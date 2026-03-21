@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('produk.create');
+        $categories = Category::get();
+
+        return view('produk.create', compact('categories'));
     }
 
     /**
