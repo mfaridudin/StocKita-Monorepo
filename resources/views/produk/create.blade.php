@@ -31,11 +31,11 @@
                 <select name="category_id"
                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                     <option value="">-- Pilih Kategori --</option>
-                    {{-- @foreach ($categories as $category)
+                    @foreach ($categories as $category)
                         <option value="{{ $category->id }}">
                             {{ $category->name }}
                         </option>
-                    @endforeach --}}
+                    @endforeach
                 </select>
             </div>
 
