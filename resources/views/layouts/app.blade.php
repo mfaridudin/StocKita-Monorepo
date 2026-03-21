@@ -31,16 +31,8 @@
 
             <!-- Content -->
             <main class="flex-1 p-6 lg:p-8 overflow-y-auto w-full">
-                <div class= mx-auto">
-                    <div class="w-full bg-black">p</div>
-                    @php
-                        $i = 1;
-                        while ($i <= 50) {
-                            echo "Angka: $i <br>";
-                            $i++; // Increment: meningkatkan $i agar perulangan berhenti
-                        }
-                    @endphp
-
+                <div class=mx-auto">
+                    {{ $slot }}
                 </div>
             </main>
 
