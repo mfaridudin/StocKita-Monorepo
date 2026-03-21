@@ -32,7 +32,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = [];
+        $products = Product::get();
 
         return view('produk.index', compact('products'));
     }
@@ -65,6 +65,7 @@ class ProductController extends Controller
         ]);
 
         // dd($imagePath);
+        return view('produk.index');
     }
 
     /**

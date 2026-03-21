@@ -13,7 +13,6 @@
                 <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                     <tr>
                         <th class="px-6 py-3">Produk</th>
-                        <th class="px-6 py-3">SKU</th>
                         <th class="px-6 py-3">Harga</th>
                         <th class="px-6 py-3">Stok</th>
                         <th class="px-6 py-3">Kategori</th>
