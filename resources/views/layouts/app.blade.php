@@ -1,3 +1,4 @@
+@props(['title' => 'Dashboard'])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -27,7 +28,7 @@
         <div id="mainContent" class="flex flex-col flex-1 min-w-0">
 
             <!-- Header -->
-            <x-header />
+            <x-header :title="$title" />
 
             <!-- Content -->
             <main class="flex-1 p-6 lg:p-8 overflow-y-auto w-full">

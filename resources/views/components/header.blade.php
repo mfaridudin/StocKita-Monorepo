@@ -19,12 +19,23 @@
     </div>
 
     <div class="flex items-center gap-4">
-        <div class="hidden md:flex items-center bg-gray-100 rounded-lg px-3 py-2">
-            <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div
+            class="flex items-center bg-gray-100 rounded-lg px-3 py-2 focus-within:bg-white focus-within:ring-2 focus-within:ring-green-200 focus-within:shadow-sm transition-all duration-200">
+            <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
-            <input type="text" placeholder="Cari..." class="bg-transparent outline-none text-sm w-40">
+            <input type="text" id="searchInput" name="search" placeholder="Cari..."
+                class="bg-transparent outline-none focus:outline-none text-sm w-48 md:w-64 pl-2 pr-3 py-1 transition-all duration-200"
+                autocomplete="off">
+            <!-- Clear button -->
+            <button id="clearSearch"
+                class="hidden ml-2 p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-200 transition-colors duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
         </div>
 
         <button class="relative p-2 rounded-lg hover:bg-green-50">
