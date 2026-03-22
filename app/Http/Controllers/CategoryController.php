@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    private function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = Category::where('slug', 'LIKE', $slug.'%')->count();
+        return $count ? "{$slug}-{$count}" : $slug;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +38,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $product = Category::create([
+            'name' => $request->name,
+            'slug' => $this->generateUniqueSlug($request->name),
+        ]);
+
+        return view('category.index');
     }
 
     /**
