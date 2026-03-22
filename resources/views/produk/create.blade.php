@@ -19,13 +19,6 @@
                 </div>
             </div>
 
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Stok</label>
-                <input type="number" name="stock" value="{{ old('stock') }}"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
-            </div>
-
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
                 <select name="category_id"

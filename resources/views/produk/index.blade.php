@@ -14,7 +14,6 @@
                     <tr>
                         <th class="px-6 py-3">Produk</th>
                         <th class="px-6 py-3">Harga</th>
-                        <th class="px-6 py-3">Stok</th>
                         <th class="px-6 py-3">Kategori</th>
                         <th class="px-6 py-3 text-right">Aksi</th>
                     </tr>
@@ -43,14 +42,6 @@
                                 Rp {{ number_format($product->price, 0, ',', '.') }}
                             </td>
 
-                            <td class="px-6 py-4">
-                                <span
-                                    class="px-3 py-1 text-xs rounded-full
-                                {{ $product->stock > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' }}">
-                                    {{ $product->stock }}
-                                </span>
-                            </td>
-
                             <td class="px-6 py-4 text-gray-600">
                                 {{ $product->category->name ?? '-' }}
                             </td>
@@ -63,17 +54,11 @@
                                         Edit
                                     </a>
 
-                                    <form action="/products/{{ $product->id }}" method="POST"
-                                        onsubmit="return confirm('Yakin hapus produk?')">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button
-                                            class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
-                                            Hapus
-                                        </button>
-                                    </form>
-
+                                    <button
+                                        class="openDeleteModal px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
+                                        data-id="{{ $product->id }}">
+                                        Hapus
+                                    </button>
                                 </div>
                             </td>
 
@@ -88,6 +73,80 @@
                 </tbody>
             </table>
         </div>
-
     </div>
+
+    {{-- modal delete --}}
+    <div id="deleteModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+
+        <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 relative">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Hapus Produk</h2>
+                <button id="closeDeleteModal" class="text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+
+            <p>Apakah anda yakin ingin meghapus produk ini?</p>
+
+            <form id="deleteForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-end gap-2 pt-4">
+                    <button type="button" id="cancelDeleteModal"
+                        class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                        Batal
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-green-700">
+                        Hapus
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("deleteModal");
+            const closeBtn = document.getElementById("closeDeleteModal");
+            const cancelBtn = document.getElementById("cancelDeleteModal");
+            const deleteForm = document.getElementById("deleteForm");
+
+            const openBtns = document.querySelectorAll(".openDeleteModal");
+
+            openBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.dataset.id;
+
+                    deleteForm.action = `/products/${id}`;
+
+                    modal.classList.remove("hidden");
+                    modal.classList.add("flex");
+
+                    gsap.fromTo(modal.firstElementChild, {
+                        scale: 0.8,
+                        opacity: 0,
+                        y: 20
+                    }, {
+                        scale: 1,
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.25,
+                        ease: "power3.out"
+                    });
+                });
+            });
+
+            function closeModal() {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+            }
+
+            closeBtn.onclick = closeModal;
+            cancelBtn.onclick = closeModal;
+
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) closeModal();
+            });
+        });
+    </script>
 </x-app-layout>
