@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 #[Guarded(['id'])]
 class Product extends Model
 {
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Category::class);
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
     }
 }
