@@ -61,13 +61,12 @@ class ProductController extends Controller
             'name' => $request->name,
             'sku' => $this->generateSku(),
             'price' => $request->price,
-            'stock' => $request->stock,
             'category_id' => $request->category_id,
             'image' => $imagePath,
             'created_by' => auth()->id(),
+            'warehouse_id' => $request->warehouse_id,
         ]);
 
-        // dd($imagePath);
         return view('produk.index');
     }
 
