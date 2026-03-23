@@ -49,9 +49,9 @@
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
 
-                                    <a href="/products/{{ $product->id }}/edit"
+                                    <a href="/products/{{ $product->id }}"
                                         class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                                        Edit
+                                        Detail
                                     </a>
 
                                     <button

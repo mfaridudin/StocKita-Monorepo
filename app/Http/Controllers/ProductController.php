@@ -6,6 +6,7 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -105,5 +106,25 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->back();
+    }
+
+    // update imaage
+    public function updateImage(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $imagePath = $request->file('image')->store('products', 'public');
+
+            $product->update([
+                'image' => $imagePath,
+            ]);
+        }
+
+        return back();
     }
 }

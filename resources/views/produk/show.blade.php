@@ -18,13 +18,15 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             <div class="lg:col-span-1">
-                <div class="rounded-xl shadow-sm border border-gray-200 h-full relative group">
+                <div class="rounded-xl shadow-sm border border-gray-200 h-full lg:max-h-[348px] relative group">
+
                     <img src="{{ asset('storage/' . $product->image) }}"
                         class="w-full h-80 lg:h-full object-cover rounded-lg"
                         onerror="this.src='https://via.placeholder.com/300x400?text=No+Image'">
 
-                    <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                        <a href="{{ route('products.edit', $product->id) }}#image"
+                    <div x-data
+                        class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                        <button type="button" @click.prevent="$dispatch('open-modal', 'edit-image')"
                             class="bg-white/90 hover:bg-white text-gray-700 p-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-1 text-sm font-medium border border-gray-200">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -32,7 +34,7 @@
                                 </path>
                             </svg>
                             Edit
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -117,7 +119,75 @@
                 @endforelse
             </div>
         </div>
-
     </div>
 
+    {{-- modal --}}
+    <x-modal name="edit-image" maxWidth="lg">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Edit Foto Produk</h3>
+                <button type="button" @click="$dispatch('close-modal', 'edit-image')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <form action="{{ route('products.update-image', $product->id) }}" method="POST"
+                enctype="multipart/form-data" class="space-y-6">
+                @csrf
+                @method('PUT')
+
+                <div class="text-center">
+                    <div
+                        class="inline-block w-40 h-40 bg-gray-50 rounded-xl p-2 border-2 border-dashed border-gray-200">
+                        <img id="image-preview" src="{{ asset('storage/' . $product->image) }}"
+                            class="w-full h-full object-cover rounded-lg shadow-md">
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3">Preview foto saat ini</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload foto baru</label>
+                    <input type="file" name="image" id="image-input" required
+                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent px-3 py-2"
+                        accept="image/*">
+                    <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF. Maksimal 2MB</p>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="button" @click="$dispatch('close-modal', 'edit-image')"
+                        class="close-modal flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all">
+                        Batal
+                    </button>
+                    <button type="submit" id="save-btn"
+                        class="close-modal flex-1 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-medium shadow-sm hover:shadow transition-all">
+                        Simpan Foto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-modal>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('image-input');
+            const preview = document.getElementById('image-preview');
+            const form = document.getElementById('edit-image-form');
+            const saveBtn = document.getElementById('save-btn');
+
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
 </x-app-layout>
