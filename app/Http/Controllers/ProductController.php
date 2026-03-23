@@ -77,8 +77,9 @@ class ProductController extends Controller
     public function show(string $id)
     {
         $product = Product::findOrFail($id);
+        $categories = Category::get();
 
-        return view('produk.show', compact('product'));
+        return view('produk.show', compact('product', 'categories'));
     }
 
     /**
@@ -94,7 +95,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'category_id' => $request->category_id,
+        ]);
+
+        return back();
     }
 
     /**
