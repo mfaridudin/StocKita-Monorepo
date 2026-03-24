@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/products', ProductController::class);
     Route::resource('/categories', CategoryController::class);
     Route::resource('/warehouse', WarehouseController::class);
-    Route::resource('customers', CustomerController::class)->except(['show', 'update']);
+    Route::resource('customers', CustomerController::class);
 
     Route::post('/stocks', [StockController::class, 'store'])->name('stocks.store');
 

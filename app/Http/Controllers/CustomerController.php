@@ -69,7 +69,11 @@ class CustomerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+        $totalOrders = 10;
+        $totalSpent = 10;
+
+        return view('pelanggan.show', compact('customer', 'totalOrders', 'totalSpent'));
     }
 
     /**
@@ -85,7 +89,23 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+        $phone = preg_replace('/[^0-9+]/', '', $request->phone);
+        if (! str_starts_with($phone, '+')) {
+            if (str_starts_with($phone, '0')) {
+                $phone = '+62'.substr($phone, 1);
+            }
+        }
+
+        $customer->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'type' => $request->type,
+            'status' => $request->status,
+            'phone' => $phone,
+        ]);
+
+        return back();
     }
 
     /**

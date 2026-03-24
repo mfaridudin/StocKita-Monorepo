@@ -152,7 +152,7 @@
                                             class="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs rounded-lg font-medium transition-all shadow-sm">
                                             📧 Email
                                         </button>
-                                        <button
+                                        <a href="{{ route('customers.show', $customer->id) }}"
                                             class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -160,7 +160,7 @@
                                                     d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.5h3m10.5 0v-3.5L9.5 10.5l-3 3v6.5">
                                                 </path>
                                             </svg>
-                                        </button>
+                                        </a>
                                         <button title="Hapus Pelanggan"
                                             class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-gray-100 rounded-lg transition-all"
                                             @click="$dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })">
