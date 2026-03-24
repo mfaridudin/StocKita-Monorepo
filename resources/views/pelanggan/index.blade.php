@@ -85,7 +85,7 @@
                         Export
                     </button>
 
-                    <button @click="$dispatch('open-modal', 'create-customer')"
+                    <button @click="$dispatch('open-modal', { name: 'create-customer' })"
                         class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -147,7 +147,7 @@
                                     <div class="text-xs text-gray-500">{{ $customer->total_orders }} pesanan</div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2">
+                                    <div x-data class="flex items-center gap-2">
                                         <button onclick="openEmailModal({{ $customer->id }})"
                                             class="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs rounded-lg font-medium transition-all shadow-sm">
                                             📧 Email
@@ -161,9 +161,9 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        <button
-                                            class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all"
-                                            onclick="confirmDelete({{ $customer->id }})">
+                                        <button title="Hapus Pelanggan"
+                                            class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-gray-100 rounded-lg transition-all"
+                                            @click="$dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -188,7 +188,7 @@
                                     </div>
                                     <h3 class="text-lg font-semibold mb-2">Belum ada pelanggan</h3>
                                     <p class="mb-4">Mulai tambahkan pelanggan pertama Anda</p>
-                                    <button @click="$dispatch('open-modal', 'create-customer')"
+                                    <button @click="$dispatch('open-modal', { name: 'create-customer' })"
                                         class="px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600">
                                         + Tambah Pelanggan
                                     </button>
@@ -204,8 +204,8 @@
         </div>
     </div>
 
-    {{-- CREATE MODAL --}}
-    <x-modal name="create-customer" max-width="md">
+    {{-- create modal --}}
+    <x-modal name="create-customer" maxWidth="md">
         <div class="p-6">
             <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold">Tambah Pelanggan Baru</h3>
@@ -261,6 +261,58 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </x-modal>
+
+    {{-- delete modal --}}
+    <x-modal name="delete-customer" maxWidth="md">
+        <div x-data="{ customerId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'delete-customer') {
+                customerId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Hapus Pelanggan
+                </h3>
+
+                <button type="button" @click="$dispatch('close-modal', 'delete-customer')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="text-center space-y-3">
+                <p class="text-gray-700 text-md">
+                    Apakah kamu yakin ingin menghapus pelanggan ini?
+                </p>
+
+                <p class="text-sm text-gray-400">
+                    Data yang dihapus tidak dapat dikembalikan.
+                </p>
+            </div>
+
+            <form :action="`/customers/${customerId}`" method="POST" class="mt-6">
+                @csrf
+                @method('DELETE')
+
+                <div class="flex gap-3">
+                    <button type="button" @click="$dispatch('close-modal', 'delete-customer')"
+                        class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-sm hover:shadow transition">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+
         </div>
     </x-modal>
 
