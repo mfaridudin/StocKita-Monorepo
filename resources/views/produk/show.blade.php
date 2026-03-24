@@ -9,8 +9,7 @@
                     Terakhir diupdate: {{ $product->updated_at->format('d M Y, H:i') }}
                 </p>
             </div>
-            <button href="{{ route('products.edit', $product->id) }}"
-                @click.prevent="$dispatch('open-modal', 'edit-produk')"
+            <button @click.prevent="$dispatch('open-modal', { name: 'edit-produk'})"
                 class="px-4 py-2 bg-emerald-500
                 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
                 Edit
@@ -28,7 +27,7 @@
 
                     <div x-data
                         class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                        <button type="button" @click.prevent="$dispatch('open-modal', 'edit-image')"
+                        <button type="button" @click.prevent="$dispatch('open-modal', { name:'edit-image'})"
                             class="bg-white/90 hover:bg-white text-gray-700 p-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-1 text-sm font-medium border border-gray-200">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
