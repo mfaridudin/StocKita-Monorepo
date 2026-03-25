@@ -33,7 +33,6 @@
         document.body.classList.remove('overflow-y-hidden');
     }
 })"
-    {{-- x-on:open-modal.window="$event.detail == '{{ $name }}' ? show = true : null" --}}
     x-on:open-modal.window="
     if ($event.detail.name === '{{ $name }}') {
         show = true

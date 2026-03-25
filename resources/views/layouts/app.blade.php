@@ -29,7 +29,7 @@
 
             <!-- Header -->
             <x-header :title="$title" />
-
+            @include('partials.stock-alert')
             <!-- Content -->
             <main class="flex-1 p-6 lg:p-8 overflow-y-auto w-full">
                 <div class=mx-auto">
