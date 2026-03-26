@@ -4,7 +4,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('/categories', CategoryController::class);
     Route::resource('/warehouse', WarehouseController::class);
     Route::resource('customers', CustomerController::class);
+    Route::resource('transactions', TransactionController::class);
 
+    Route::get('/settings', [SettingController::class, 'index']);
+    Route::post('/settings', [SettingController::class, 'update']);
     Route::post('/stocks', [StockController::class, 'store'])->name('stocks.store');
 
     Route::put('/product/update-img/{id}', [ProductController::class, 'updateImage'])->name('products.update-image');

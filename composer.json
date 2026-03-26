@@ -3,11 +3,15 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
         "giggsey/libphonenumber-for-php": "^9.0",
+        "intervention/image": "^3.11",
         "laravel/framework": "^13.0",
         "laravel/socialite": "^5.25",
         "laravel/tinker": "^3.0",
@@ -27,7 +31,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/SettingHelpers.php",
+            "app/Helpers/ReceiptHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
