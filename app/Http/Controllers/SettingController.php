@@ -52,12 +52,25 @@ class SettingController extends Controller
      */
     public function update(Request $request)
     {
-        foreach ($request->except('_token') as $key => $value) {
-            Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => $value]
-            );
+        if ($request->has('store')) {
+            foreach ($request->store as $key => $value) {
+                Setting::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => $value]
+                );
+            }
         }
+
+        if ($request->has('email')) {
+            foreach ($request->email as $key => $value) {
+                Setting::updateOrCreate(
+                    ['key' => 'email.'.$key],
+                    ['value' => $value]
+                );
+            }
+        }
+
+        cache()->forget('settings');
 
         return back()->with('success', 'Setting berhasil disimpan');
     }
