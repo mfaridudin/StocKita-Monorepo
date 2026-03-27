@@ -12,6 +12,7 @@ class CategoryController extends Controller
     {
         $slug = Str::slug($name);
         $count = Category::where('slug', 'LIKE', $slug.'%')->count();
+
         return $count ? "{$slug}-{$count}" : $slug;
     }
 
@@ -42,12 +43,12 @@ class CategoryController extends Controller
             'name' => 'required',
         ]);
 
-        $product = Category::create([
+        $category = Category::create([
             'name' => $request->name,
             'slug' => $this->generateUniqueSlug($request->name),
         ]);
 
-        return view('category.index');
+        return redirect()->back();
     }
 
     /**
@@ -71,7 +72,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'slug' => $this->generateUniqueSlug($request->name),
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -79,6 +90,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return redirect()->back();
     }
 }

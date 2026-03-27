@@ -1,55 +1,75 @@
 <x-app-layout title="Kategori">
     <div class="space-y-4">
 
-        <div class="flex justify-between">
-            <h1 class="text-lg font-semibold">Kategori</h1>
-            <button id="openCategoryModal" class="px-4 py-2 bg-green-600 text-white rounded-lg">
-                + Tambah
-            </button>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Manajemen Kategori</h1>
+                <p class="text-gray-600 mt-1">Kelola kategori produk dengan mudah</p>
+            </div>
+
+            <div class="flex gap-3">
+                <button x-data @click="$dispatch('open-modal', { name: 'create-category' })"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-medium text-sm rounded-xl shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Tambah Kategori
+                </button>
+            </div>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                     <tr>
-                        <th class="p-3 text-left">Nama</th>
-                        <th class="p-3 text-left">Slug</th>
-                        <th class="px-6 py-3 text-right">Aksi</th>
+                        <th class="px-6 py-4 text-left font-semibold">Nama</th>
+                        <th class="px-6 py-4 text-left font-semibold">Slug</th>
+                        <th class="px-6 py-4 text-left font-semibold">Total Produk</th>
+                        <th class="px-6 py-4 text-right font-semibold">Aksi</th>
                     </tr>
                 </thead>
 
-                <tbody class="divide-y">
+                <tbody class="divide-y divide-gray-100">
                     @forelse ($categories as $cat)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="p-3">{{ $cat->name }}</td>
-                            <td class="p-3 text-gray-500">{{ $cat->slug }}</td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
 
-                                    <a href="/categories/{{ $cat->id }}/edit"
-                                        class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                            <td class="px-6 py-4 font-medium text-gray-900">
+                                {{ $cat->name }}
+                            </td>
+
+                            <td class="px-6 py-4 text-gray-500">
+                                {{ $cat->slug }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg">
+                                    {{ $cat->products_count ?? $cat->products->count() }} produk
+                                </span>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <div x-data class="flex justify-end gap-2">
+
+                                    <button
+                                        @click="$dispatch('open-modal', { name: 'edit-category', id: {{ $cat->id }} })"
+                                        class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
                                         Edit
-                                    </a>
+                                    </button>
 
-                                    <form action="/categories/{{ $cat->id }}" method="POST"
-                                        onsubmit="return confirm('Yakin hapus produk?')">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button
-                                            class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <button
+                                        @click="$dispatch('open-modal', { name: 'delete-category', id: {{ $cat->id }} })"
+                                        class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition">
+                                        Hapus
+                                    </button>
 
                                 </div>
                             </td>
 
-
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-400">
+                            <td colspan="4" class="text-center py-12 text-gray-400">
                                 Belum ada kategori
                             </td>
                         </tr>
@@ -59,18 +79,18 @@
         </div>
     </div>
 
-    {{-- modal add --}}
-    <div id="categoryModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
-
-        <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 relative">
-
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold">Tambah Kategori</h2>
-                <button id="closeCategoryModal" class="text-gray-400 hover:text-gray-600">✕</button>
+    {{-- create modal --}}
+    <x-modal name="create-category" maxWidth="md">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold">Tambah Kategori Baru</h3>
+                <button type="button" @click="$dispatch('close-modal', 'create-category')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
             </div>
-
-            <!-- Form -->
             <form action="/categories" method="POST" class="space-y-4">
                 @csrf
                 @method('POST')
@@ -82,7 +102,52 @@
                 </div>
 
                 <div class="flex justify-end gap-2 pt-4">
-                    <button type="button" id="cancelCategoryModal"
+                    <button type="button" @click="$dispatch('close-modal', 'create-category')"
+                        class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                        Batal
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-modal>
+
+    <x-modal name="edit-category" maxWidth="md">
+        <div x-data="{ categoryId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'edit-category') {
+                categoryId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Edit Kategori
+                </h3>
+
+                <button type="button" @click="$dispatch('close-modal', 'edit-category')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <form :action="`/categories/${categoryId}`" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+
+                <div>
+                    <label class="text-sm font-medium">Nama</label>
+                    <input type="text" name="name"
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                </div>
+
+                <div class="flex justify-end gap-2 pt-4">
+                    <button type="button" @click="$dispatch('close-modal', 'edit-category')"
                         class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
                         Batal
                     </button>
@@ -94,43 +159,58 @@
             </form>
 
         </div>
-    </div>
+    </x-modal>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const modal = document.getElementById("categoryModal");
-            const openBtn = document.getElementById("openCategoryModal");
-            const closeBtn = document.getElementById("closeCategoryModal");
-            const cancelBtn = document.getElementById("cancelCategoryModal");
+    {{-- delete modal --}}
+    <x-modal name="delete-category" maxWidth="md">
+        <div x-data="{ categoryId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'delete-category') {
+                categoryId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Hapus Kategori
+                </h3>
 
-            openBtn.onclick = () => {
-                modal.classList.remove("hidden");
-                modal.classList.add("flex");
+                <button type="button" @click="$dispatch('close-modal', 'delete-category')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
 
-                gsap.fromTo(modal.firstElementChild, {
-                    scale: 0.8,
-                    opacity: 0,
-                    y: 20
-                }, {
-                    scale: 1,
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.25,
-                    ease: "power3.out"
-                });
-            };
+            <div class="text-center space-y-3">
+                <p class="text-gray-700 text-md">
+                    Apakah kamu yakin ingin menghapus kategori ini?
+                </p>
 
-            function closeModal() {
-                modal.classList.add("hidden");
-                modal.classList.remove("flex");
-            }
+                <p class="text-sm text-gray-400">
+                    Data yang dihapus tidak dapat dikembalikan.
+                </p>
+            </div>
 
-            closeBtn.onclick = closeModal;
-            cancelBtn.onclick = closeModal;
+            <form :action="`/categories/${categoryId}`" method="POST" class="mt-6">
+                @csrf
+                @method('DELETE')
 
-            modal.addEventListener("click", (e) => {
-                if (e.target === modal) closeModal();
-            });
-        });
-    </script>
+                <div class="flex gap-3">
+                    <button type="button" @click="$dispatch('close-modal', 'delete-category')"
+                        class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-sm hover:shadow transition">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </x-modal>
+
 </x-app-layout>
