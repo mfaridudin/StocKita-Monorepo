@@ -1,13 +1,24 @@
 <x-app-layout title="Produk">
     <div class="space-y-6">
 
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Manajemen Produk</h1>
+                <p class="text-gray-600 mt-1">Kelola semua produk toko Anda</p>
+            </div>
 
-            <a href="/products/create"
-                class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg shadow hover:bg-green-700 transition">
-                + Tambah Produk
-            </a>
+            <div x-data class="flex gap-3">
+                <button @click.prevent="$dispatch('open-modal', { name: 'add-produk'})"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium text-sm rounded-xl shadow-lg hover:shadow-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Tambah Produk
+                </button>
+            </div>
         </div>
+
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <table class="w-full text-sm text-left">
                 <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
@@ -46,7 +57,7 @@
                                 {{ $product->category->name ?? '-' }}
                             </td>
 
-                            <td class="px-6 py-4 text-right">
+                            <td x-data class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
 
                                     <a href="/products/{{ $product->id }}"
@@ -55,8 +66,8 @@
                                     </a>
 
                                     <button
-                                        class="openDeleteModal px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
-                                        data-id="{{ $product->id }}">
+                                        class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
+                                        @click="$dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })">
                                         Hapus
                                     </button>
                                 </div>
@@ -75,22 +86,35 @@
         </div>
     </div>
 
-    {{-- modal delete --}}
-    <div id="deleteModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+    {{-- delete modal --}}
+    <x-modal name="delete-product" maxWidth="md">
+        <div x-data="{ productId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'delete-product') {
+                productId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Hapus Pelanggan
+                </h3>
 
-        <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 relative">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold">Hapus Produk</h2>
-                <button id="closeDeleteModal" class="text-gray-400 hover:text-gray-600">✕</button>
+                <button type="button" @click="$dispatch('close-modal', 'delete-product')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
 
             <p>Apakah anda yakin ingin meghapus produk ini?</p>
 
-            <form id="deleteForm" method="POST">
+            <form :action="`/products/${productId}`" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="flex justify-end gap-2 pt-4">
-                    <button type="button" id="cancelDeleteModal"
+                    <button type="button" @click="$dispatch('close-modal', 'delete-product')"
                         class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
                         Batal
                     </button>
@@ -102,50 +126,122 @@
             </form>
 
         </div>
-    </div>
+    </x-modal>
+
+    {{-- modal edit produk --}}
+    <x-modal name="add-produk" maxWidth="xl">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Tambah Produk</h3>
+                <button type="button" @click="$dispatch('close-modal', 'add-produk')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <form action="/products" method="POST" enctype="multipart/form-data" class="space-y-5">
+                @csrf
+
+                <div class="grid grid-col-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+                        <input type="text" name="name" value="{{ old('name') }}"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
+                        <input type="number" name="price" value="{{ old('price') }}"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                    <select name="category_id"
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Gambar Produk</label>
+                    <div
+                        class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-gray-300 hover:bg-gray-50 transition-colors duration-200">
+                        <input type="file" name="image" accept="image/*" class="hidden" id="imageUpload">
+                        <div id="uploadPlaceholder">
+                            <label for="imageUpload" class="cursor-pointer block">
+                                <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p class="text-sm font-medium text-gray-700 mb-1">Klik untuk upload gambar</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF (max 5MB)</p>
+                            </label>
+                        </div>
+                        <div id="imagePreview" class="mt-4 hidden cursor-pointer">
+                            <img class="w-full h-48 object-cover rounded-lg shadow-md" alt="Preview">
+                        </div>
+                    </div>
+                    @error('image')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button @click.prevent="$dispatch('close-modal', 'add-produk')"
+                        class="px-4 py-2 text-sm bg-gray-200 rounded-lg hover:bg-gray-300">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="px-5 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700">
+                        Simpan
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </x-modal>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const modal = document.getElementById("deleteModal");
-            const closeBtn = document.getElementById("closeDeleteModal");
-            const cancelBtn = document.getElementById("cancelDeleteModal");
-            const deleteForm = document.getElementById("deleteForm");
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
 
-            const openBtns = document.querySelectorAll(".openDeleteModal");
+            if (!imageUpload || !imagePreview) return; // safety
 
-            openBtns.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    const id = btn.dataset.id;
+            const img = imagePreview.querySelector('img');
 
-                    deleteForm.action = `/products/${id}`;
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
 
-                    modal.classList.remove("hidden");
-                    modal.classList.add("flex");
+                if (file) {
+                    const reader = new FileReader();
 
-                    gsap.fromTo(modal.firstElementChild, {
-                        scale: 0.8,
-                        opacity: 0,
-                        y: 20
-                    }, {
-                        scale: 1,
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.25,
-                        ease: "power3.out"
-                    });
-                });
+                    reader.onload = function(e) {
+                        if (img) {
+                            img.src = e.target.result;
+                        }
+
+                        imagePreview.classList.remove('hidden');
+                        uploadPlaceholder?.classList.add('hidden');
+                    };
+
+                    reader.readAsDataURL(file);
+                }
             });
 
-            function closeModal() {
-                modal.classList.add("hidden");
-                modal.classList.remove("flex");
-            }
-
-            closeBtn.onclick = closeModal;
-            cancelBtn.onclick = closeModal;
-
-            modal.addEventListener("click", (e) => {
-                if (e.target === modal) closeModal();
+            imagePreview.addEventListener('click', function() {
+                imageUpload.click();
             });
         });
     </script>

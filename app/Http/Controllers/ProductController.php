@@ -35,19 +35,15 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::get();
+        $categories = Category::get();
 
-        return view('produk.index', compact('products'));
+        return view('produk.index', compact('products', 'categories'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $categories = Category::get();
-
-        return view('produk.create', compact('categories'));
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -68,7 +64,7 @@ class ProductController extends Controller
             'warehouse_id' => $request->warehouse_id,
         ]);
 
-        return view('produk.index');
+        return back();
     }
 
     /**
