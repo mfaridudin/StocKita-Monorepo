@@ -6,7 +6,6 @@ use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
-use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -19,11 +18,17 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with(['customer', 'warehouse'])
+        $stats = [
+            'total' => Transaction::count(),
+            'total_amount' => Transaction::sum('total'),
+            'pending' => Transaction::where('status', '!=', 'paid')->count(),
+            'items' => TransactionItem::count(),
+        ];
+        $transactions = Transaction::with('customer')
             ->latest()
             ->paginate(10);
 
-        return view('transaksi.index', compact('transactions'));
+        return view('transaksi.index', compact('transactions', 'stats'));
     }
 
     /**
@@ -32,9 +37,8 @@ class TransactionController extends Controller
     public function create()
     {
         $products = Product::all();
-        $warehouses = Warehouse::all();
 
-        return view('transaksi.create', compact('products', 'warehouses'));
+        return view('transaksi.create', compact('products'));
     }
 
     /**
@@ -79,7 +83,7 @@ class TransactionController extends Controller
 
             foreach ($request->items as $item) {
 
-                $productId = $item['id'];
+                $productId = $item['product_id'];
                 $qty = $item['qty'];
                 $price = $item['price'];
 
@@ -97,7 +101,7 @@ class TransactionController extends Controller
                     'subtotal' => $qty * $price,
                 ]);
 
-                $total += $qty * $price;
+                // $total += $qty * $price;
 
                 $stocks = Stock::where('product_id', $productId)
                     ->where('qty', '>', 0)
@@ -127,7 +131,7 @@ class TransactionController extends Controller
 
             DB::commit();
 
-            // generate struk
+            // buat struk
             $transaction->load('items.product');
 
             $receiptPath = $this->generateReceipt($transaction);
