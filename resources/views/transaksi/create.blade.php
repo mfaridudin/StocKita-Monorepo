@@ -79,14 +79,20 @@
                         </h4>
 
                         <div id="cartItems" class="flex-1 overflow-y-auto space-y-2"></div>
-                        <div class="border-t pt-3">
+                        <div x-data class="border-t pt-3">
                             <div class="flex justify-between text-sm">
                                 <span>Total</span>
                                 <span id="grandTotal">Rp 0</span>
                             </div>
 
-                            <button id="submitBtn"
+                            {{-- <button id="submitBtn"
                                 class="w-full mt-3 bg-green-500 text-white py-3 rounded-xl font-semibold disabled:opacity-50">
+                                Simpan Transaksi
+                            </button> --}}
+
+                            <button id="buttonSubmit" type="button"
+                                @click="$dispatch('open-modal', { name: 'payment-modal' })"
+                                class="w-full mt-3 bg-green-500 text-white py-3 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
                                 Simpan Transaksi
                             </button>
                         </div>
@@ -98,8 +104,68 @@
         </form>
     </div>
 
+    <x-modal name="payment-modal" maxWidth="md">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold">Pembayaran</h3>
+                <button type="button" @click="$dispatch('close-modal', 'payment-modal')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-sm">Nominal Dibayar</label>
+                    <input type="number" id="paid" class="w-full border px-3 py-2 rounded-xl" placeholder="0">
+                </div>
+
+                <div>
+                    <label class="text-sm">Metode Pembayaran</label>
+                    <select id="payment_method" class="w-full border px-3 py-2 rounded-xl">
+                        <option value="cash">Cash</option>
+                        <option value="transfer">Transfer</option>
+                        <option value="qris">QRIS</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-sm">Tanggal Bayar</label>
+                    <input type="datetime-local" id="paid_at" class="w-full border px-3 py-2 rounded-xl">
+                </div>
+
+                <div>
+                    <label class="text-sm">Catatan</label>
+                    <textarea id="notes" class="w-full border px-3 py-2 rounded-xl"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-2">
+                    <button @click="$dispatch('close-modal', 'payment-modal')" class="px-4 py-2 bg-gray-200 rounded-xl">
+                        Batal
+                    </button>
+                    <button onclick="submitTransaction()" class="px-4 py-2 bg-green-500 text-white rounded-xl">
+                        Simpan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </x-modal>
+
+
     <script>
         let cart = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateButtonState();
+            document.getElementById('paid_at').value = new Date().toISOString().slice(0, 16);
+        });
+
+        function updateButtonState() {
+            const button = document.getElementById('buttonSubmit');
+            button.disabled = cart.length === 0;
+        }
 
         function addToCart(id, name, price, image = '') {
             let item = cart.find(i => i.id === id);
@@ -134,7 +200,6 @@
             renderCart();
         }
 
-
         function renderCart() {
             const container = document.getElementById('cartItems');
             const totalEl = document.getElementById('grandTotal');
@@ -146,6 +211,7 @@
                     </div>`;
                 totalEl.textContent = 'Rp 0';
                 updateTitle();
+                updateButtonState();
                 return;
             }
 
@@ -197,6 +263,7 @@
 
             totalEl.textContent = 'Rp ' + format(total);
             updateTitle();
+            updateButtonState();
         }
 
         function updateTitle() {
@@ -209,7 +276,6 @@
         }
 
         // search
-        // Search functionality - DIPERBAIKI
         document.getElementById('productSearch').addEventListener('input', debounce(function(e) {
             const keyword = e.target.value.toLowerCase().trim();
             const productCards = document.querySelectorAll('#productsGrid > div:not(.col-span-full)');
@@ -259,14 +325,53 @@
             };
         }
 
+        // document.getElementById('transactionForm').addEventListener('submit', async (e) => {
+        //     e.preventDefault();
 
-        document.getElementById('transactionForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        //     if (cart.length === 0) {
+        //         alert('Keranjang kosong');
+        //         return;
+        //     }
 
-            if (cart.length === 0) {
-                alert('Keranjang kosong');
-                return;
-            }
+        //     try {
+        //         const res = await fetch('/transactions', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        //             },
+        //             body: JSON.stringify({
+        //                 customer_name: document.getElementById('customerName').value,
+        //                 type: 'out',
+        //                 items: cart.map(i => ({
+        //                     product_id: i.id,
+        //                     qty: i.qty,
+        //                     price: i.price
+        //                 }))
+        //             })
+        //         });
+
+        //         const data = await res.json();
+
+        //         if (res.ok) {
+        //             alert(data.message || 'Berhasil');
+        //             location.href = '/transactions/' + data.data.id;
+
+        //         } else {
+        //             alert(data.error || data.message || 'Terjadi kesalahan');
+        //         }
+
+        //     } catch (err) {
+        //         console.error(err);
+        //         alert('Server error');
+        //     }
+        // });
+        async function submitTransaction() {
+
+            const paid = document.getElementById('paid').value;
+            const payment_method = document.getElementById('payment_method').value;
+            const paid_at = document.getElementById('paid_at').value;
+            const notes = document.getElementById('notes').value;
 
             try {
                 const res = await fetch('/transactions', {
@@ -278,6 +383,10 @@
                     body: JSON.stringify({
                         customer_name: document.getElementById('customerName').value,
                         type: 'out',
+                        paid: paid,
+                        payment_method: payment_method,
+                        paid_at: paid_at,
+                        notes: notes,
                         items: cart.map(i => ({
                             product_id: i.id,
                             qty: i.qty,
@@ -289,21 +398,17 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert(data.message || 'Berhasil');
-
-                    // ✅ FIX DI SINI
+                    alert('Transaksi berhasil');
                     location.href = '/transactions/' + data.data.id;
-
                 } else {
-                    // ✅ FIX ERROR MESSAGE
-                    alert(data.error || data.message || 'Terjadi kesalahan');
+                    alert(data.message || 'Gagal');
                 }
 
             } catch (err) {
                 console.error(err);
                 alert('Server error');
             }
-        });
+        }
     </script>
 
 </x-app-layout>

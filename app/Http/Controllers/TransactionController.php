@@ -62,7 +62,7 @@ class TransactionController extends Controller
                 $total += $item['qty'] * $item['price'];
             }
 
-            $paid = 1000000;
+            $paid = $request->paid;
             $change = $paid - $total;
 
             if ($change < 0) {
@@ -75,6 +75,9 @@ class TransactionController extends Controller
                 'invoice_code' => $invoice,
                 'customer_id' => $request->customer_id ?? null,
                 'total' => $total,
+                'payment_method' => $request->payment_method,
+                'paid_at' => $request->paid_at,
+                'notes' => $request->notes,
                 'paid' => $paid,
                 'change' => $change,
                 'status' => 'paid',
