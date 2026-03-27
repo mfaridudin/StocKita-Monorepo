@@ -120,7 +120,7 @@
                         </p>
                     </div>
 
-                    <div class="flex flex-wrap gap-2">
+                    <div x-data class="flex flex-wrap gap-2">
                         @if ($trx->status != 'paid')
                             <button onclick="confirmPayment({{ $trx->id }})"
                                 class="flex-1 px-3 py-2 text-xs bg-green-100 text-green-700 rounded-lg hover:bg-green-200 font-medium">
@@ -138,7 +138,8 @@
                             Detail
                         </a>
 
-                        <button onclick="deleteTransaction({{ $trx->id }})"
+                        <button
+                            @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
                             class="px-3 py-2 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
                             Hapus
                         </button>
@@ -169,4 +170,56 @@
             {{ $transactions->appends(request()->query())->links() }}
         </div>
     </div>
+
+    {{-- delete modal --}}
+    <x-modal name="delete-transaksi" maxWidth="md">
+        <div x-data="{ transaksiId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'delete-transaksi') {
+                transaksiId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Hapus Transaksi
+                </h3>
+
+                <button type="button" @click="$dispatch('close-modal', 'delete-transaksi')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="text-center space-y-3">
+                <p class="text-gray-700 text-md">
+                    Apakah kamu yakin ingin menghapus transaksi ini?
+                </p>
+
+                <p class="text-sm text-gray-400">
+                    Data yang dihapus tidak dapat dikembalikan.
+                </p>
+            </div>
+
+            <form :action="`/transactions/${transaksiId}`" method="POST" class="mt-6">
+                @csrf
+                @method('DELETE')
+
+                <div class="flex gap-3">
+                    <button type="button" @click="$dispatch('close-modal', 'delete-transaksi')"
+                        class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-sm hover:shadow transition">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </x-modal>
 </x-app-layout>

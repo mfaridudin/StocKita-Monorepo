@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
@@ -187,7 +188,16 @@ class TransactionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $transaksi = Transaction::findOrFail($id);
+
+        if ($transaksi->receipt && Storage::disk('public')->exists($transaksi->receipt)) {
+            Storage::disk('public')->delete($transaksi->receipt);
+        }
+
+        $transaksi->delete();
+
+        return redirect()->back();
+
     }
 
     private function generateReceipt($transaction)
