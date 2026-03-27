@@ -52,15 +52,27 @@ class SettingController extends Controller
      */
     public function update(Request $request)
     {
+        // STORE
         if ($request->has('store')) {
             foreach ($request->store as $key => $value) {
                 Setting::updateOrCreate(
-                    ['key' => $key],
+                    ['key' => 'store.'.$key], // ✅ FIX
                     ['value' => $value]
                 );
             }
         }
 
+        // APP (kamu belum handle ini ❗)
+        if ($request->has('app')) {
+            foreach ($request->app as $key => $value) {
+                Setting::updateOrCreate(
+                    ['key' => 'app.'.$key],
+                    ['value' => $value]
+                );
+            }
+        }
+        
+        // email
         if ($request->has('email')) {
             foreach ($request->email as $key => $value) {
                 Setting::updateOrCreate(

@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // role seeder
-          $this->call(RoleSeeder::class);
+        $this->call(RoleSeeder::class);
+
+        // setting seeder
+        $this->call(SettingSeeder::class);
     }
 }

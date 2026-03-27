@@ -28,7 +28,7 @@
                     </div>
                     <div class="space-y-2">
                         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Deskripsi</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ setting('app_description', 'POS ') }}</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ setting('app.description', 'POS ') }}</p>
                     </div>
                 </div>
             </div>
@@ -49,21 +49,21 @@
                 <div class="grid grid-cols-2 gap-8">
                     <div class="space-y-1">
                         <p class="text-sm font-medium text-gray-500">Nama Toko</p>
-                        <p class="font-semibold text-lg text-gray-900">{{ setting('store_name', 'StocKita ') }}</p>
+                        <p class="font-semibold text-lg text-gray-900">{{ setting('store.name', 'StocKita ') }}</p>
                     </div>
                     <div class="space-y-1">
                         <p class="text-sm font-medium text-gray-500">Email</p>
-                        <p class="font-semibold text-gray-900">{{ setting('store_email', 'StocKita@gmail.com') }}</p>
+                        <p class="font-semibold text-gray-900">{{ setting('store.email', 'StocKita@gmail.com') }}</p>
                     </div>
                     <div class="space-y-1">
                         <p class="text-sm font-medium text-gray-500">No HP</p>
-                        <p class="font-semibold text-gray-900">{{ setting('store_phone', '0812-3456-7890') }}</p>
+                        <p class="font-semibold text-gray-900">{{ setting('store.phone', '0812-3456-7890') }}</p>
                     </div>
                     <div class="space-y-1">
                         <p class="text-sm font-medium text-gray-500">Alamat</p>
                         <p class="font-semibold text-gray-900">
                             {{ setting(
-                                'store_address',
+                                'store.address',
                                 'Jl. Sudirman No. 123 (Samping Bank BCA), RT 01/RW 04, Kel. Menteng, Kec. Menteng, Kota Jakarta Pusat, DKI Jakarta, 10310 Telp/WA: 0812-3456-7890',
                             ) }}
                         </p>
@@ -83,7 +83,7 @@
                     $template = setting('email.welcome');
 
                     $template = str_replace(
-                        ['{{ name }}', '{{ store_name }}'],
+                        ['{{ name }}', '{{ store.name }}'],
                         ['Customer', setting('store.name')],
                         $template,
                     );
@@ -150,13 +150,13 @@
 
                     <div>
                         <label class="text-sm font-medium">Nama Aplikasi</label>
-                        <input type="text" name="app.name" value="{{ setting('store_name', 'StocKita ') }}"
+                        <input type="text" name="app[name]" value="{{ setting('store.name', 'StocKita ') }}"
                             class="w-full border px-3 py-2 rounded-xl">
                     </div>
 
                     <div>
                         <label class="text-sm font-medium">Deskripsi</label>
-                        <input type="text" name="app.description" value="{{ setting('store_email', 'Deskripsi') }}"
+                        <input type="text" name="app[description]" value="{{ setting('store.email', 'Deskripsi') }}"
                             class="w-full border px-3 py-2 rounded-xl">
                     </div>
                 </div>
@@ -200,28 +200,28 @@
 
                     <div>
                         <label class="text-sm font-medium">Nama Toko</label>
-                        <input type="text" name="store.name" value="{{ setting('store_name', 'StocKita ') }}"
+                        <input type="text" name="store[name]" value="{{ setting('store.name', 'StocKita ') }}"
                             class="w-full border px-3 py-2 rounded-xl">
                     </div>
 
                     <div>
                         <label class="text-sm font-medium">Email</label>
-                        <input type="email" name="store.email"
-                            value="{{ setting('store_email', 'StocKita@gmail.com') }}"
+                        <input type="email" name="store[email]"
+                            value="{{ setting('store.email', 'StocKita@gmail.com') }}"
                             class="w-full border px-3 py-2 rounded-xl">
                     </div>
 
                     <div>
                         <label class="text-sm font-medium">No HP</label>
-                        <input type="text" name="store.phone"
-                            value="{{ setting('store_phone', '0812-3456-7890') }}"
+                        <input type="text" name="store[phone]"
+                            value="{{ setting('store.phone', '0812-3456-7890') }}"
                             class="w-full border px-3 py-2 rounded-xl">
                     </div>
 
                     <div>
                         <label class="text-sm font-medium">Alamat</label>
-                        <textarea name="store.address" class="w-full h-32 border px-3 py-2 rounded-xl"> {{ setting(
-                            'store_address',
+                        <textarea name="store[address]" class="w-full h-32 border px-3 py-2 rounded-xl"> {{ setting(
+                            'store.address',
                             'Jl. Sudirman No. 123 (Samping Bank BCA), RT 01/RW 04, Kel. Menteng, Kec. Menteng, Kota Jakarta Pusat, DKI Jakarta, 10310 Telp/WA: 0812-3456-7890',
                         ) }}</textarea>
                     </div>

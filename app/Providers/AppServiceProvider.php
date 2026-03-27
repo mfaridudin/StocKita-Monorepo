@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (Schema::hasTable('settings')) {
-            $appName = Setting::where('key', 'app_name')->value('value');
+            $appName = Setting::where('key', 'app.name')->value('value');
 
             if ($appName) {
                 Config::set('app.name', $appName);
