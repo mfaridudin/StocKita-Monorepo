@@ -1,9 +1,10 @@
 <x-app-layout title="Gudang">
     <div class="space-y-4">
 
-        <div class="flex justify-between">
+        <div x-data class="flex justify-between">
             <h1 class="text-lg font-semibold">Gudang</h1>
-            <button id="openWarehouseModal" class="px-4 py-2 bg-green-600 text-white rounded-lg">
+            <button @click="$dispatch('open-modal', { name: 'create-warehouse' })"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg">
                 + Tambah
             </button>
         </div>
@@ -29,25 +30,19 @@
                             <td class="p-3 text-gray-500">{{ $w->location }}</td>
                             <td class="p-3 text-gray-500">{{ $w->description }}</td>
 
-                            <td class="px-6 py-4 text-right">
+                            <td x-data class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
 
-                                    <a href="/products/{{ $w->id }}/edit"
+                                    <a href="/warehouse/{{ $w->id }}"
                                         class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                                        Edit
+                                        Detail
                                     </a>
 
-                                    <form action="/products/{{ $w->id }}" method="POST"
-                                        onsubmit="return confirm('Yakin hapus produk?')">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button
-                                            class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
-                                            Hapus
-                                        </button>
-                                    </form>
-
+                                    <button
+                                        @click="$dispatch('open-modal', { name: 'delete-warehouse', id: {{ $w->id }} })"
+                                        class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                                        Hapus
+                                    </button>
                                 </div>
                             </td>
 
@@ -63,19 +58,18 @@
             </table>
         </div>
     </div>
-
-    {{-- modal add --}}
-    <div id="warehouseModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
-
-        <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 relative">
-
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold">Tambah Gudang</h2>
-                <button id="closeWarehouseModal" class="text-gray-400 hover:text-gray-600">✕</button>
+    {{-- create modal --}}
+    <x-modal name="create-warehouse" maxWidth="lg">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold">Tambah Gudang Baru</h3>
+                <button type="button" @click="$dispatch('close-modal', 'create-warehouse')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
             </div>
-
-            <!-- Form -->
             <form action="/warehouse" method="POST" class="space-y-4">
                 @csrf
                 @method('POST')
@@ -108,45 +102,58 @@
                     </button>
                 </div>
             </form>
-
         </div>
-    </div>
+    </x-modal>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const modal = document.getElementById("warehouseModal");
-            const openBtn = document.getElementById("openWarehouseModal");
-            const closeBtn = document.getElementById("closeWarehouseModal");
-            const cancelBtn = document.getElementById("cancelWarehouseModal");
+    {{-- delete modal --}}
+    <x-modal name="delete-warehouse" maxWidth="md">
+        <div x-data="{ warehouseId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'delete-warehouse') {
+                warehouseId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Hapus Gudang
+                </h3>
 
-            openBtn.onclick = () => {
-                modal.classList.remove("hidden");
-                modal.classList.add("flex");
+                <button type="button" @click="$dispatch('close-modal', 'delete-warehouse')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
 
-                gsap.fromTo(modal.firstElementChild, {
-                    scale: 0.8,
-                    opacity: 0,
-                    y: 20
-                }, {
-                    scale: 1,
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.25,
-                    ease: "power3.out"
-                });
-            };
+            <div class="text-center space-y-3">
+                <p class="text-gray-700 text-md">
+                    Apakah kamu yakin ingin menghapus gudang ini?
+                </p>
 
-            function closeModal() {
-                modal.classList.add("hidden");
-                modal.classList.remove("flex");
-            }
+                <p class="text-sm text-gray-400">
+                    Data yang dihapus tidak dapat dikembalikan.
+                </p>
+            </div>
 
-            closeBtn.onclick = closeModal;
-            cancelBtn.onclick = closeModal;
+            <form :action="`/warehouse/${warehouseId}`" method="POST" class="mt-6">
+                @csrf
+                @method('DELETE')
 
-            modal.addEventListener("click", (e) => {
-                if (e.target === modal) closeModal();
-            });
-        });
-    </script>
+                <div class="flex gap-3">
+                    <button type="button" @click="$dispatch('close-modal', 'delete-warehouse')"
+                        class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-sm hover:shadow transition">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-modal>
+
 </x-app-layout>

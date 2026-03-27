@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WarehouseStoreRequest;
+use App\Models\Product;
+use App\Models\Stock;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
@@ -55,7 +57,7 @@ class WarehouseController extends Controller
             'description' => $request->description,
         ]);
 
-        return view('warehouse.index');
+        return redirect()->back();
     }
 
     /**
@@ -63,7 +65,15 @@ class WarehouseController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $warehouse = Warehouse::findOrFail($id);
+
+        $products = Product::all();
+
+        $stocks = Stock::with('product')
+            ->where('warehouse_id', $id)
+            ->get();
+
+        return view('warehouse.show', compact('warehouse', 'stocks', 'products'));
     }
 
     /**
@@ -87,6 +97,10 @@ class WarehouseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $warehouse = Warehouse::findOrFail($id);
+
+        $warehouse->delete();
+
+        return redirect()->back();
     }
 }
