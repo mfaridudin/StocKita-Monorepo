@@ -14,7 +14,7 @@
                                     clip-rule="evenodd" />
                             </svg>
 
-                            Dashboard Toko
+                            Dashboard Toko {{ setting('store.name') }}
                         </h1>
                         <p class="text-emerald-700 mt-1 font-medium">Selamat datang kembali, Owner!</p>
                     </div>
@@ -149,8 +149,78 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div class="lg:col-span-3">
+                    <div class="bg-white/70 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-green-200">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-bold text-emerald-900 flex items-center gap-3">
+                                <i class="fas fa-chart-line"></i>
+                                Trend Revenue & Order
+                            </h3>
+                            <form method="GET">
+                                <select name="range" onchange="this.form.submit()"
+                                    class="px-4 py-2 border border-green-500 rounded-xl bg-white/50">
+
+                                    <option value="7" {{ $range == 7 ? 'selected' : '' }}>7 Hari Terakhir</option>
+                                    <option value="30" {{ $range == 30 ? 'selected' : '' }}>30 Hari</option>
+                                    <option value="90" {{ $range == 90 ? 'selected' : '' }}>3 Bulan</option>
+                                </select>
+                            </form>
+                        </div>
+                        <canvas id="revenueChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    {{-- chart.JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('revenueChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: @json($chartLabels),
+                        datasets: [{
+                                label: 'Revenue',
+                                data: @json($chartRevenue),
+                                borderWidth: 3,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Order',
+                                data: @json($chartOrders),
+                                borderWidth: 3,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        if (context.dataset.label === 'Revenue') {
+                                            return 'Rp ' + context.raw.toLocaleString('id-ID');
+                                        }
+                                        return context.raw + ' order';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 
     <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');

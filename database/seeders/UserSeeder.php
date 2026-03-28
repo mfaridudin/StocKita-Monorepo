@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
                 ]
             );
 
-            $user->syncRoles([$data['role']]); // lebih aman dari assignRole
+            $user->syncRoles([$data['role']]);
         }
     }
 }

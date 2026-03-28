@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Stock;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // total order
         $totalOrder = Transaction::count();
@@ -67,6 +68,29 @@ class DashboardController extends Controller
             $percentLow = (($todayLow - $yesterdayLow) / $yesterdayLow) * 100;
         }
 
+        // statistik chart
+        $range = $request->get('range', 7);
+
+    $data = collect();
+
+    for ($i = $range - 1; $i >= 0; $i--) {
+        $date = Carbon::today()->subDays($i);
+
+        $revenue = Transaction::whereDate('created_at', $date)->sum('total');
+        $orders = Transaction::whereDate('created_at', $date)->count();
+
+        $data->push([
+            'date' => $date->format('d M'),
+            'revenue' => $revenue,
+            'orders' => $orders,
+        ]);
+    }
+
+    $chartLabels = $data->pluck('date');
+    $chartRevenue = $data->pluck('revenue');
+    $chartOrders = $data->pluck('orders');
+
+
         return view('dashboard', compact(
             'totalOrder',
             'today',
@@ -80,7 +104,11 @@ class DashboardController extends Controller
             'yesterdayStock',
             'percentStock',
             'lowStockCount',
-            'percentLow'
+            'percentLow',
+            'chartLabels',
+            'chartRevenue',
+            'chartOrders',
+            'range'
         ));
     }
 }
