@@ -11,15 +11,16 @@
                         </p>
                     </div>
                     <div class="p-3 bg-green-100 rounded-xl">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2M7 20H2v-2"></path>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5 text-green-600">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                         </svg>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gradient-to-br from-green-500 to-emerald-600 p-5 rounded-2xl text-white shadow-md">
+            <div class="bg-green-500 p-5 rounded-2xl text-white shadow-md">
                 <p class="text-sm opacity-90">Exclusive</p>
                 <p class="text-2xl font-bold mt-1">{{ number_format($stats['exclusive']) }}</p>
             </div>
@@ -45,14 +46,14 @@
 
                 <div class="flex flex-wrap gap-3">
                     <select
-                        class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all bg-white shadow-sm hover:shadow-md">
+                        class="px-8 py-2.5 border border-gray-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white shadow-sm hover:shadow-md">
                         <option value="">Semua Status</option>
                         <option value="active">Aktif</option>
                         <option value="inactive">Tidak Aktif</option>
                     </select>
 
                     <select
-                        class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all bg-white shadow-sm hover:shadow-md">
+                        class="px-8 py-2.5 border border-gray-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white shadow-sm hover:shadow-md">
                         <option value="">Semua Tipe</option>
                         <option value="regular">Regular</option>
                         <option value="exclusive">Exclusive</option>
@@ -63,7 +64,7 @@
                     <div class="relative w-full max-w-[600px]">
 
                         <input type="text" placeholder="Cari nama, email, atau nomor telepon..."
-                            class="w-full pl-10 py-3 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white shadow-sm">
+                            class="w-full pl-10 py-3 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm">
 
                         <div class="absolute left-2 top-3 text-gray-400 pointer-events-none">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +76,7 @@
 
                     </div>
 
-                    <button
+                    {{-- <button
                         class="px-5 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl text-sm font-medium shadow-sm hover:shadow-md transition-all flex items-center gap-2 border border-gray-200">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -83,10 +84,10 @@
                             </path>
                         </svg>
                         Export
-                    </button>
+                    </button> --}}
 
                     <button @click="$dispatch('open-modal', { name: 'create-customer' })"
-                        class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+                        class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -136,7 +137,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <span
-                                        class="px-3 py-1 {{ $customer->type === 'exclusive' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }} rounded-full text-xs font-medium">
+                                        class="px-3 py-1 {{ $customer->type === 'exclusive' ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-800' }} rounded-full text-xs font-medium">
                                         {{ ucfirst($customer->type) }}
                                     </span>
                                 </td>
@@ -148,18 +149,28 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div x-data class="flex items-center gap-2">
-                                        <button onclick="openEmailModal({{ $customer->id }})"
-                                            class="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs rounded-lg font-medium transition-all shadow-sm">
-                                            📧 Email
-                                        </button>
-                                        <a href="{{ route('customers.show', $customer->id) }}"
-                                            class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.5h3m10.5 0v-3.5L9.5 10.5l-3 3v6.5">
-                                                </path>
+                                        <button title="Hapus Pelanggan"
+                                            class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-all"
+                                            @click="$dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                                             </svg>
+
+                                        </button>
+                                        <a title="Detail Pelanggan"
+                                            href="{{ route('customers.show', $customer->id) }}"
+                                            class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            </svg>
+
                                         </a>
                                         <button title="Hapus Pelanggan"
                                             class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-gray-100 rounded-lg transition-all"

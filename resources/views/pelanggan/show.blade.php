@@ -191,7 +191,7 @@
                     </button>
                     <button type="submit"
                         class="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium">
-                        Simpan Pelanggan
+                        Simpan Perubahan
                     </button>
                 </div>
             </form>
