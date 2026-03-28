@@ -64,7 +64,15 @@ class StockController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $stock = Stock::findOrFail($id);
+        $qty = $stock->qty;
+        $addQty = $request->qty;
+        $updateQty = $qty + $addQty;
+        $stock->update([
+            'qty' => $updateQty,
+        ]);
+
+        return redirect()->back();
     }
 
     /**

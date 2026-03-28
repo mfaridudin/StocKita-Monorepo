@@ -25,8 +25,8 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-4">
-                    <button id="openStockModal"
+                <div x-data class="flex flex-wrap gap-4">
+                    <button @click="$dispatch('open-modal', {name:'create-stock'})"
                         class="group relative px-6 py-3 bg-green-500 text-white font-semibold rounded-2xl shadow-md transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -61,7 +61,7 @@
                 <div
                     class="bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
 
-                    <div class="relative h-40 bg-gray-100 overflow-hidden">
+                    <div x-data class="relative h-40 bg-gray-100 overflow-hidden">
                         <img src="{{ asset('storage/' . $stock->product->image) }}"
                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                         <span
@@ -69,14 +69,13 @@
                             {{ $stock->qty }}
                         </span>
 
-                        <span
+                        <button @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} })"
                             class="absolute top-3 right-2 flex items-center justify-center w-7 h-7 bg-green-500/90 backdrop-blur-sm text-white rounded-xl shadow-lg border border-white/50 group-hover:bg-green-600 transition-all duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
-                        </span>
+                        </button>
                     </div>
 
                     <div class="p-4 space-y-2">
@@ -106,16 +105,18 @@
 
     </div>
 
-
-    {{-- modal  --}}
-    <div id="stockModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
-
-        <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 relative">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold">Tambah Barang</h2>
-                <button id="closeStockModal" class="text-gray-400 hover:text-gray-600">✕</button>
+    {{-- create modal --}}
+    <x-modal name="create-stock" maxWidth="md">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold">Tambah Barang</h3>
+                <button type="button" @click="$dispatch('close-modal', 'create-stock')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
             </div>
-
             <form action="{{ route('stocks.store') }}" method="POST" class="space-y-4">
                 @csrf
 
@@ -140,7 +141,8 @@
                 <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
 
                 <div class="flex justify-end gap-2 pt-3">
-                    <button type="button" id="closeModal" class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
+                    <button @click="$dispatch('close-modal', 'create-stock')" type="button" id="closeModal"
+                        class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
                         Batal
                     </button>
 
@@ -151,44 +153,50 @@
 
             </form>
         </div>
-    </div>
+    </x-modal>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const modal = document.getElementById("stockModal");
-            const openBtn = document.getElementById("openStockModal");
-            const closeBtn = document.getElementById("closeStockModal");
-            const cancelBtn = document.getElementById("cancelStockModal");
+    {{-- add stock --}}
+    <x-modal name="add-stock" maxWidth="md">
+        <div x-data="{ stockId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'add-stock') {
+                stockId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold">Tambah Stok</h3>
+                <button type="button" @click="$dispatch('close-modal', 'add-stock')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <form :action="`/stocks/${stockId}`" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
 
-            openBtn.onclick = () => {
-                modal.classList.remove("hidden");
-                modal.classList.add("flex");
+                <div>
+                    <label class="text-sm font-medium">Masukan Stok</label>
+                    <input type="number" name="qty"
+                        class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                </div>
+                <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
 
-                gsap.fromTo(modal.firstElementChild, {
-                    scale: 0.8,
-                    opacity: 0,
-                    y: 20
-                }, {
-                    scale: 1,
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.25,
-                    ease: "power3.out"
-                });
-            };
+                <div class="flex justify-end gap-2 pt-3">
+                    <button @click="$dispatch('close-modal', 'add-stock')" type="button" id="closeModal"
+                        class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
+                        Batal
+                    </button>
 
-            function closeModal() {
-                modal.classList.add("hidden");
-                modal.classList.remove("flex");
-            }
+                    <button type="submit" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg">
+                        Simpan
+                    </button>
+                </div>
 
-            closeBtn.onclick = closeModal;
-            cancelBtn.onclick = closeModal;
-
-            modal.addEventListener("click", (e) => {
-                if (e.target === modal) closeModal();
-            });
-        });
-    </script>
+            </form>
+        </div>
+    </x-modal>
 
 </x-app-layout>

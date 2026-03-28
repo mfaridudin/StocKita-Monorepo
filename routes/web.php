@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingController::class, 'index']);
     Route::post('/settings', [SettingController::class, 'update']);
     Route::post('/stocks', [StockController::class, 'store'])->name('stocks.store');
+    Route::put('/stocks/{id}', [StockController::class, 'update'])->name('stocks.update');
 
     Route::put('/product/update-img/{id}', [ProductController::class, 'updateImage'])->name('products.update-image');
 });

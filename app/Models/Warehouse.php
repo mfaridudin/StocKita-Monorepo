@@ -12,4 +12,14 @@ class Warehouse extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
+
+    public function transactionItems()
+    {
+        return $this->hasMany(TransactionItem::class);
+    }
 }
