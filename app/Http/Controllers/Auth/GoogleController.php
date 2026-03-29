@@ -28,8 +28,9 @@ class GoogleController extends Controller
                 'email' => $googleUser->email,
                 'email_verified_at' => now(),
                 'password' => bcrypt('password123'),
-                'role' => 'owner',
             ]);
+
+            $user->assignRole('owner');
         }
 
         Auth::login($user);
