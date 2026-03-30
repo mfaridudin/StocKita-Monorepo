@@ -21,6 +21,17 @@
             </a>
         @endrole
 
+        @role('buyer')
+            <a href="/buyer/dashboard" class="nav-item {{ $currentPath == 'buyer/dashboard' ? 'active' : '' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                </svg>
+                <span class="sidebar-text will-change-transform">Dashboard</span>
+            </a>
+        @endrole
+
         @role('admin|owner')
             <a href="/products" class="nav-item {{ str_starts_with($currentPath, 'products') ? 'active' : '' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,6 +82,19 @@
                     </path>
                 </svg>
                 <span class="sidebar-text will-change-transform">Pelanggan</span>
+            </a>
+        @endrole
+
+
+        @role('buyer')
+            <a href="/buyer/orders" class="nav-item {{ str_starts_with($currentPath, 'buyer/orders') ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+
+                <span class="sidebar-text will-change-transform">Riwayat</span>
             </a>
         @endrole
 
