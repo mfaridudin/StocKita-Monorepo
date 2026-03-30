@@ -4,7 +4,10 @@
 
         <div class="flex items-center gap-4">
             <button onclick="history.back()" class="p-2 text-gray-500 hover:bg-gray-100 rounded-xl">
-                ←
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>
             </button>
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Transaksi Baru</h1>
@@ -69,7 +72,18 @@
                 <div class="lg:col-span-4 space-y-4">
                     <div class="bg-white p-6 rounded-2xl border">
                         <h4 class="font-semibold mb-3">Customer</h4>
-                        <input id="customerName" class="w-full border px-3 py-2 rounded-xl" placeholder="Nama customer">
+
+                        <input type="text" id="customerInput" class="w-full border px-3 py-2 rounded-xl"
+                            placeholder="Cari / isi nama customer">
+
+                        <!-- hasil ID kalau pilih dari database -->
+                        <input type="hidden" name="customer_id" id="customerId">
+
+                        <!-- fallback kalau bukan dari database -->
+                        <input type="hidden" name="customer_name" id="customerName">
+
+                        <!-- dropdown hasil search -->
+                        <div id="customerDropdown" class="mt-2 bg-white border rounded-xl hidden"></div>
                     </div>
                     {{-- cart --}}
                     <div class="bg-white p-6 rounded-2xl border flex flex-col h-[420px]">
@@ -141,7 +155,8 @@
                 </div>
 
                 <div class="flex justify-end gap-2">
-                    <button @click="$dispatch('close-modal', 'payment-modal')" class="px-4 py-2 bg-gray-200 rounded-xl">
+                    <button @click="$dispatch('close-modal', 'payment-modal')"
+                        class="px-4 py-2 bg-gray-200 rounded-xl">
                         Batal
                     </button>
                     <button onclick="submitTransaction()" class="px-4 py-2 bg-green-500 text-white rounded-xl">
@@ -381,6 +396,7 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify({
+                        customer_id: document.getElementById('customerId').value,
                         customer_name: document.getElementById('customerName').value,
                         type: 'out',
                         paid: paid,
@@ -394,6 +410,8 @@
                         }))
                     })
                 });
+
+                
 
                 const data = await res.json();
 
@@ -409,6 +427,52 @@
                 alert('Server error');
             }
         }
+    </script>
+    <script>
+        const input = document.getElementById('customerInput');
+        const dropdown = document.getElementById('customerDropdown');
+        const customerId = document.getElementById('customerId');
+        const customerName = document.getElementById('customerName');
+
+        input.addEventListener('input', async () => {
+            let q = input.value;
+
+            // reset dulu
+            customerId.value = '';
+            customerName.value = q;
+
+            if (q.length < 2) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+
+            let res = await fetch(`/customers/search?q=${q}`);
+            let data = await res.json();
+
+            dropdown.innerHTML = '';
+
+            if (data.length === 0) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+
+            data.forEach(item => {
+                let div = document.createElement('div');
+                div.className = "p-2 hover:bg-gray-100 cursor-pointer";
+                div.innerText = item.name;
+
+                div.onclick = () => {
+                    input.value = item.name;
+                    customerId.value = item.id;
+                    customerName.value = ''; // kosongkan karena pakai ID
+                    dropdown.classList.add('hidden');
+                };
+
+                dropdown.appendChild(div);
+            });
+
+            dropdown.classList.remove('hidden');
+        });
     </script>
 
 </x-app-layout>

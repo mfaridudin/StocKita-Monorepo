@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -41,6 +42,13 @@ class UserSeeder extends Seeder
             );
 
             $user->syncRoles([$data['role']]);
+
+            if ($data['role'] === 'buyer') {
+                Customer::firstOrCreate([
+                    'user_id' => $user->id,
+                    'phone' => '+13059565677',
+                ]);
+            }
         }
     }
 }

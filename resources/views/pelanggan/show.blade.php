@@ -8,14 +8,14 @@
             <div class="flex items-center gap-4">
                 <div
                     class="w-14 h-14 bg-green-500 text-white flex items-center justify-center rounded-xl text-lg font-bold shadow">
-                    {{ strtoupper(substr($customer->name, 0, 1)) }}
+                    {{ strtoupper(substr($customer->user->name, 0, 1)) }}
                 </div>
 
                 <div>
                     <h2 class="text-xl font-bold text-gray-800">
-                        {{ $customer->name }}
+                        {{ $customer->user->name }}
                     </h2>
-                    <p class="text-sm text-gray-500">{{ $customer->email ?? '-' }}</p>
+                    <p class="text-sm text-gray-500">{{ $customer->user->email ?? '-' }}</p>
                     <p class="text-sm text-gray-500">{{ $customer->phone ?? '-' }}</p>
                 </div>
             </div>
@@ -82,7 +82,7 @@
 
                     <tbody class="divide-y">
 
-                        {{-- @forelse ($orders as $order)
+                        @forelse ($orders as $order)
                             <tr class="hover:bg-gray-50 transition">
 
                                 <td class="px-6 py-4">
@@ -102,7 +102,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-right">
-                                    <a href="/orders/{{ $order->id }}"
+                                    <a href="/transactions/{{ $order->id }}"
                                         class="text-blue-500 text-xs hover:underline">
                                         Detail
                                     </a>
@@ -115,7 +115,7 @@
                                     Belum ada transaksi
                                 </td>
                             </tr>
-                        @endforelse --}}
+                        @endforelse
 
                     </tbody>
 
@@ -142,12 +142,12 @@
                 @method('PUT')
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
-                    <input type="text" name="name" required value="{{ $customer->name }}"
+                    <input type="text" name="name" required value="{{ $customer->user->name }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input type="email" name="email" value="{{ $customer->email }}"
+                    <input type="email" name="email" value="{{ $customer->user->email }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                 </div>
                 <div class="grid grid-cols-2 gap-4">

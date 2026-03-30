@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerStoreRequest;
 use App\Models\Customer;
+use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -26,7 +29,8 @@ class CustomerController extends Controller
             'total' => Customer::count(),
             'exclusive' => Customer::exclusive()->count(),
             'active' => Customer::active()->count(),
-            'total_spent' => Customer::sum('total_spent'),
+            'total_spent' => Transaction::where('status', 'paid')
+                ->sum('total'),
         ];
 
         return view('pelanggan.index', compact('customers', 'stats'));
@@ -53,9 +57,16 @@ class CustomerController extends Controller
             }
         }
 
-        $customer = Customer::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'password' => Hash::make('password'),
+        ]);
+
+        $user->assignRole('buyer');
+
+        $customer = Customer::create([
+            'user_id' => $user->id,
             'type' => $request->type,
             'status' => $request->status,
             'phone' => $phone,
@@ -70,10 +81,21 @@ class CustomerController extends Controller
     public function show(string $id)
     {
         $customer = Customer::findOrFail($id);
-        $totalOrders = 10;
-        $totalSpent = 10;
+        $totalOrders = Transaction::where('customer_id', $customer->user->id)
+            ->where('status', 'paid')
+            ->count();
+        $totalSpent = Transaction::where('customer_id', $customer->user->id)
+            ->where('status', 'paid')
+            ->sum('total');
 
-        return view('pelanggan.show', compact('customer', 'totalOrders', 'totalSpent'));
+        $lastOrder = optional(Transaction::where('customer_id', $customer->user->id)
+            ->latest()
+            ->first())->created_at;
+        $orders = Transaction::where('customer_id', $customer->user->id)->get();
+
+        // dd($orders);
+
+        return view('pelanggan.show', compact('customer', 'totalOrders', 'totalSpent', 'lastOrder', 'orders'));
     }
 
     /**
@@ -90,6 +112,8 @@ class CustomerController extends Controller
     public function update(Request $request, string $id)
     {
         $customer = Customer::findOrFail($id);
+        $user = User::findOrFail($customer->user->id);
+
         $phone = preg_replace('/[^0-9+]/', '', $request->phone);
         if (! str_starts_with($phone, '+')) {
             if (str_starts_with($phone, '0')) {
@@ -97,9 +121,12 @@ class CustomerController extends Controller
             }
         }
 
-        $customer->update([
+        $user->update([
             'name' => $request->name,
             'email' => $request->email,
+        ]);
+
+        $customer->update([
             'type' => $request->type,
             'status' => $request->status,
             'phone' => $phone,
@@ -114,7 +141,8 @@ class CustomerController extends Controller
     public function destroy(string $id)
     {
         $customer = Customer::findOrFail($id);
-        $customer->delete();
+        $user = User::findOrFail($customer->user->id);
+        $user->delete();
 
         return redirect()->back();
     }

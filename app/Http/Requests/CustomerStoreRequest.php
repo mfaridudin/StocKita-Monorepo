@@ -24,7 +24,7 @@ class CustomerStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:customers,email',
+            'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|max:25',
             'type' => 'required|in:regular,exclusive',
             'status' => 'required|in:active,inactive',

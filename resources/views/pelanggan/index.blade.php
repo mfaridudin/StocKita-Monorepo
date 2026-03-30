@@ -107,8 +107,6 @@
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Pelanggan</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Kontak</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Tipe</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Total Belanja
-                            </th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase w-32">Aksi</th>
                         </tr>
                     </thead>
@@ -120,12 +118,12 @@
                                         <div
                                             class="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center">
                                             <span class="text-white font-semibold text-sm">
-                                                {{ substr($customer->name, 0, 1) }}
+                                                {{ substr($customer->user->name, 0, 1) }}
                                             </span>
                                         </div>
                                         <div>
-                                            <div class="font-medium text-gray-900">{{ $customer->name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $customer->email ?? '-' }}</div>
+                                            <div class="font-medium text-gray-900">{{ $customer->user->name }}</div>
+                                            <div class="text-sm text-gray-500">{{ $customer->user->email ?? '-' }}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -142,12 +140,6 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="text-sm font-semibold text-gray-900">
-                                        Rp {{ number_format($customer->total_spent, 0, ',', '.') }}
-                                    </div>
-                                    <div class="text-xs text-gray-500">{{ $customer->total_orders }} pesanan</div>
-                                </td>
-                                <td class="px-6 py-4">
                                     <div x-data class="flex items-center gap-2">
                                         <button title="Hapus Pelanggan"
                                             class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-all"
@@ -159,8 +151,7 @@
                                             </svg>
 
                                         </button>
-                                        <a title="Detail Pelanggan"
-                                            href="{{ route('customers.show', $customer->id) }}"
+                                        <a title="Detail Pelanggan" href="{{ route('customers.show', $customer->id) }}"
                                             class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

@@ -10,6 +10,11 @@ use libphonenumber\PhoneNumberUtil;
 #[Guarded(['id'])]
 class Customer extends Model
 {
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function scopeFilter($query)
     {
         return $query

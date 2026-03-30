@@ -47,6 +47,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         DB::beginTransaction();
 
         try {
@@ -73,7 +74,8 @@ class TransactionController extends Controller
 
             $transaction = Transaction::create([
                 'invoice_code' => $invoice,
-                'customer_id' => $request->customer_id ?? null,
+                'customer_id' => $request->filled('customer_id') ? $request->customer_id : null,
+                'customer_name' => $request->filled('customer_id') ? null : $request->customer_name,
                 'total' => $total,
                 'payment_method' => $request->payment_method,
                 'paid_at' => $request->paid_at,
@@ -82,7 +84,6 @@ class TransactionController extends Controller
                 'change' => $change,
                 'status' => 'paid',
                 'created_by' => auth()->id(),
-
             ]);
 
             foreach ($request->items as $item) {
@@ -219,7 +220,7 @@ class TransactionController extends Controller
 
         $y = 30;
 
-        $img->text(strtoupper(setting('store_name') ?? 'TOKO'), $center, $y, function ($font) use ($fontPath) {
+        $img->text(strtoupper(setting('store.name') ?? 'TOKO'), $center, $y, function ($font) use ($fontPath) {
             $font->file($fontPath);
             $font->size(22);
             $font->align('center');
@@ -227,7 +228,7 @@ class TransactionController extends Controller
 
         $y += 25;
 
-        $address = strtoupper(setting('store_address') ?? 'ALAMAT TOKO');
+        $address = strtoupper(setting('store.address') ?? 'ALAMAT TOKO');
 
         $charPerLine = floor(($width - ($leftX * 2)) / 7);
         $lines = explode("\n", wordwrap($address, $charPerLine, "\n", true));
