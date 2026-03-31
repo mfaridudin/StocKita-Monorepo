@@ -45,4 +45,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(MidtransTransaction::class);
     }
+
+    // batas subsribe
+    public function canCreateProduct()
+    {
+        $subscription = $this->subscription;
+
+        if (! $subscription || $subscription->status !== 'active') {
+            return false;
+        }
+
+        return $this->products()->count() < $subscription->plan->max_products;
+    }
 }
