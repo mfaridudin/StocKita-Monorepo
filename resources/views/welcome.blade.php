@@ -61,10 +61,10 @@
         class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-slate-200/50">
         <nav class="max-w-7xl mx-auto py-4 flex items-center justify-between">
             {{-- logo --}}
-            <div class="flex items-center gap-3">
+            <a href="/" class="flex items-center gap-3">
                 <div
-                    class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <i class="fas fa-store text-2xl text-white"></i>
+                    class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg">
+                    <img src="/image/icon/icon.png" alt="icon">
                 </div>
                 <div>
                     <h1
@@ -72,7 +72,7 @@
                         StocKita</h1>
                     <p class="text-xs text-slate-500 font-medium">Inventory Pro</p>
                 </div>
-            </div>
+            </a>
 
             {{-- nav --}}
             <ul class="hidden md:flex items-center gap-8 mx-auto">
@@ -104,8 +104,7 @@
                 <!-- SEARCH -->
                 <div class="relative hidden lg:block group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor"
-                        class="size-6 absolute left-4 top-1/2 -translate-y-1/2">
+                        stroke="currentColor" class="size-6 absolute left-4 top-1/2 -translate-y-1/2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
