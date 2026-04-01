@@ -6,24 +6,25 @@ use App\Models\Stock;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
         // total order
-        $totalOrder = Transaction::count();
-        $today = Transaction::whereDate('created_at', Carbon::today())->count();
-        $yesterday = Transaction::whereDate('created_at', Carbon::yesterday())->count();
+        $totalOrder = Transaction::where('store_id', Auth::user()->store->id)->count();
+        $today = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::today())->count();
+        $yesterday = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::yesterday())->count();
         $percent = 0;
         if ($yesterday > 0) {
             $percent = (($today - $yesterday) / $yesterday) * 100;
         }
 
         // revenue
-        $todayRevenue = Transaction::whereDate('created_at', Carbon::today())
+        $todayRevenue = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::today())
             ->sum('total');
-        $yesterdayRevenue = Transaction::whereDate('created_at', Carbon::yesterday())
+        $yesterdayRevenue = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::yesterday())
             ->sum('total');
 
         $percentRevenue = 0;
@@ -32,13 +33,15 @@ class DashboardController extends Controller
             $percentRevenue = (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100;
         }
 
+        $warehouseIds = Auth::user()->store->warehouse->pluck('id');
         // stok ready
-        $totalStock = Stock::sum('qty');
+        $totalStock = Stock::whereIn('warehouse_id', $warehouseIds)->sum('qty');
 
-        $todayStock = Stock::whereDate('updated_at', Carbon::today())
+        $todayStock = Stock::whereIn('warehouse_id', $warehouseIds)
+            ->whereDate('updated_at', Carbon::today())
             ->sum('qty');
 
-        $yesterdayStock = Stock::whereDate('updated_at', Carbon::yesterday())
+        $yesterdayStock = Stock::whereIn('warehouse_id', $warehouseIds)->whereDate('updated_at', Carbon::yesterday())
             ->sum('qty');
 
         $percentStock = 0;
@@ -48,16 +51,16 @@ class DashboardController extends Controller
         }
 
         // low stok
-        $lowStockCount = Stock::where('qty', '<=', 5)
+        $lowStockCount = Stock::whereIn('warehouse_id', $warehouseIds)->where('qty', '<=', 5)
             ->where('qty', '>', 0)
             ->count();
 
-        $todayLow = Stock::where('qty', '<=', 5)
+        $todayLow = Stock::whereIn('warehouse_id', $warehouseIds)->where('qty', '<=', 5)
             ->where('qty', '>', 0)
             ->whereDate('updated_at', Carbon::today())
             ->count();
 
-        $yesterdayLow = Stock::where('qty', '<=', 5)
+        $yesterdayLow = Stock::whereIn('warehouse_id', $warehouseIds)->where('qty', '<=', 5)
             ->where('qty', '>', 0)
             ->whereDate('updated_at', Carbon::yesterday())
             ->count();
@@ -71,25 +74,24 @@ class DashboardController extends Controller
         // statistik chart
         $range = $request->get('range', 7);
 
-    $data = collect();
+        $data = collect();
 
-    for ($i = $range - 1; $i >= 0; $i--) {
-        $date = Carbon::today()->subDays($i);
+        for ($i = $range - 1; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
 
-        $revenue = Transaction::whereDate('created_at', $date)->sum('total');
-        $orders = Transaction::whereDate('created_at', $date)->count();
+            $revenue = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', $date)->sum('total');
+            $orders = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', $date)->count();
 
-        $data->push([
-            'date' => $date->format('d M'),
-            'revenue' => $revenue,
-            'orders' => $orders,
-        ]);
-    }
+            $data->push([
+                'date' => $date->format('d M'),
+                'revenue' => $revenue,
+                'orders' => $orders,
+            ]);
+        }
 
-    $chartLabels = $data->pluck('date');
-    $chartRevenue = $data->pluck('revenue');
-    $chartOrders = $data->pluck('orders');
-
+        $chartLabels = $data->pluck('date');
+        $chartRevenue = $data->pluck('revenue');
+        $chartOrders = $data->pluck('orders');
 
         return view('dashboard', compact(
             'totalOrder',

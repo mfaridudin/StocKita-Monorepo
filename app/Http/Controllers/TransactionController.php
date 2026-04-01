@@ -20,13 +20,26 @@ class TransactionController extends Controller
      */
     public function index()
     {
+        $storeId = Auth::user()->store->id;
+
+        $transactionQuery = Transaction::where('store_id', $storeId);
+
         $stats = [
-            'total' => Transaction::count(),
-            'total_amount' => Transaction::sum('total'),
-            'pending' => Transaction::where('status', '!=', 'paid')->count(),
-            'items' => TransactionItem::count(),
+            'total' => (clone $transactionQuery)->count(),
+
+            'total_amount' => (clone $transactionQuery)->sum('total'),
+
+            'pending' => (clone $transactionQuery)
+                ->where('status', '!=', 'paid')
+                ->count(),
+
+            'items' => TransactionItem::whereHas('transaction', function ($q) use ($storeId) {
+                $q->where('store_id', $storeId);
+            })->count(),
         ];
-        $transactions = Transaction::with('customer')
+
+        $transactions = $transactionQuery
+            ->with('customer')
             ->latest()
             ->paginate(10);
 

@@ -30,7 +30,7 @@ class CustomerController extends Controller
             'total' => Customer::where('store_id', Auth::user()->store->id)->count(),
             'exclusive' => Customer::where('store_id', Auth::user()->store->id)->exclusive()->count(),
             'active' => Customer::where('store_id', Auth::user()->store->id)->active()->count(),
-            'total_spent' => Transaction::where('status', 'paid')
+            'total_spent' => Transaction::where('store_id', Auth::user()->store->id)->where('status', 'paid')
                 ->sum('total'),
         ];
 
