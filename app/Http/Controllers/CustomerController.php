@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerStoreRequest;
+use App\Mail\SendCustomerEmail;
 use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class CustomerController extends Controller
 {
@@ -146,5 +148,16 @@ class CustomerController extends Controller
         $user->delete();
 
         return redirect()->back();
+    }
+
+    // kirim email
+    public function sendEmail($id)
+    {
+        $customer = Customer::findOrFail($id);
+
+        Mail::to($customer->user->email)
+            ->send(new SendCustomerEmail($customer));
+
+        return back()->with('success', 'Email berhasil dikirim!');
     }
 }

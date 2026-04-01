@@ -43,6 +43,8 @@ Route::middleware(['auth', 'role:admin|owner'])->group(function () {
     Route::resource('/categories', CategoryController::class);
     Route::resource('/warehouse', WarehouseController::class);
     Route::resource('customers', CustomerController::class);
+    Route::post('/customers/{id}/send-email', [CustomerController::class, 'sendEmail'])
+        ->name('customers.sendEmail');
     Route::resource('transactions', TransactionController::class);
 
     Route::get('/settings', [SettingController::class, 'index']);
