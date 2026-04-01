@@ -62,30 +62,28 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         if (! auth()->user()->canCreateTransaction()) {
-            return response()->json(['error' => true, 'message' => 'Limit transaksi habis'], 400);
+            return response()->json(['message' => 'Limit transaksi habis'], 400);
         }
+
         DB::beginTransaction();
 
         try {
             if (empty($request->items)) {
-                return response()->json(['error' => 'Keranjang kosong'], 400);
+                return response()->json(['message' => 'Keranjang kosong'], 422);
             }
 
             $invoice = 'INV-'.now()->format('YmdHis');
-
             $total = 0;
 
             foreach ($request->items as $item) {
                 $total += $item['qty'] * $item['price'];
             }
 
-            $paid = $request->paid;
+            $paid = $request->paid ?? 0;
             $change = $paid - $total;
 
             if ($change < 0) {
-                return response()->json([
-                    'error' => 'Uang kurang!',
-                ], 400);
+                return response()->json(['message' => 'Nominal bayar kurang!'], 422);
             }
 
             $transaction = Transaction::create([
@@ -104,15 +102,18 @@ class TransactionController extends Controller
             ]);
 
             foreach ($request->items as $item) {
-
                 $productId = $item['product_id'];
                 $qty = $item['qty'];
                 $price = $item['price'];
 
                 $totalStock = Stock::where('product_id', $productId)->sum('qty');
-
+                $product = Product::find($productId);
                 if ($totalStock < $qty) {
-                    throw new \Exception("Stok produk ID $productId tidak cukup");
+                    DB::rollBack();
+
+                    return response()->json([
+                        'message' => "Stok produk '{$product->name}' tidak cukup",
+                    ], 422);
                 }
 
                 $transactionItem = TransactionItem::create([
@@ -123,8 +124,7 @@ class TransactionController extends Controller
                     'subtotal' => $qty * $price,
                 ]);
 
-                // $total += $qty * $price;
-
+                // update stok
                 $stocks = Stock::where('product_id', $productId)
                     ->where('qty', '>', 0)
                     ->orderByDesc('qty')
@@ -134,45 +134,34 @@ class TransactionController extends Controller
                 $remaining = $qty;
 
                 foreach ($stocks as $stock) {
-
                     if ($remaining <= 0) {
                         break;
                     }
-
                     $take = min($stock->qty, $remaining);
-
                     $stock->decrement('qty', $take);
-
                     $remaining -= $take;
                 }
             }
 
-            $transaction->update([
-                'total' => $total,
-            ]);
+            $transaction->update(['total' => $total]);
 
             DB::commit();
 
             // buat struk
             $transaction->load('items.product');
-
             $receiptPath = $this->generateReceipt($transaction);
-
-            $transaction->update([
-                'receipt' => $receiptPath,
-            ]);
+            $transaction->update(['receipt' => $receiptPath]);
 
             return response()->json([
                 'message' => 'Transaksi berhasil',
                 'data' => $transaction,
-            ]);
+            ], 200);
 
         } catch (\Exception $e) {
-
             DB::rollBack();
 
             return response()->json([
-                'error' => $e->getMessage(),
+                'message' => 'Terjadi kesalahan: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -217,7 +206,7 @@ class TransactionController extends Controller
 
         $transaksi->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data transaksi berhasil dihapus');
 
     }
 

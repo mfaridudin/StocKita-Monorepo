@@ -1,5 +1,20 @@
 <x-app-layout title="Manajemen Transaksi & Stok">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+        <script>
+            let type =
+                "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: "{{ $message }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
+    
     <div class="space-y-6">
         <div class="flex justify-between items-center flex-wrap gap-3">
             <div>
@@ -138,8 +153,7 @@
                             Detail
                         </a>
 
-                        <button
-                            @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
+                        <button @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
                             class="px-3 py-2 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
                             Hapus
                         </button>

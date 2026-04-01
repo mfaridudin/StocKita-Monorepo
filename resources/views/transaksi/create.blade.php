@@ -1,5 +1,4 @@
 <x-app-layout title="Transaksi Baru">
-
     <div class="space-y-6">
 
         <div class="flex items-center gap-4">
@@ -76,15 +75,13 @@
                         <input type="text" id="customerInput" class="w-full border px-3 py-2 rounded-xl"
                             placeholder="Cari / isi nama customer">
 
-                        <!-- hasil ID kalau pilih dari database -->
                         <input type="hidden" name="customer_id" id="customerId">
 
-                        <!-- fallback kalau bukan dari database -->
                         <input type="hidden" name="customer_name" id="customerName">
 
-                        <!-- dropdown hasil search -->
                         <div id="customerDropdown" class="mt-2 bg-white border rounded-xl hidden"></div>
                     </div>
+
                     {{-- cart --}}
                     <div class="bg-white p-6 rounded-2xl border flex flex-col h-[420px]">
 
@@ -98,11 +95,6 @@
                                 <span>Total</span>
                                 <span id="grandTotal">Rp 0</span>
                             </div>
-
-                            {{-- <button id="submitBtn"
-                                class="w-full mt-3 bg-green-500 text-white py-3 rounded-xl font-semibold disabled:opacity-50">
-                                Simpan Transaksi
-                            </button> --}}
 
                             <button id="buttonSubmit" type="button"
                                 @click="$dispatch('open-modal', { name: 'payment-modal' })"
@@ -341,7 +333,6 @@
         }
 
         async function submitTransaction() {
-
             const paid = document.getElementById('paid').value;
             const payment_method = document.getElementById('payment_method').value;
             const paid_at = document.getElementById('paid_at').value;
@@ -370,20 +361,47 @@
                     })
                 });
 
-                
-
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert('Transaksi berhasil');
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Transaksi berhasil!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     location.href = '/transactions/' + data.data.id;
                 } else {
-                    alert(data.message || 'Gagal');
+                    let message = data.message || 'Gagal menyimpan transaksi';
+
+                    if (data.errors) {
+                        message = Object.values(data.errors).flat().join('<br>');
+                    }
+
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        position: 'top-end',
+                        title: 'Transaksi Gagal',
+                        html: message,
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
 
             } catch (err) {
                 console.error(err);
-                alert('Server error');
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'Terjadi kesalahan pada server, coba lagi nanti',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
         }
     </script>
@@ -423,7 +441,7 @@
                 div.onclick = () => {
                     input.value = item.name;
                     customerId.value = item.id;
-                    customerName.value = ''; // kosongkan karena pakai ID
+                    customerName.value = '';
                     dropdown.classList.add('hidden');
                 };
 
