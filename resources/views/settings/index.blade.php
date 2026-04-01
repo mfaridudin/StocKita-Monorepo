@@ -130,7 +130,7 @@
                 @else
                     <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 text-center">
                         <p class="text-gray-500">Belum ada paket aktif</p>
-                        <a href="{{ route('subscription.upgrade') }}"
+                        <a href="{{ route('subscription.index') }}"
                             class="mt-4 inline-block bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors shadow-sm hover:shadow-md">
                             Pilih Paket
                         </a>
