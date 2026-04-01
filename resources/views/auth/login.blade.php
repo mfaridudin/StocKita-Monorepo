@@ -1,4 +1,20 @@
 <x-guest-layout>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+        <script>
+            let type =
+                "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: "{{ $message }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
+    
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}" class="mx-auto p-2 ">
@@ -55,7 +71,7 @@
     </form>
 
 
-    <div class="max-w-md mx-auto px-8 mt-6">
+    <div class="max-w-md mx-auto mt-6">
         <div class="relative">
             <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t border-gray-300"></div>
@@ -66,7 +82,7 @@
         </div>
 
         <a href="/auth/google"
-            class="flex items-center justify-center w-full mt-6 bg-white border-2 border-green-200 hover:border-green-400 text-gray-800 hover:text-green-700 font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transition-all gap-3">
+            class="flex items-center justify-center w-full my-6 bg-white border-2 border-green-200 hover:border-green-400 text-gray-800 hover:text-green-700 font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transition-all gap-3">
             <svg class="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4"
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
