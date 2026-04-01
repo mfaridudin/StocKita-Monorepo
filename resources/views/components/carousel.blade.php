@@ -44,11 +44,8 @@
 
                             <div class="flex flex-col sm:flex-row gap-4 pt-4">
                                 <a href="/register"
-                                    class="group relative bg-white text-green-700 hover:bg-green-50 px-10 py-6 rounded-3xl font-black text-xl shadow-2xl hover:shadow-white/50 hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20 hover:border-green-200/50">
+                                    class="group relative bg-white text-green-700 hover:bg-green-100 px-10 py-6 rounded-3xl font-black text-xl shadow-2xltransform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20 hover:border-green-200/50">
                                     <span class="relative z-10">Daftar Gratis</span>
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
-                                    </div>
                                     <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -84,12 +81,6 @@
 
                     <div class="relative z-20 h-full max-w-7xl mx-auto flex items-center px-6 lg:px-12">
                         <div class="w-full lg:w-1/2 space-y-8 lg:pr-12">
-                            {{-- <div
-                                class="inline-flex items-center gap-3 px-6 py-3 bg-white/20 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
-                                <div class="w-3 h-3 bg-emerald-400 rounded-full shadow-lg"></div>
-                                <span class="text-sm font-bold text-white">#1 Aplikasi Kasir</span>
-                            </div> --}}
-
                             <div>
                                 <h1
                                     class="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-white to-green-100/50 bg-clip-text text-transparent leading-[0.9] mb-6 drop-shadow-2xl">
@@ -105,11 +96,8 @@
 
                             <div class="flex flex-col sm:flex-row gap-4 pt-4">
                                 <a href="/register"
-                                    class="group bg-white text-green-700 hover:bg-green-50 px-10 py-6 rounded-3xl font-black text-xl shadow-2xl hover:shadow-white/50 hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20 hover:border-green-200/50">
+                                    class="group bg-white text-green-700 hover:bg-green-100 px-10 py-6 rounded-3xl font-black text-xl shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20">
                                     <span class="relative z-10">Mulai Gratis</span>
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
-                                    </div>
                                     <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -117,7 +105,7 @@
                                     </svg>
                                 </a>
                                 <a href="#features"
-                                    class="flex items-center justify-center gap-3 px-8 py-6 text-lg font-bold text-white border-2 border-white/40 hover:border-white/70 hover:bg-white/10 rounded-2xl backdrop-blur-xl transition-all duration-300 min-w-[160px] shadow-xl hover:shadow-white/20 hover:-translate-y-1">
+                                    class="flex items-center justify-center gap-3 px-8 py-6 text-lg font-bold text-white border-2 border-white/40 hover:border-white/70 rounded-2xl backdrop-blur-xl transition-all duration-300 min-w-[160px] shadow-xl hover:shadow-white/20 hover:-translate-y-1">
                                     Fitur
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -175,11 +163,8 @@
 
                             <div class="flex flex-col sm:flex-row gap-4 pt-4">
                                 <a href="/register"
-                                    class="group relative bg-white text-green-700 hover:bg-green-50 px-10 py-6 rounded-3xl font-black text-xl shadow-2xl hover:shadow-white/50 hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20 hover:border-green-200/50">
+                                    class="group relative bg-white text-green-700 hover:bg-green-0 px-10 py-6 rounded-3xl font-black text-xl shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20">
                                     <span class="relative z-10">Bergabung Sekarang</span>
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
-                                    </div>
                                     <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
