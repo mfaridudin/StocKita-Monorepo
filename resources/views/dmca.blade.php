@@ -1,0 +1,72 @@
+<x-legal-layout>
+    <section class="bg-emerald-50 py-14">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">
+                DMCA & Hak Cipta
+            </h2>
+            <p class="text-gray-600">
+                Kami menghormati hak cipta dan menangani pelanggaran dengan serius.
+            </p>
+        </div>
+    </section>
+
+    <main class="max-w-4xl mx-auto px-6 py-16">
+
+        <div class="space-y-10 leading-relaxed">
+
+            <p class="text-gray-600">
+                StocKita berkomitmen untuk melindungi hak cipta dan mematuhi ketentuan Digital Millennium Copyright Act
+                (DMCA).
+                Jika terdapat konten yang melanggar, kami akan mengambil tindakan sesuai kebijakan.
+            </p>
+
+            <!-- SECTION -->
+            <div>
+                <h3 class="text-xl font-semibold mb-2">1. Pelaporan Pelanggaran</h3>
+                <p class="text-gray-600">
+                    Jika Anda merasa bahwa konten dalam platform kami melanggar hak cipta Anda, silakan kirimkan laporan
+                    yang berisi bukti kepemilikan, detail pelanggaran, dan informasi kontak Anda.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold mb-2">2. Proses Peninjauan</h3>
+                <p class="text-gray-600">
+                    Tim kami akan meninjau laporan yang masuk dan melakukan verifikasi sebelum mengambil tindakan lebih
+                    lanjut.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold mb-2">3. Tindakan</h3>
+                <p class="text-gray-600">
+                    Jika terbukti melanggar, konten akan dihapus atau dibatasi sesuai kebijakan yang berlaku.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold mb-2">4. Kontak</h3>
+                <p class="text-gray-600">
+                    Untuk laporan pelanggaran, silakan hubungi:
+                </p>
+
+                <div class="flex items-center gap-2 mt-3 p-4 bg-emerald-50 rounded-lg text-sm text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-4 ">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                    </svg>
+
+                    support@stockita.com
+                </div>
+            </div>
+
+            <p class="text-sm text-gray-400">
+                Terakhir diperbarui: 2026
+            </p>
+
+        </div>
+
+    </main>
+
+</x-legal-layout>

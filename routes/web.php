@@ -11,7 +11,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
-use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WarehouseController;
 use App\Models\User;
@@ -23,6 +22,10 @@ Route::get('/', function () {
 });
 Route::post('/pay', [PaymentController::class, 'pay']);
 Route::post('/midtrans/webhook', [PaymentController::class, 'webhook']);
+
+Route::view('/privacy', 'privacy');
+Route::view('/terms', 'terms');
+Route::view('/dmca', 'dmca');
 
 Route::middleware(['auth', 'role:admin|owner'])->group(function () {
     Route::get('/customers/search', function (Request $request) {
