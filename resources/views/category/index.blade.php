@@ -52,7 +52,7 @@
                                 <div x-data class="flex justify-end gap-2">
 
                                     <button
-                                        @click="$dispatch('open-modal', { name: 'edit-category', id: {{ $cat->id }} })"
+                                        @click="$dispatch('open-modal', { name: 'edit-category', id: {{ $cat->id }}, categoryName: '{{ $cat->name }}' })"
                                         class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
                                         Edit
                                     </button>
@@ -116,11 +116,13 @@
     </x-modal>
 
     <x-modal name="edit-category" maxWidth="md">
-        <div x-data="{ categoryId: null }"
+        <div x-data="{ categoryId: null, categoryName: '' }"
             x-on:open-modal.window="
-            if ($event.detail.name === 'edit-category') {
-                categoryId = $event.detail.id
-            }"
+        if ($event.detail.name === 'edit-category') {
+            categoryId = $event.detail.id
+            name = $event.detail.categoryName
+        }
+    "
             class="p-6">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
@@ -142,7 +144,7 @@
 
                 <div>
                     <label class="text-sm font-medium">Nama</label>
-                    <input type="text" name="name"
+                    <input type="text" name="name" x-model="name" :value="'{{ old('name') }}' || name"
                         class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                 </div>
 
