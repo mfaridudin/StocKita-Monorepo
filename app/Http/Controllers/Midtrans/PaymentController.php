@@ -13,6 +13,19 @@ use Midtrans\Snap;
 
 class PaymentController extends Controller
 {
+    public function index()
+    {
+        $plans = Plan::all();
+        $user = auth()->user();
+        $organization = $user->organization;
+
+        $subscription = Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first();
+
+        return view('subscription.index', compact('plans', 'subscription', 'organization'));
+    }
+
     public function pay(Request $request)
     {
         $user = auth()->user();
@@ -59,6 +72,66 @@ class PaymentController extends Controller
         $snapToken = Snap::getSnapToken($params);
 
         MidtransTransaction::create([
+            'user_id' => $user->id,
+            'order_id' => $orderId,
+            'plan_id' => $plan->id,
+            'interval' => $interval,
+            'gross_amount' => $amount,
+            'status' => 'pending',
+            'snap_token' => $snapToken,
+        ]);
+
+        return response()->json([
+            'snap_token' => $snapToken,
+        ]);
+    }
+
+    public function upgrade(Request $request)
+    {
+        $user = auth()->user();
+
+        $plan = Plan::findOrFail($request->plan_id);
+        $interval = $request->interval;
+
+        if ($plan->price == 0) {
+            Subscription::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'plan_id' => $plan->id,
+                    'interval' => 'monthly',
+                    'status' => 'active',
+                    'current_period_end' => now()->addDays(30),
+                ]
+            );
+
+            return response()->json(['free' => true]);
+        }
+
+        $amount = $interval === 'yearly'
+            ? $plan->yearly_price
+            : $plan->price;
+
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $orderId = 'ORDER-'.uniqid();
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => $amount,
+            ],
+            'customer_details' => [
+                'first_name' => $user->name,
+                'email' => $user->email,
+            ],
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+        MidtransTransaction::updateOrCreate([
             'user_id' => $user->id,
             'order_id' => $orderId,
             'plan_id' => $plan->id,

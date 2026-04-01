@@ -83,7 +83,7 @@
                     $template = setting('email.welcome');
 
                     $template = str_replace(
-                        ['{{ name }}', '{{ store.name }}'],
+                        ['{{ name }}', '{{ store . name }}'],
                         ['Customer', setting('store.name')],
                         $template,
                     );
@@ -112,16 +112,30 @@
                     <p class="text-sm text-gray-500">Status paket saat ini</p>
                 </div>
 
-                <div class="flex items-center justify-between p-6 border border-gray-100 rounded-xl bg-green-50/50">
-                    <div>
-                        <p class="text-xl font-bold text-gray-900">Pro Plan</p>
-                        <p class="text-sm text-gray-600">Limit 1000 produk • Aktif</p>
+                @if ($plan)
+                    <div class="flex items-center justify-between p-6 border border-gray-100 rounded-xl bg-green-50/50">
+                        <div>
+                            <p class="text-xl font-bold text-gray-900">{{ $plan->name }} Plan</p>
+                            <p class="text-sm text-gray-600">
+                                Limit {{ $plan->max_products }} produk • {{ ucfirst($subscription->status) }}
+                            </p>
+                        </div>
+                        <form action="{{ route('subscription.index') }}" method="GET">
+                            <button type="submit"
+                                class="bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors shadow-sm hover:shadow-md">
+                                Upgrade
+                            </button>
+                        </form>
                     </div>
-                    <button
-                        class="bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors shadow-sm hover:shadow-md">
-                        Upgrade
-                    </button>
-                </div>
+                @else
+                    <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 text-center">
+                        <p class="text-gray-500">Belum ada paket aktif</p>
+                        <a href="{{ route('subscription.upgrade') }}"
+                            class="mt-4 inline-block bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors shadow-sm hover:shadow-md">
+                            Pilih Paket
+                        </a>
+                    </div>
+                @endif
             </div>
 
         </div>

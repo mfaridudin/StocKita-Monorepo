@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plan;
 use App\Models\Setting;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -12,7 +14,15 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return view('settings.index');
+        $user = auth()->user();
+
+        $subscription = Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first();
+
+        $plan = $subscription ? Plan::find($subscription->plan_id) : null;
+
+        return view('settings.index', compact('subscription', 'plan'));
     }
 
     /**
@@ -71,7 +81,7 @@ class SettingController extends Controller
                 );
             }
         }
-        
+
         // email
         if ($request->has('email')) {
             foreach ($request->email as $key => $value) {

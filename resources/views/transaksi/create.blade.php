@@ -340,47 +340,6 @@
             };
         }
 
-        // document.getElementById('transactionForm').addEventListener('submit', async (e) => {
-        //     e.preventDefault();
-
-        //     if (cart.length === 0) {
-        //         alert('Keranjang kosong');
-        //         return;
-        //     }
-
-        //     try {
-        //         const res = await fetch('/transactions', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        //             },
-        //             body: JSON.stringify({
-        //                 customer_name: document.getElementById('customerName').value,
-        //                 type: 'out',
-        //                 items: cart.map(i => ({
-        //                     product_id: i.id,
-        //                     qty: i.qty,
-        //                     price: i.price
-        //                 }))
-        //             })
-        //         });
-
-        //         const data = await res.json();
-
-        //         if (res.ok) {
-        //             alert(data.message || 'Berhasil');
-        //             location.href = '/transactions/' + data.data.id;
-
-        //         } else {
-        //             alert(data.error || data.message || 'Terjadi kesalahan');
-        //         }
-
-        //     } catch (err) {
-        //         console.error(err);
-        //         alert('Server error');
-        //     }
-        // });
         async function submitTransaction() {
 
             const paid = document.getElementById('paid').value;
