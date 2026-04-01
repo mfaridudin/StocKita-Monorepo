@@ -19,19 +19,19 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'Admin',
-                'email' => 'admin@mail.com',
+                'email' => 'admin@gmail.com',
                 'role' => 'admin',
                 'store_id' => $store->id,
             ],
             [
                 'name' => 'Owner',
-                'email' => 'owner@mail.com',
+                'email' => 'owner@gmail.com',
                 'role' => 'owner',
                 'store_id' => $store->id,
             ],
             [
                 'name' => 'Buyer',
-                'email' => 'buyer@mail.com',
+                'email' => 'buyer@gmail.com',
                 'role' => 'buyer',
                 'store_id' => $store->id,
             ],
