@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Store;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -43,6 +44,18 @@ class GoogleController extends Controller
             ]);
             $user->store_id = $store->id;
             $user->save();
+        }
+
+        if ($user) {
+            Subscription::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'plan_id' => 1,
+                    'interval' => 'monthly',
+                    'status' => 'active',
+                    'current_period_end' => now()->addDays(30),
+                ]
+            );
         }
 
         Auth::login($user);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Store;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -54,6 +55,18 @@ class RegisteredUserController extends Controller
             ]);
             $user->store_id = $store->id;
             $user->save();
+        }
+
+        if ($user) {
+            Subscription::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'plan_id' => 1,
+                    'interval' => 'monthly',
+                    'status' => 'active',
+                    'current_period_end' => now()->addDays(30),
+                ]
+            );
         }
 
         event(new Registered($user));
