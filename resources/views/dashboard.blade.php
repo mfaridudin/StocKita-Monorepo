@@ -14,9 +14,12 @@
                                     clip-rule="evenodd" />
                             </svg>
 
-                            Dashboard Toko, {{ setting('store.name') }}
+                            Dashboard Toko, @php
+                                $user = Auth::user();
+                            @endphp
+                            {{ $user->store->name }}
                         </h1>
-                        <p class="text-emerald-700 mt-1 font-medium">Selamat datang kembali, Owner!</p>
+                        <p class="text-emerald-700 mt-1 font-medium">Selamat datang kembali!</p>
                     </div>
                 </div>
             </div>
