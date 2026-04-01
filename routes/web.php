@@ -6,7 +6,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Midtrans\PaymentController;
-use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -16,17 +15,12 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WarehouseController;
 use App\Models\User;
-use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/tes-pay', function () {
-    return view('test-pay');
-});
-
 Route::post('/pay', [PaymentController::class, 'pay']);
 Route::post('/midtrans/webhook', [PaymentController::class, 'webhook']);
 
@@ -55,8 +49,8 @@ Route::middleware(['auth', 'role:admin|owner'])->group(function () {
 
     Route::put('/product/update-img/{id}', [ProductController::class, 'updateImage'])->name('products.update-image');
 
-    // Route::get('/subscribe', [SubscriptionController::class, 'create']);
-    // Route::post('/midtrans/webhook', [MidtransController::class, 'webhook'])->withoutMiddleware([ValidateCsrfToken::class]);
+    Route::get('/subscription', [PaymentController::class, 'index'])->name('subscription.index');
+    Route::post('/subscription/upgrade', [PaymentController::class, 'upgrade'])->name('subscription.upgrade');
 });
 
 Route::middleware(['auth', 'role:buyer'])
