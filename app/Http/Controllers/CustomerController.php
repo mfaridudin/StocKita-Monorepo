@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
@@ -16,7 +17,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customers = Customer::filter([
+        $customers = Customer::where('store_id', Auth::user()->store->id)->filter([
             'search' => $request->search,
             'type' => $request->type,
             'status' => $request->status,
@@ -26,9 +27,9 @@ class CustomerController extends Controller
             ->withQueryString();
 
         $stats = [
-            'total' => Customer::count(),
-            'exclusive' => Customer::exclusive()->count(),
-            'active' => Customer::active()->count(),
+            'total' => Customer::where('store_id', Auth::user()->store->id)->count(),
+            'exclusive' => Customer::where('store_id', Auth::user()->store->id)->exclusive()->count(),
+            'active' => Customer::where('store_id', Auth::user()->store->id)->active()->count(),
             'total_spent' => Transaction::where('status', 'paid')
                 ->sum('total'),
         ];
@@ -49,7 +50,6 @@ class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request)
     {
-
         $phone = preg_replace('/[^0-9+]/', '', $request->phone);
         if (! str_starts_with($phone, '+')) {
             if (str_starts_with($phone, '0')) {
@@ -70,6 +70,7 @@ class CustomerController extends Controller
             'type' => $request->type,
             'status' => $request->status,
             'phone' => $phone,
+            'store_id' => Auth::user()->store->id,
         ]);
 
         return back();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -21,7 +22,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::latest()->get();
+        $categories = Category::where('store_id', Auth::user()->store->id)->latest()->get();
 
         return view('category.index', compact('categories'));
     }
@@ -46,6 +47,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'slug' => $this->generateUniqueSlug($request->name),
+            'store_id' => Auth::user()->store->id,
         ]);
 
         return redirect()->back();

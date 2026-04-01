@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -44,10 +46,28 @@ class RegisteredUserController extends Controller
 
         $user->assignRole('admin');
 
+        if ($user->hasRole('admin')) {
+            $store = Store::create([
+                'name' => $user->name."'s Store",
+                'owner_id' => $user->id,
+                'slug' => $this->generateUniqueSlug($user->name.'-store'),
+            ]);
+            $user->store_id = $store->id;
+            $user->save();
+        }
+
         event(new Registered($user));
 
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
+    }
+
+    private function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = Store::where('slug', 'LIKE', $slug.'%')->count();
+
+        return $count ? "{$slug}-{$count}" : $slug;
     }
 }

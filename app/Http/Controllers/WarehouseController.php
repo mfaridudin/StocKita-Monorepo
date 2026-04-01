@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WarehouseController extends Controller
 {
@@ -31,7 +32,7 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        $warehouses = Warehouse::get();
+        $warehouses = Warehouse::where('store_id', Auth::user()->store->id)->get();
 
         return view('warehouse.index', compact('warehouses'));
     }
@@ -54,6 +55,7 @@ class WarehouseController extends Controller
             'name' => $request->name,
             'code' => $this->generateWarehouseCode(),
             'location' => $request->location,
+            'store_id' => Auth::user()->store->id,
             'description' => $request->description,
         ]);
 
@@ -65,7 +67,7 @@ class WarehouseController extends Controller
      */
     public function show(string $id)
     {
-        $warehouse = Warehouse::findOrFail($id);
+        $warehouse = Warehouse::where('store_id', Auth::user()->store->id)->findOrFail($id);
 
         $products = Product::all();
 

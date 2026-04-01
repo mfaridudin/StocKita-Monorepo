@@ -7,6 +7,7 @@ use App\Models\Stock;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -47,7 +48,9 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        if (! auth()->user()->canCreateTransaction()) {
+            return response()->json(['error' => true, 'message' => 'Limit transaksi habis'], 400);
+        }
         DB::beginTransaction();
 
         try {
@@ -77,6 +80,7 @@ class TransactionController extends Controller
                 'customer_id' => $request->filled('customer_id') ? $request->customer_id : null,
                 'customer_name' => $request->filled('customer_id') ? null : $request->customer_name,
                 'total' => $total,
+                'store_id' => Auth::user()->store->id,
                 'payment_method' => $request->payment_method,
                 'paid_at' => $request->paid_at,
                 'notes' => $request->notes,

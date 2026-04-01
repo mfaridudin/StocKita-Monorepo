@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('warehouse_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('store_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -31,6 +31,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function products()
+    {
+        return $this->hasManyThrough(Product::class, Store::class, 'id', 'store_id', 'store_id', 'id');
+    }
+
     public function customer()
     {
         return $this->hasOne(Customer::class);
@@ -46,6 +51,16 @@ class User extends Authenticatable
         return $this->hasMany(MidtransTransaction::class);
     }
 
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
+    public function transactions()
+    {
+        return $this->store ? $this->store->transactions() : collect();
+    }
+
     // batas subsribe
     public function canCreateProduct()
     {
@@ -56,5 +71,21 @@ class User extends Authenticatable
         }
 
         return $this->products()->count() < $subscription->plan->max_products;
+    }
+
+    public function canCreateTransaction()
+    {
+        $subscription = $this->subscription;
+
+        // Cek ada subscription aktif
+        if (! $subscription || $subscription->status !== 'active') {
+            return false;
+        }
+
+        // Hitung transaksi yang sudah dibuat
+        $transactionCount = $this->transactions()->count();
+
+        // Bandingkan dengan limit plan
+        return $transactionCount < $subscription->plan->max_orders;
     }
 }

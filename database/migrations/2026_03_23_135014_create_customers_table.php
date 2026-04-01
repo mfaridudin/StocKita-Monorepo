@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->enum('type', ['regular', 'exclusive'])->default('regular');
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('store_id')->nullable()->constrained()->cascadeOnDelete();
             $table->decimal('total_spent', 10, 2)->default(0);
             $table->integer('total_orders')->default(0);
             $table->timestamp('last_contacted')->nullable();

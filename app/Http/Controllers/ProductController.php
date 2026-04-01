@@ -6,6 +6,7 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -34,8 +35,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::get();
-        $categories = Category::get();
+        $products = Product::where('store_id', Auth::user()->store->id)->get();
+        $categories = Category::where('store_id', Auth::user()->store->id)->get();
 
         return view('produk.index', compact('products', 'categories'));
     }
@@ -50,6 +51,9 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
+        if (! auth()->user()->canCreateProduct()) {
+            return back()->with('error', 'Limit produk habis');
+        }
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
         }
@@ -61,6 +65,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'image' => $imagePath,
             'created_by' => auth()->id(),
+            'store_id' => Auth::user()->store->id,
             'warehouse_id' => $request->warehouse_id,
         ]);
 
@@ -72,8 +77,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::findOrFail($id);
-        $categories = Category::get();
+        $product = Product::where('store_id', Auth::user()->store->id)->findOrFail($id);
+        $categories = Category::where('store_id', Auth::user()->store->id)->get();
 
         return view('produk.show', compact('product', 'categories'));
     }

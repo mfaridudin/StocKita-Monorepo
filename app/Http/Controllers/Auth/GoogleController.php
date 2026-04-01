@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
@@ -30,11 +32,29 @@ class GoogleController extends Controller
                 'password' => bcrypt('password123'),
             ]);
 
-            $user->assignRole('owner');
+            $user->assignRole('admin');
+        }
+
+        if ($user->hasRole('admin')) {
+            $store = Store::create([
+                'name' => $googleUser->name."'s Store",
+                'owner_id' => $user->id,
+                'slug' => $this->generateUniqueSlug($$googleUser->name.'-store'),
+            ]);
+            $user->store_id = $store->id;
+            $user->save();
         }
 
         Auth::login($user);
 
         return redirect('/dashboard');
+    }
+
+    private function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = Store::where('slug', 'LIKE', $slug.'%')->count();
+
+        return $count ? "{$slug}-{$count}" : $slug;
     }
 }
