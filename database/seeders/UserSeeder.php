@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -14,21 +15,25 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $store = Store::where('slug', 'stoc-kita')->first();
         $users = [
             [
                 'name' => 'Admin',
                 'email' => 'admin@mail.com',
                 'role' => 'admin',
+                'store_id' => $store->id,
             ],
             [
                 'name' => 'Owner',
                 'email' => 'owner@mail.com',
                 'role' => 'owner',
+                'store_id' => $store->id,
             ],
             [
                 'name' => 'Buyer',
                 'email' => 'buyer@mail.com',
                 'role' => 'buyer',
+                'store_id' => $store->id,
             ],
         ];
 
@@ -38,6 +43,7 @@ class UserSeeder extends Seeder
                 [
                     'name' => $data['name'],
                     'password' => Hash::make('password'),
+                    'store_id' => $data['store_id'],
                 ]
             );
 
@@ -47,6 +53,7 @@ class UserSeeder extends Seeder
                 Customer::firstOrCreate([
                     'user_id' => $user->id,
                     'phone' => '+13059565677',
+                    'store_id' => $store->id,
                 ]);
             }
         }

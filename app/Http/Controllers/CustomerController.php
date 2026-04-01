@@ -63,6 +63,7 @@ class CustomerController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make('password'),
+            'store_id' => Auth::user()->store->id,
         ]);
 
         $user->assignRole('buyer');
