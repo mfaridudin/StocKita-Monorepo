@@ -1,5 +1,6 @@
 <aside id="sidebar"
     class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-green-100 z-50 flex flex-col will-change-[width]">
+     <img src="/image/icon/icon.png" alt="icon" class="w-10 absolute top-3 left-5">
     <div class="p-6 border-b h-16 border-green-50 flex items-center justify-center">
         <span
             class="items-center sidebar-text text-2xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
