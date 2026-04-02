@@ -6,7 +6,7 @@
                  <div class="flex items-center gap-3 mb-6">
                      <div
                          class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                       <img src="/image/icon/icon.png" alt="">
+                         <img src="/image/icon/icon.png" alt="">
                      </div>
                      <div>
                          <h3 class="text-xl font-bold">StocKita</h3>
@@ -44,7 +44,7 @@
          </div>
 
          <div class="border-t border-white mt-16 pt-6 text-center text-white text-slate-500 text-sm">
-             <p>&copy; 2025 StocKita. All rights reserved.</p>
+             <p>&copy; <?php echo date('Y'); ?> StocKita. All rights reserved.</p>
          </div>
 
      </div>
