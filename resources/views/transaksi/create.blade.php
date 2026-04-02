@@ -382,7 +382,7 @@
 
                     Swal.fire({
                         toast: true,
-                        icon: 'error',
+                        icon: 'warning',
                         position: 'top-end',
                         title: 'Transaksi Gagal',
                         html: message,

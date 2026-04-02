@@ -1,5 +1,4 @@
 <x-app-layout title="Manajemen Transaksi & Stok">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
         <script>
             let type =

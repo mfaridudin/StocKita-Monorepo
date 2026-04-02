@@ -1,20 +1,21 @@
 <x-app-layout title="Kategori">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
         <script>
-            let type =
-                "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: type,
-                title: "{{ $message }}",
-                showConfirmButton: false,
-                timer: 3000
+            document.addEventListener('DOMContentLoaded', function() {
+                let type =
+                    "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: type,
+                    title: "{{ $message }}",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             });
         </script>
     @endif
-
     <div class="space-y-4">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
