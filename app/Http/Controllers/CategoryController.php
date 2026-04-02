@@ -50,7 +50,7 @@ class CategoryController extends Controller
             'store_id' => Auth::user()->store->id,
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data berhasil disimpan!');
     }
 
     /**
@@ -84,7 +84,7 @@ class CategoryController extends Controller
             'slug' => $this->generateUniqueSlug($request->name),
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data berhasil diperbarui!');
     }
 
     /**
@@ -100,6 +100,6 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
 }

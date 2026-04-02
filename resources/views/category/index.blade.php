@@ -1,4 +1,20 @@
 <x-app-layout title="Kategori">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+        <script>
+            let type =
+                "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: "{{ $message }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
+
     <div class="space-y-4">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -122,7 +138,7 @@
             categoryId = $event.detail.id
             name = $event.detail.categoryName
         }
-    "
+        "
             class="p-6">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
@@ -214,5 +230,4 @@
 
         </div>
     </x-modal>
-
 </x-app-layout>
