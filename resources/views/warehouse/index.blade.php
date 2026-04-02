@@ -1,4 +1,19 @@
 <x-app-layout title="Gudang">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+        <script>
+            let type =
+                "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: "{{ $message }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
     <div class="space-y-4">
 
         <div x-data class="flex justify-between">
@@ -58,48 +73,58 @@
             </table>
         </div>
     </div>
+
     {{-- create modal --}}
-    <x-modal name="create-warehouse" maxWidth="lg">
+    <x-modal name="create-warehouse" maxWidth="lg" :show="$errors->any()">
         <div class="p-6">
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">Tambah Gudang Baru</h3>
-                <button type="button" @click="$dispatch('close-modal', 'create-warehouse')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-            <form action="/warehouse" method="POST" class="space-y-4">
+            <form action="/warehouse" method="POST">
                 @csrf
                 @method('POST')
 
-                <div>
-                    <label class="text-sm font-medium">Nama Gudang</label>
-                    <input type="text" name="name"
-                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
-                </div>
-
-                <div>
-                    <label class="text-sm font-medium">Lokasi</label>
-                    <input type="text" name="location"
-                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
-                </div>
-
-                <div>
-                    <label class="text-sm font-medium">Deskripsi</label>
-                    <textarea name="description" class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"></textarea>
-                </div>
-
-                <div class="flex justify-end gap-2 pt-4">
-                    <button type="button" id="cancelWarehouseModal"
-                        class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
-                        Batal
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">Tambah Gudang Baru</h3>
+                    <button type="button"
+                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-warehouse')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
                     </button>
+                </div>
 
-                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                        Simpan
-                    </button>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-medium">Nama Gudang</label>
+                        <input type="text" name="name" value="{{ old('name') }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                        <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium">Lokasi</label>
+                        <input type="text" name="location" value="{{ old('location') }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                        <x-input-error :messages="$errors->get('location')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium">Deskripsi</label>
+                        <textarea name="description" class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">{{ old('description') }}</textarea>
+                        <x-input-error :messages="$errors->get('description')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-4">
+                        <button type="button"
+                            @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-warehouse')"
+                            class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                            Batal
+                        </button>
+
+                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            Simpan
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

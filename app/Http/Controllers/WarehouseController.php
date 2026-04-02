@@ -59,7 +59,7 @@ class WarehouseController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Gudang berhasil disi!');
     }
 
     /**
@@ -103,6 +103,6 @@ class WarehouseController extends Controller
 
         $warehouse->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Gudang Berhasil dihapus!');
     }
 }

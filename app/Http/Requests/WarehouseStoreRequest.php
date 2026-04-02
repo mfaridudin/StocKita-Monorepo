@@ -28,4 +28,16 @@ class WarehouseStoreRequest extends FormRequest
             'description' => ['required', 'string'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama gudang wajib diisi.',
+            'name.max' => 'Nama gudang maksimal 255 karakter.',
+
+            'location.required' => 'Lokasi wajib diisi.',
+
+            'description.required' => 'Deskripsi wajib diisi.',
+        ];
+    }
 }

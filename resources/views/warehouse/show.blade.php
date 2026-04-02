@@ -1,5 +1,19 @@
 <x-app-layout title="Detail Gudang">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+        <script>
+            let type =
+                "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: "{{ $message }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
     <div class="space-y-6">
 
         <div class="bg-white border border-slate-100 rounded-3xl p-8">
@@ -106,95 +120,105 @@
     </div>
 
     {{-- create modal --}}
-    <x-modal name="create-stock" maxWidth="md">
+    <x-modal name="create-stock" maxWidth="md" :show="session('open_modal') === 'create-stock'">
         <div class="p-6">
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">Tambah Barang</h3>
-                <button type="button" @click="$dispatch('close-modal', 'create-stock')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-            <form action="{{ route('stocks.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('stocks.store') }}" method="POST">
                 @csrf
 
-                <div>
-                    <label class="text-sm font-medium">Produk</label>
-                    <select name="product_id"
-                        class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
-                        <option value="">--- Pilih Produk ---</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}">
-                                {{ $product->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label class="text-sm font-medium">Jumlah</label>
-                    <input type="number" name="qty"
-                        class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
-                </div>
-                <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
-
-                <div class="flex justify-end gap-2 pt-3">
-                    <button @click="$dispatch('close-modal', 'create-stock')" type="button" id="closeModal"
-                        class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
-                        Batal
-                    </button>
-
-                    <button type="submit" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg">
-                        Simpan
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">Tambah Barang</h3>
+                    <button type="button"
+                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-stock')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
                     </button>
                 </div>
 
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-medium">Produk</label>
+                        <select name="product_id"
+                            class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                            <option value="">--- Pilih Produk ---</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">
+                                    {{ $product->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->createStock->get('product_id')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium">Jumlah</label>
+                        <input type="number" name="qty"
+                            class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                        <x-input-error :messages="$errors->createStock->get('qty')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+                    <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
+
+                    <div class="flex justify-end gap-2 pt-3">
+                        <button @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-stock')"
+                            type="button" id="closeModal" class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
+                            Batal
+                        </button>
+
+                        <button type="submit" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg">
+                            Simpan
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
     </x-modal>
 
     {{-- add stock --}}
-    <x-modal name="add-stock" maxWidth="md">
+    <x-modal name="add-stock" maxWidth="md" :show="session('open_modal') === 'add-stock'">
         <div x-data="{ stockId: null }"
             x-on:open-modal.window="
             if ($event.detail.name === 'add-stock') {
                 stockId = $event.detail.id
             }"
-            class="p-6">
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">Tambah Stok</h3>
-                <button type="button" @click="$dispatch('close-modal', 'add-stock')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-            <form :action="`/stocks/${stockId}`" method="POST" class="space-y-4">
+                class="p-6">
+
+            <form :action="`/stocks/${stockId}`" method="POST">
                 @csrf
                 @method('PUT')
 
-                <div>
-                    <label class="text-sm font-medium">Masukan Stok</label>
-                    <input type="number" name="qty"
-                        class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
-                </div>
-                <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
-
-                <div class="flex justify-end gap-2 pt-3">
-                    <button @click="$dispatch('close-modal', 'add-stock')" type="button" id="closeModal"
-                        class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
-                        Batal
-                    </button>
-
-                    <button type="submit" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg">
-                        Simpan
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">Tambah Stok</h3>
+                    <button type="button"
+                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'add-stock')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
                     </button>
                 </div>
 
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-medium">Masukan Stok</label>
+                        <input type="number" name="qty" value="{{ old('qty') }}"
+                            class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                        <x-input-error :messages="$errors->addStock->get('qty')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-3">
+                        <button @click="$el.closest('form').reset(); $dispatch('close-modal', 'add-stock')"
+                            type="button" id="closeModal" class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
+                            Batal
+                        </button>
+
+                        <button type="submit" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg">
+                            Simpan
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
     </x-modal>
