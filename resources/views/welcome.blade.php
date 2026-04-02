@@ -62,8 +62,7 @@
         <nav class="max-w-7xl mx-auto py-4 flex items-center justify-between">
             {{-- logo --}}
             <a href="/" class="flex items-center gap-3">
-                <div
-                    class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg">
                     <img src="/image/icon/icon.png" alt="icon">
                 </div>
                 <div>
@@ -99,9 +98,7 @@
                 </li>
             </ul>
 
-            <!-- RIGHT SIDE -->
             <div class="flex items-center gap-4">
-                <!-- SEARCH -->
                 <div class="relative hidden lg:block group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6 absolute left-4 top-1/2 -translate-y-1/2">
@@ -109,8 +106,20 @@
                             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
 
-                    <input type="text" placeholder="Seacrh"
-                        class="pl-12 pr-4 py-3 w-72 bg-slate-100/50 border borderrounded-2xl">
+                    <input id="searchInput" type="text" placeholder="Cari..."
+                        class="pl-12 pr-4 py-3 w-72 bg-slate-100 border border-green-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-white transition-all duration-200 shadow-sm group-hover:shadow-md">
+
+                    <button id="clearSearch"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center hidden transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <div id="searchResults"
+                        class="absolute mt-2 w-full bg-white shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50">
+                    </div>
                 </div>
                 <div class="flex items-center gap-4">
                     <a href="/register"
@@ -134,13 +143,11 @@
 
     <x-sponsorship />
 
-
     {{-- features  --}}
     <x-features />
 
-    <!-- BLOG SECTION -->
+    {{-- blog --}}
     <x-blogs />
-
 
     {{-- subscribe --}}
     <x-offer />
@@ -149,6 +156,132 @@
     <x-footer />
 
     <x-cookie-consent />
+
+    <script>
+        const input = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+        const resultsBox = document.getElementById('searchResults');
+
+        input.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+        });
+
+        clearBtn.addEventListener('click', function() {
+            input.value = '';
+            resultsBox.innerHTML = '';
+            resultsBox.classList.add('hidden');
+
+            removeHighlights();
+
+            clearBtn.classList.add('hidden');
+            input.focus();
+
+        });
+
+        input.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase();
+
+            resultsBox.innerHTML = '';
+            resultsBox.classList.add('hidden');
+
+            removeHighlights();
+
+            if (keyword.length < 2) return;
+
+            let results = [];
+            const elements = document.querySelectorAll('h1, h2, h3, p, span, a, li');
+
+            elements.forEach(el => {
+                const text = el.innerText.toLowerCase();
+
+                if (text.includes(keyword)) {
+                    results.push({
+                        element: el,
+                        text: el.innerText
+                    });
+
+                    highlightWord(el, keyword);
+                }
+            });
+
+            if (results.length === 0) {
+                resultsBox.innerHTML = `<div class="p-3 text-sm text-gray-500">Tidak ditemukan</div>`;
+            } else {
+                results.slice(0, 5).forEach((res, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'p-3 text-sm hover:bg-gray-100 cursor-pointer';
+
+                    item.innerHTML = createSnippet(res.text, keyword)
+                        .replace(new RegExp(`(${keyword})`, 'gi'),
+                            '<span class="bg-yellow-200 rounded">$1</span>');
+
+                    item.addEventListener('click', () => {
+                        res.element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    });
+
+                    resultsBox.appendChild(item);
+                });
+            }
+
+            resultsBox.classList.remove('hidden');
+        });
+
+        function highlightWord(element, keyword) {
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+
+            const nodes = [];
+
+            while (walker.nextNode()) {
+                nodes.push(walker.currentNode);
+            }
+
+            nodes.forEach(node => {
+                const text = node.nodeValue;
+                const lower = text.toLowerCase();
+
+                if (lower.includes(keyword)) {
+                    const span = document.createElement('span');
+                    const regex = new RegExp(`(${keyword})`, 'gi');
+
+                    span.innerHTML = text.replace(regex,
+                        `<mark class="bg-yellow-200/50 rounded">$1</mark>`);
+
+                    node.replaceWith(span);
+                }
+            });
+        }
+
+        function removeHighlights() {
+            document.querySelectorAll('mark').forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceWith(document.createTextNode(parent.innerText));
+            });
+        }
+
+        function createSnippet(text, keyword) {
+            const lower = text.toLowerCase();
+            const index = lower.indexOf(keyword);
+
+            if (index === -1) return text.substring(0, 50) + '...';
+
+            const start = Math.max(index - 20, 0);
+            const end = Math.min(index + keyword.length + 20, text.length);
+
+            let snippet = text.substring(start, end);
+
+            if (start > 0) snippet = '...' + snippet;
+            if (end < text.length) snippet = snippet + '...';
+
+            return snippet;
+        }
+    </script>
 </body>
 
 </html>
