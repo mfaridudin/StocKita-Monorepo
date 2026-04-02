@@ -1,4 +1,19 @@
 <x-app-layout title="Pelanggan & Marketing">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+        <script>
+            let type =
+                "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: "{{ $message }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
     <div class="space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
@@ -168,12 +183,10 @@
 
                                             </button>
                                         </form>
-                                        <a title="Detail Pelanggan"
-                                            href="{{ route('customers.show', $customer->id) }}"
+                                        <a title="Detail Pelanggan" href="{{ route('customers.show', $customer->id) }}"
                                             class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="size-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="size-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round"

@@ -76,7 +76,7 @@ class CustomerController extends Controller
             'store_id' => Auth::user()->store->id,
         ]);
 
-        return back();
+        return redirect()->back()->with('success', 'Pelanggan berhasil disimpan!');
     }
 
     /**
@@ -136,7 +136,7 @@ class CustomerController extends Controller
             'phone' => $phone,
         ]);
 
-        return back();
+        return redirect()->back()->with('success', 'Pelanggan berhasil diperbarui!');
     }
 
     /**
@@ -148,7 +148,7 @@ class CustomerController extends Controller
         $user = User::findOrFail($customer->user->id);
         $user->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Pelanggan berhasil dihapus!');
     }
 
     // kirim email
