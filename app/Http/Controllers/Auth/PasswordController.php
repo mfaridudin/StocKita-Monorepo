@@ -17,13 +17,24 @@ class PasswordController extends Controller
     {
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password' => ['required', 'confirmed',  Password::min(8)
+                ->mixedCase()
+                ->numbers()
+                ->symbols(),
+            ],
+        ], [
+            'password.required' => 'Password wajib diisi.',
+            'password.confirmed' => 'Konfirmasi password tidak sesuai.',
+            'password.min' => 'Password minimal :min karakter.',
+            'password.mixed' => 'Password harus mengandung minimal 1 huruf besar dan 1 huruf kecil.',
+            'password.numbers' => 'Password harus mengandung minimal 1 angka.',
+            'password.symbols' => 'Password harus mengandung minimal 1 karakter unik/simbol.',
         ]);
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back()->with('status', 'password-updated');
+        return back()->with('success', 'Password berhasil diperbarui!');
     }
 }

@@ -128,34 +128,5 @@
             <span class="sidebar-text will-change-transform">Settings</span>
         </a>
     </nav>
-
-    <div class="p-4 border-t border-green-100 bg-green-50/50">
-        <div class="flex items-center gap-3 mb-4 pb-4 border-b border-green-100">
-            <div
-                class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center rounded-xl shadow-md font-semibold">
-                {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-            </div>
-            <div class="min-w-0 flex-1 sidebar-text will-change-transform">
-                <p class="font-semibold text-gray-900 truncate">{{ auth()->user()->name ?? 'User' }}</p>
-                <p class="text-xs text-green-700 font-medium">{{ auth()->user()->getRoleNames()->first() ?? 'Owner' }}
-                </p>
-            </div>
-        </div>
-
-        <form method="POST" action="{{ route('logout') }}" class="w-full sidebar-text will-change-transform">
-            @csrf
-            <button type="submit"
-                class="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 hover:text-red-700 transition-all duration-200 group">
-                <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                    </path>
-                </svg>
-                Keluar
-            </button>
-        </form>
-    </div>
-
 </aside>
 <div id="overlay" class="fixed inset-0 bg-black/30 z-40 hidden lg:hidden"></div>
