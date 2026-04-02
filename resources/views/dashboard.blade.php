@@ -161,13 +161,24 @@
                                 Trend Revenue & Order
                             </h3>
                             <form method="GET">
-                                <select name="range" onchange="this.form.submit()"
-                                    class="px-4 py-2 border border-green-500 rounded-xl bg-white/50">
+                                <div class="relative w-full sm:w-48">
+                                    <select name="range" onchange="this.form.submit()"
+                                        class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                        <option value="7" {{ $range == 7 ? 'selected' : '' }}>7 Hari Terakhir
+                                        </option>
+                                        <option value="30" {{ $range == 30 ? 'selected' : '' }}>30 Hari</option>
+                                        <option value="90" {{ $range == 90 ? 'selected' : '' }}>3 Bulan</option>
+                                    </select>
 
-                                    <option value="7" {{ $range == 7 ? 'selected' : '' }}>7 Hari Terakhir</option>
-                                    <option value="30" {{ $range == 30 ? 'selected' : '' }}>30 Hari</option>
-                                    <option value="90" {{ $range == 90 ? 'selected' : '' }}>3 Bulan</option>
-                                </select>
+                                    <div
+                                        class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                        </svg>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                         <canvas id="revenueChart" height="100"></canvas>
