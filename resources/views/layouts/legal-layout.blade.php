@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Privacy Policy - StocKita</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-white text-gray-800">

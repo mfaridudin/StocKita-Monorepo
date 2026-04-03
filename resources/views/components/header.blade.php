@@ -19,25 +19,25 @@
     </div>
 
     <div class="flex items-center gap-4">
-        <div
+        {{-- <div
             class="flex items-center bg-gray-100 rounded-lg px-3 py-2 focus-within:bg-white focus-within:ring-2 focus-within:ring-green-200 focus-within:shadow-sm transition-all duration-200">
             <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             <input type="text" id="searchInput" name="search" placeholder="Cari..."
-                class="bg-transparent outline-none focus:outline-none text-sm w-48 md:w-64 pl-2 pr-3 py-1 transition-all duration-200"
+                class="bg-transparent border-0 outline-none focus:outline-none focus:ring-0 focus:border-0 text-sm w-48 md:w-64 pl-2 pr-3 py-1"
                 autocomplete="off">
-            <button id="clearSearch"
+            <button
                 class="hidden ml-2 p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-200 transition-colors duration-200">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                     </path>
                 </svg>
             </button>
-        </div>
+        </div> --}}
 
-        <button class="relative p-2 rounded-lg hover:bg-green-50">
+        {{-- <button class="relative p-2 rounded-lg hover:bg-green-50">
             <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
@@ -45,7 +45,7 @@
             </svg>
 
             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
+        </button> --}}
 
         <div class="relative group inline-block">
             <button class="flex items-center gap-2 p-2 rounded-lg hover:bg-green-50">

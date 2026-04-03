@@ -1,5 +1,5 @@
- <footer class="bg-emerald-600 text-white py-16 pt-24 relative overflow-hidden">
-     <div class="max-w-7xl mx-auto px-6 lg:px-8 pb-16 relative z-10">
+ <footer class="bg-emerald-600 text-white pt-24 relative overflow-hidden">
+     <div class="max-w-7xl mx-auto px-6 lg:px-8 pb-6 relative z-10">
          <div class="grid grid-cols-1 justify-between sm:grid-cols-2 lg:grid-cols-3 gap-10 text-white">
 
              <div>

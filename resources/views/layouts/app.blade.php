@@ -18,7 +18,7 @@
 </head>
 
 <body class="font-figtree bg-gray-50 antialiased">
-
+    
     <div class="flex w-full min-h-screen overflow-hidden">
 
         <!-- Sidebar -->
