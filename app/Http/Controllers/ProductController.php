@@ -69,7 +69,7 @@ class ProductController extends Controller
             'warehouse_id' => $request->warehouse_id,
         ]);
 
-        return back();
+        return redirect()->back()->with('success', 'Produk baru berhasil ditambahkan!');
     }
 
     /**
@@ -96,6 +96,24 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:1',
+            'category_id' => 'required|exists:categories,id',
+
+        ], [
+            'name.required' => 'Nama produk wajib diisi.',
+            'name.string' => 'Nama produk harus berupa teks.',
+            'name.max' => 'Nama produk maksimal 255 karakter.',
+
+            'price.required' => 'Harga wajib diisi.',
+            'price.numeric' => 'Harga harus berupa angka.',
+            'price.min' => 'Harga tidak boleh kurang dari 0.',
+
+            'category_id.required' => 'Kategori wajib dipilih.',
+            'category_id.exists' => 'Kategori tidak valid.',
+        ]);
+
         $product = Product::findOrFail($id);
 
         $product->update([
@@ -104,7 +122,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
         ]);
 
-        return back();
+        return redirect()->back()->with('success', 'Produk berhasil diperbarui!');
     }
 
     /**
@@ -115,7 +133,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Produk berhasil dihapus!');
     }
 
     // update imaage
@@ -135,6 +153,6 @@ class ProductController extends Controller
             ]);
         }
 
-        return back();
+        return redirect()->back()->with('success', 'Gambar produk berhasil diperbarui!');
     }
 }
