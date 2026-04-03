@@ -85,3 +85,32 @@
 
     </div>
 </section>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.set(".blog-card", {
+        willChange: "transform, opacity"
+    });
+
+    gsap.utils.toArray(".blog-card").forEach((el, i) => {
+        gsap.fromTo(el, {
+            opacity: 0,
+            y: 100,
+            scale: 0.96
+        }, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.2,
+            ease: "power3.out",
+            delay: i * 0.08,
+            scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                end: "top 60%",
+                scrub: 0.8,
+            }
+        });
+    });
+</script>
