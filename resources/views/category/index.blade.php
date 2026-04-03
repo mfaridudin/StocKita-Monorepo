@@ -97,47 +97,56 @@
     </div>
 
     {{-- create modal --}}
-    <x-modal name="create-category" maxWidth="md">
+    <x-modal name="create-category" maxWidth="md" :show="$errors->any()">
         <div class="p-6">
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">Tambah Kategori Baru</h3>
-                <button type="button" @click="$dispatch('close-modal', 'create-category')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-            <form action="/categories" method="POST" class="space-y-4">
+            <form action="/categories" method="POST">
                 @csrf
                 @method('POST')
-
-                <div>
-                    <label class="text-sm font-medium">Nama</label>
-                    <input type="text" name="name"
-                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">Tambah Kategori Baru</h3>
+                    <button type="button"
+                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-category')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
                 </div>
 
-                <div class="flex justify-end gap-2 pt-4">
-                    <button type="button" @click="$dispatch('close-modal', 'create-category')"
-                        class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
-                        Batal
-                    </button>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-medium">Nama</label>
+                        <input type="text" name="name"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                        <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
+                    </div>
 
-                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                        Simpan
-                    </button>
+                    <div class="flex justify-end gap-2 pt-4">
+                        <button type="button"
+                            @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-category')"
+                            class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                            Batal
+                        </button>
+
+                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            Simpan
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </x-modal>
 
-    <x-modal name="edit-category" maxWidth="md">
-        <div x-data="{ categoryId: null, categoryName: '' }"
+    <x-modal name="edit-category" maxWidth="md" :show="session('open_modal') === 'edit-category'">
+        <div x-data="{
+            categoryId: {{ session('category_id') ?? 'null' }},
+            categoryName: '{{ old('name') }}'
+        }"
             x-on:open-modal.window="
         if ($event.detail.name === 'edit-category') {
             categoryId = $event.detail.id
-            name = $event.detail.categoryName
+            categoryName = $event.detail.categoryName
         }
         "
             class="p-6">
@@ -150,7 +159,7 @@
                     class="text-gray-400 hover:text-gray-600 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+                            d=" M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -161,12 +170,14 @@
 
                 <div>
                     <label class="text-sm font-medium">Nama</label>
-                    <input type="text" name="name" x-model="name" :value="'{{ old('name') }}' || name"
+                    <input type="text" name="name" x-model="categoryName"
                         class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                    <x-input-error :messages="$errors->editCategory->get('name')" class="mt-2 text-red-500 text-sm" />
                 </div>
 
                 <div class="flex justify-end gap-2 pt-4">
-                    <button type="button" @click="$dispatch('close-modal', 'edit-category')"
+                    <button type="button"
+                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'edit-category')"
                         class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
                         Batal
                     </button>

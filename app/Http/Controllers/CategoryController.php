@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -42,6 +43,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
+        ], [
+            'name.required' => 'Nama kategori wajib diisi!',
         ]);
 
         $category = Category::create([
@@ -75,9 +78,20 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
-        $request->validate([
-            'name' => 'required',
+
+        $validator = Validator::make($request->all(), [
+            'name' => ['required'],
+        ], [
+            'name.required' => 'Nama kategori wajib diisi!',
         ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'editCategory')
+                ->with('open_modal', 'edit-category')
+                ->with('category_id', $id)
+                ->withInput();
+        }
 
         $category->update([
             'name' => $request->name,
