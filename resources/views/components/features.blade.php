@@ -1,4 +1,4 @@
-<section id="features" class="py-24 bg-gradient-to-b from-white to-emerald-50">
+<section id="features" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto">
 
         <div class="text-center mb-16">

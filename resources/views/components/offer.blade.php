@@ -2,7 +2,7 @@
     $plans = App\Models\Plan::get();
 @endphp
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<section id="offer" class="py-24 bg-gradient-to-b from-white to-emerald-50 overflow-hidden">
+<section id="offer" class="py-24 bg-gray-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6">
 
         <div class="text-center mb-10">
