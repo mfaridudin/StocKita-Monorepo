@@ -7,110 +7,165 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // total order
-        $totalOrder = Transaction::where('store_id', Auth::user()->store->id)->count();
-        $today = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::today())->count();
-        $yesterday = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::yesterday())->count();
-        $percent = 0;
-        if ($yesterday > 0) {
-            $percent = (($today - $yesterday) / $yesterday) * 100;
+        $storeId = Auth::user()->store->id;
+        $warehouseIds = Auth::user()->store->warehouse->pluck('id');
+
+        $today = Carbon::today();
+        $yesterday = Carbon::yesterday();
+
+        $transactions = Transaction::where('store_id', $storeId)
+            ->whereBetween('created_at', [
+                $today->copy()->subDays(30)->startOfDay(),
+                $today->copy()->endOfDay(),
+            ])
+            ->get()
+            ->groupBy(fn ($t) => Carbon::parse($t->created_at)->format('Y-m-d'));
+
+        $todayData = $transactions[$today->format('Y-m-d')] ?? collect();
+        $yesterdayData = $transactions[$yesterday->format('Y-m-d')] ?? collect();
+
+        $totalOrder = $transactions->flatten()->count();
+
+        $todayCount = $todayData->count();
+        $yesterdayCount = $yesterdayData->count();
+
+        if ($yesterdayCount == 0) {
+            $percentOrder = $todayCount > 0 ? 100 : 0;
+        } else {
+            $percentOrder = (($todayCount - $yesterdayCount) / $yesterdayCount) * 100;
         }
 
         // revenue
-        $todayRevenue = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::today())
-            ->sum('total');
-        $yesterdayRevenue = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', Carbon::yesterday())
-            ->sum('total');
+        $todayRevenue = (float) $todayData->sum('total');
+        $yesterdayRevenue = (float) $yesterdayData->sum('total');
 
-        $percentRevenue = 0;
-
-        if ($yesterdayRevenue > 0) {
+        if ($yesterdayRevenue == 0) {
+            $percentRevenue = $todayRevenue > 0 ? 100 : 0;
+        } else {
             $percentRevenue = (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100;
         }
 
-        $warehouseIds = Auth::user()->store->warehouse->pluck('id');
-        // stok ready
-        $totalStock = Stock::whereIn('warehouse_id', $warehouseIds)->sum('qty');
+        $formatPercent = function ($value) {
+            if ($value > 100) {
+                return '100%+';
+            }
+            if ($value < -100) {
+                return '-100%';
+            }
 
-        $todayStock = Stock::whereIn('warehouse_id', $warehouseIds)
-            ->whereDate('updated_at', Carbon::today())
-            ->sum('qty');
+            return round($value, 1).'%';
+        };
 
-        $yesterdayStock = Stock::whereIn('warehouse_id', $warehouseIds)->whereDate('updated_at', Carbon::yesterday())
-            ->sum('qty');
+        $percentOrderLabel = $formatPercent($percentOrder);
+        $percentRevenueLabel = $formatPercent($percentRevenue);
 
-        $percentStock = 0;
+        // stok
+        $stocks = Stock::whereIn('warehouse_id', $warehouseIds)->get();
 
-        if ($yesterdayStock > 0) {
+        $totalStock = $stocks->sum('qty');
+
+        $todayStock = $stocks->filter(fn ($s) => Carbon::parse($s->updated_at)->isToday()
+        )->sum('qty');
+
+        $yesterdayStock = $stocks->filter(fn ($s) => Carbon::parse($s->updated_at)->isYesterday()
+        )->sum('qty');
+
+        if ($yesterdayStock == 0) {
+            $percentStock = $todayStock > 0 ? 100 : 0;
+        } else {
             $percentStock = (($todayStock - $yesterdayStock) / $yesterdayStock) * 100;
         }
 
-        // low stok
-        $lowStockCount = Stock::whereIn('warehouse_id', $warehouseIds)->where('qty', '<=', 5)
-            ->where('qty', '>', 0)
-            ->count();
+        $percentStockLabel = $formatPercent($percentStock);
 
-        $todayLow = Stock::whereIn('warehouse_id', $warehouseIds)->where('qty', '<=', 5)
-            ->where('qty', '>', 0)
-            ->whereDate('updated_at', Carbon::today())
-            ->count();
+        $lowStock = $stocks->filter(fn ($s) => $s->qty <= 5 && $s->qty > 0);
 
-        $yesterdayLow = Stock::whereIn('warehouse_id', $warehouseIds)->where('qty', '<=', 5)
-            ->where('qty', '>', 0)
-            ->whereDate('updated_at', Carbon::yesterday())
-            ->count();
+        $lowStockCount = $lowStock->count();
 
-        $percentLow = 0;
+        $todayLow = $lowStock->filter(fn ($s) => Carbon::parse($s->updated_at)->isToday()
+        )->count();
 
-        if ($yesterdayLow > 0) {
+        $yesterdayLow = $lowStock->filter(fn ($s) => Carbon::parse($s->updated_at)->isYesterday()
+        )->count();
+
+        if ($yesterdayLow == 0) {
+            $percentLow = $todayLow > 0 ? 100 : 0;
+        } else {
             $percentLow = (($todayLow - $yesterdayLow) / $yesterdayLow) * 100;
         }
 
-        // statistik chart
+        $percentLowLabel = $formatPercent($percentLow);
+
+        // revenue order
         $range = $request->get('range', 7);
 
-        $data = collect();
+        $chartLabels = [];
+        $chartRevenue = [];
+        $chartOrders = [];
 
         for ($i = $range - 1; $i >= 0; $i--) {
-            $date = Carbon::today()->subDays($i);
+            $date = $today->copy()->subDays($i)->format('Y-m-d');
+            $formatted = Carbon::parse($date)->format('d M');
 
-            $revenue = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', $date)->sum('total');
-            $orders = Transaction::where('store_id', Auth::user()->store->id)->whereDate('created_at', $date)->count();
+            $dayData = $transactions[$date] ?? collect();
 
-            $data->push([
-                'date' => $date->format('d M'),
-                'revenue' => $revenue,
-                'orders' => $orders,
-            ]);
+            $chartLabels[] = $formatted;
+            $chartRevenue[] = $dayData->sum('total');
+            $chartOrders[] = $dayData->count();
         }
 
-        $chartLabels = $data->pluck('date');
-        $chartRevenue = $data->pluck('revenue');
-        $chartOrders = $data->pluck('orders');
+        // top produk
+        $topProducts = DB::table('transaction_items')
+            ->select('products.name', DB::raw('SUM(transaction_items.qty) as total_sold'))
+            ->join('products', 'transaction_items.product_id', '=', 'products.id')
+            ->groupBy('products.id', 'products.name')
+            ->orderByDesc('total_sold')
+            ->limit(5)
+            ->get();
+
+        if ($topProducts->isEmpty()) {
+            $labels = ['Belum ada data'];
+            $data = [1];
+        } else {
+            $labels = $topProducts->pluck('name');
+            $data = $topProducts->pluck('total_sold');
+        }
 
         return view('dashboard', compact(
             'totalOrder',
-            'today',
-            'yesterday',
-            'percent',
+            'todayCount',
+            'yesterdayCount',
+            'percentOrder',
+            'percentOrderLabel',
+
             'todayRevenue',
             'yesterdayRevenue',
             'percentRevenue',
+            'percentRevenueLabel',
+
             'totalStock',
             'todayStock',
             'yesterdayStock',
             'percentStock',
+            'percentStockLabel',
+
             'lowStockCount',
             'percentLow',
+            'percentLowLabel',
+
             'chartLabels',
             'chartRevenue',
             'chartOrders',
-            'range'
+            'range',
+
+            'labels',
+            'data'
         ));
     }
 }
