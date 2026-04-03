@@ -200,4 +200,14 @@ class PaymentController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function checkout(Request $request)
+    {
+        $plan = Plan::findOrFail($request->plan);
+
+        return view('checkout', [
+            'plan' => $plan,
+            'interval' => $request->interval ?? 'monthly',
+        ]);
+    }
 }

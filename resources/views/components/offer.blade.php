@@ -1,7 +1,7 @@
 @php
     $plans = App\Models\Plan::get();
 @endphp
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <section id="offer" class="py-24 bg-gradient-to-b from-white to-emerald-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6">
 
@@ -30,8 +30,8 @@
             @foreach ($plans as $plan)
                 <div
                     class="offer-card 
-                            {{ $plan->name == 'Pro' ? 'bg-emerald-500 text-white p-10 shadow-2xl scale-105 relative' : 'bg-white p-8 border shadow-sm hover:shadow-xl' }} 
-                            rounded-3xl transition">
+                        {{ $plan->name == 'Pro' ? 'bg-emerald-500 text-white p-10 shadow-2xl scale-105 relative' : 'bg-white p-8 border shadow-sm hover:shadow-xl' }} 
+                        rounded-3xl transition">
 
                     @if ($plan->name == 'Pro')
                         <span class="absolute top-4 right-4 bg-white text-emerald-600 text-xs px-3 py-1 rounded-full">
@@ -51,9 +51,15 @@
                         @endif
                     </p>
 
-                    <div class="text-4xl font-bold mb-6 price" data-monthly="{{ $plan->price }}"
-                        data-yearly="{{ $plan->yearly_price }}">
-                        Rp {{ $plan->price }}
+                    <div class="mb-6">
+                        <div
+                            class="text-sm mt-1 {{ $plan->name == 'Pro' ? 'text-white' : 'text-emerald-500' }}  save-badge hidden">
+                            Hemat 20%
+                        </div>
+                        <div class="text-4xl font-bold price" data-monthly="{{ $plan->price }}"
+                            data-yearly="{{ $plan->yearly_price }}">
+                            Rp {{ $plan->price }}
+                        </div>
                     </div>
 
                     <ul class="space-y-3 mb-8">
@@ -70,7 +76,7 @@
                     @elseif($plan->name == 'Pro')
                         <button class="w-full py-3 rounded-xl bg-white text-emerald-600 font-semibold pay-btn"
                             data-plan-id="{{ $plan->id }}">
-                            Upgrade Sekarang
+                            Pilih Paket
                         </button>
                     @else
                         <button class="w-full py-3 rounded-xl bg-gray-900 text-white pay-btn"
@@ -113,6 +119,15 @@
 
                 el.innerHTML = formatRupiah(value) +
                     (value != 0 ? `<span class="text-lg">/${isYearly ? 'tahun' : 'bulan'}</span>` : '');
+
+                const saveBadge = el.parentElement.querySelector('.save-badge');
+                if (saveBadge) {
+                    if (isYearly && yearly < monthly * 12) {
+                        saveBadge.classList.remove('hidden');
+                    } else {
+                        saveBadge.classList.add('hidden');
+                    }
+                }
             });
         }
 
@@ -135,6 +150,13 @@
             btn.addEventListener('click', async () => {
                 const plan_id = btn.dataset.planId;
                 const interval = isYearly ? 'yearly' : 'monthly';
+
+                const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+
+                if (!isLoggedIn) {
+                    window.location.href = `/register?plan=${plan_id}&interval=${interval}`;
+                    return;
+                }
 
                 try {
                     const res = await fetch(`/pay`, {
@@ -160,20 +182,48 @@
                     // MIDTRANS POPUP
                     snap.pay(data.snap_token, {
                         onSuccess: function(result) {
-                            alert('Pembayaran sukses');
+                            Swal.fire({
+                                toast: true,
+                                icon: 'success',
+                                position: 'top-end',
+                                title: 'Pembayaran sukses',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
                             location.reload();
                         },
                         onPending: function(result) {
-                            alert('Menunggu pembayaran');
+                            Swal.fire({
+                                toast: true,
+                                icon: 'warning',
+                                position: 'top-end',
+                                title: 'Menunggu pembayaran',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
                         },
                         onError: function(result) {
-                            alert('Pembayaran gagal');
+                            Swal.fire({
+                                toast: true,
+                                icon: 'error',
+                                position: 'top-end',
+                                title: 'Pembayaran gagal',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
                         }
                     });
 
                 } catch (err) {
                     console.error(err);
-                    alert('Terjadi error, cek console');
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        position: 'top-end',
+                        title: 'Terjadi error',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
             });
         });

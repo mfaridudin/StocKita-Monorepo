@@ -21,8 +21,13 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        session([
+            'plan_id' => $request->plan,
+            'interval' => $request->interval,
+        ]);
+
         return view('auth.register');
     }
 
@@ -76,6 +81,15 @@ class RegisteredUserController extends Controller
             $user->save();
         }
 
+        $plan = session('plan_id');
+        $interval = session('interval');
+
+        if ($plan) {
+            Auth::login($user);
+
+            return redirect("/checkout?plan={$plan}&interval={$interval}");
+        }
+
         if ($user) {
             Subscription::updateOrCreate(
                 ['user_id' => $user->id],
@@ -89,8 +103,6 @@ class RegisteredUserController extends Controller
         }
 
         event(new Registered($user));
-
-        // Auth::login($user);
 
         return redirect(route('login'))->with('success', 'Registrasi berhasil silahkan login!');
     }

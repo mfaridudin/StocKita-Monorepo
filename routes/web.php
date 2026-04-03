@@ -28,6 +28,7 @@ Route::view('/terms', 'terms');
 Route::view('/dmca', 'dmca');
 
 Route::middleware(['auth', 'role:admin|owner'])->group(function () {
+    Route::get('/checkout', [PaymentController::class, 'checkout']);
     Route::get('/customers/search', function (Request $request) {
         return User::role('buyer')
             ->where('name', 'like', '%'.$request->q.'%')
