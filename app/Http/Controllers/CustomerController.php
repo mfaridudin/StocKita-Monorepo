@@ -113,7 +113,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CustomerStoreRequest $request, string $id)
     {
         $customer = Customer::findOrFail($id);
         $user = User::findOrFail($customer->user->id);
