@@ -289,11 +289,11 @@
             let visibleCount = 0;
 
             productCards.forEach(card => {
-                const productName = card.querySelector('p.font-bold')?.textContent.toLowerCase() || '';
-                const stockInfo = card.querySelector('span')?.textContent.toLowerCase() || '';
+                const productName = card.querySelector('p.font-medium')?.textContent.toLowerCase() || '';
+                const stockInfo = card.querySelector('p.text-xs')?.textContent.toLowerCase() || '';
                 const fullText = (productName + ' ' + stockInfo).trim();
 
-                const isVisible = keyword === '' || fullText.includes(keyword);
+                const isVisible = keyword === '' || fullText.startsWith(keyword);
 
                 card.style.display = isVisible ? 'block' : 'none';
 
