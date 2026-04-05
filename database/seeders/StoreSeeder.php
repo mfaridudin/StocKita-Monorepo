@@ -15,6 +15,9 @@ class StoreSeeder extends Seeder
         Store::firstOrCreate([
             'name' => 'Stockita',
             'slug' => 'stoc-kita',
+            'email' => 'StocKita@email.com',
+            'phone' => '08123456789',
+            'address' => 'Jl. Pandanaran No. 123, Semarang, Jawa Tengah, 50241, Indonesia',
         ]);
     }
 }

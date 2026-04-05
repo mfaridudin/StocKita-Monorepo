@@ -55,6 +55,10 @@ Route::middleware(['auth', 'role:admin|owner'])->group(function () {
 
     Route::put('/product/update-img/{id}', [ProductController::class, 'updateImage'])->name('products.update-image');
 
+    Route::post('/owner', [SettingController::class, 'storeOwner'])->name('owners.store');
+    Route::put('/owner/{id}', [SettingController::class, 'updateOwner']);
+    Route::put('/store/{id}', [SettingController::class, 'updateStore']);
+
     Route::get('/subscription', [PaymentController::class, 'index'])->name('subscription.index');
     Route::post('/subscription/upgrade', [PaymentController::class, 'upgrade'])->name('subscription.upgrade');
 });

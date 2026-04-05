@@ -74,6 +74,7 @@ class RegisteredUserController extends Controller
         if ($user->hasRole('admin')) {
             $store = Store::create([
                 'name' => $user->name."'s Store",
+                'email' => $request->email,
                 'owner_id' => $user->id,
                 'slug' => $this->generateUniqueSlug($user->name.'-store'),
             ]);
