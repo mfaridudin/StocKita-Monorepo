@@ -169,7 +169,7 @@
                             toast: true,
                             icon: 'success',
                             position: 'top-end',
-                            title: 'Terjadi kesalahan',
+                            title: 'Terjadi kesalahan dibackend, cek console',
                             showConfirmButton: false,
                             timer: 3000
                         });
