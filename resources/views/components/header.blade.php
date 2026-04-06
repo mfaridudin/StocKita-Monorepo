@@ -61,7 +61,7 @@
             <div
                 class="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible scale-95 group-hover:scale-100 transition-all duration-200 origin-top-right border-b-0 overflow-hidden">
 
-                <div class="py-2 space-y-1">
+                <div x-data class="py-2 space-y-1">
                     <a href="/profile"
                         class="group/menu flex items-center gap-3 px-5 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 relative overflow-hidden">
                         <div
@@ -84,27 +84,74 @@
                         <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
                     </div>
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <button type="submit"
-                            class="w-full flex items-center gap-3 px-5 py-3 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-rose-50 hover:text-red-700 group/logout transition-all duration-200 relative overflow-hidden">
-                            <div
-                                class="w-10 h-10 bg-gradient-to-r from-red-500 to-rose-600 flex items-center justify-center rounded-xl text-white text-sm font-semibold shadow-md group-hover/logout:scale-105 transition-transform duration-200">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                                </svg>
-                            </div>
-                            <div class="min-w-0 flex-1 text-left">
-                                <span class="font-medium block">Keluar</span>
-                                <span class="text-xs opacity-75 block">Keluar dari akun</span>
-                            </div>
-                        </button>
-                    </form>
+                    <button @click="$dispatch('open-modal', { name: 'logout' })"
+                        class="w-full flex items-center gap-3 px-5 py-3 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-rose-50 hover:text-red-700 group/logout transition-all duration-200 relative overflow-hidden">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-r from-red-500 to-rose-600 flex items-center justify-center rounded-xl text-white text-sm font-semibold shadow-md group-hover/logout:scale-105 transition-transform duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                            </svg>
+                        </div>
+                        <div class="min-w-0 flex-1 text-left">
+                            <span class="font-medium block">Keluar</span>
+                            <span class="text-xs opacity-75 block">Keluar dari akun</span>
+                        </div>
+                    </button>
+                    {{-- </form> --}}
                 </div>
             </div>
         </div>
 
     </div>
+    <x-modal name="logout" maxWidth="md">
+        <div class="p-6">
+
+            <div class="flex items-center justify-between mb-5 pb-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-red-100 text-red-600">
+
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Logout Akun
+                    </h3>
+                </div>
+
+                <button type="button" @click="$dispatch('close-modal', 'logout')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                Apakah kamu yakin ingin keluar dari akun? Kamu perlu login kembali untuk mengakses aplikasi.
+            </p>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <div class="flex gap-3">
+                    <button type="button" @click="$dispatch('close-modal', 'logout')"
+                        class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-sm hover:shadow transition">
+                        Ya, Logout
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </x-modal>
 
 </header>
