@@ -49,6 +49,25 @@ Route::get('/blog/{slug}', function ($slug) {
 
 });
 
+Route::get('/features/{slug}', function ($slug) {
+
+    $features = config('features');
+
+    abort_if(! isset($features[$slug]), 404);
+
+    return view('features.detail', [
+        'title' => $features[$slug]['title'],
+        'excerpt' => $features[$slug]['excerpt'],
+        'image' => $features[$slug]['image'],
+        'description' => $features[$slug]['description'],
+        'steps' => $features[$slug]['steps'],
+        'benefits' => $features[$slug]['benefits'],
+        'faqs' => $features[$slug]['faqs'],
+        'use_cases' => $features[$slug]['use_cases'],
+        'highlights' => $features[$slug]['highlights']
+    ]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Auth Routes (tanpa subscription)
