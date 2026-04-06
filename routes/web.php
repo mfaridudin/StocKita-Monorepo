@@ -33,6 +33,22 @@ Route::view('/privacy', 'privacy');
 Route::view('/terms', 'terms');
 Route::view('/dmca', 'dmca');
 
+Route::get('/blog/{slug}', function ($slug) {
+
+    $articles = config('blog');
+
+    if (! isset($articles[$slug])) {
+        abort(404);
+    }
+
+    return view('blogs.detail', [
+        'title' => $articles[$slug]['title'],
+        'content' => $articles[$slug]['content'],
+        'image' => $articles[$slug]['image'],
+    ]);
+
+});
+
 /*
 |--------------------------------------------------------------------------
 | Auth Routes (tanpa subscription)
