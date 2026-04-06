@@ -4,8 +4,7 @@
 
              <div>
                  <div class="flex items-center gap-3 mb-6">
-                     <div
-                         class="w-12 h-12">
+                     <div class="w-12 h-12">
                          <img src="/image/icon/icon.png" alt="">
                      </div>
                      <div>
@@ -23,11 +22,10 @@
              <div>
                  <h4 class="text-lg font-semibold mb-4">Produk</h4>
                  <ul class="space-y-2 text-sm text-white">
-                     <li><span class="hover:white transition">Dashboard</span></li>
-                     <li><span class="hover:white transition">Manajemen Produk</span></li>
-                     <li><span class="hover:white transition">Pelanggan</span></li>
-                     <li><span class="hover:white transition">Pembayaran</span></li>
-                     <li><span class="hover:white transition">Report</span></li>
+                     <li><a href="/blog/kelola-produk" class="block hover:text-emerald-400">Manajemen Produk</a></li>
+                     <li><a href="/features/pelanggan" class="block hover:text-emerald-400">Pelanggan</a></li>
+                     <li><a href="#offer" class="block hover:text-emerald-400">Pembayaran</a></li>
+                     <li><a href="/login" class="block hover:text-emerald-400">Dashboard</a></li>
                  </ul>
              </div>
 
