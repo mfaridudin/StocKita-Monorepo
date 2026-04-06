@@ -1,0 +1,45 @@
+# Setup Singkat Midtrans
+
+## 1. Register
+
+* Daftar akun di [https://midtrans.com](https://midtrans.com)
+
+## 2. Ambil API Key
+
+* Dashboard → Settings → Access Keys
+* Copy:
+
+  * Server Key
+  * Client Key
+
+## 3. Set di `.env`
+
+```env
+MIDTRANS_SERVER_KEY=your_server_key
+MIDTRANS_CLIENT_KEY=your_client_key
+```
+
+## 4. Settings Snap Reference
+
+* Dashboard → Settings → Snap Reference
+
+
+## 5. Set Payment Notification URL
+
+* Dashboard → Integrations → Configurations
+* Isi URL callback (contoh):
+
+```
+https://domain.com/midtrans/callback
+```
+
+## 6. Jika pakai localhost
+
+* Gunakan:
+
+  * Cloudflare Tunnel
+  * atau ngrok
+
+---
+
+**Selesai**
