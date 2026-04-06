@@ -104,14 +104,6 @@
                                             d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
                                 </a>
-                                <a href="#features"
-                                    class="flex items-center justify-center gap-3 px-8 py-6 text-lg font-bold text-white border-2 border-white/40 hover:border-white/70 rounded-2xl backdrop-blur-xl transition-all duration-300 min-w-[160px] shadow-xl hover:shadow-white/20 hover:-translate-y-1">
-                                    Fitur
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </a>
                             </div>
                         </div>
                     </div>
