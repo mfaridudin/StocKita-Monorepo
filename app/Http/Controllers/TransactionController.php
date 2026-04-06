@@ -18,11 +18,22 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $storeId = Auth::user()->store->id;
 
-        $transactionQuery = Transaction::where('store_id', $storeId);
+        $transactionQuery = Transaction::where('store_id', $storeId)
+            ->when($request->search, function ($q) use ($request) {
+                $search = $request->search;
+
+                $q->where(function ($query) use ($search) {
+                    $query->where('invoice', 'like', "%$search%")
+                        ->orWhere('product_name', 'like', "%$search%");
+                });
+            })
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            });
 
         $stats = [
             'total' => (clone $transactionQuery)->count(),
@@ -41,7 +52,8 @@ class TransactionController extends Controller
         $transactions = $transactionQuery
             ->with('customer')
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('transaksi.index', compact('transactions', 'stats'));
     }

@@ -39,32 +39,38 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl shadow-sm border">
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input type="text" placeholder="Cari invoice, customer, atau produk..."
-                    class="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500">
+        <form method="GET" action="{{ route('transactions.index') }}">
+            <div class="bg-white p-4 rounded-xl shadow-sm border">
+                <div class="flex flex-col sm:flex-row gap-3">
 
-                <div class="relative w-full sm:w-48">
-                    <select
-                        class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        <option>Semua</option>
-                        <option>Paid</option>
-                        <option>Unpaid</option>
-                    </select>
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari invoice, customer, atau produk..."
+                        class="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500">
 
-                    <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                        </svg>
+                    <div class="relative w-full sm:w-48">
+                        <select name="status"
+                            class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-500">
+
+                            <option value="">Semua</option>
+                            <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Paid</option>
+                            <option value="unpaid" {{ request('status') == 'unpaid' ? 'selected' : '' }}>Unpaid</option>
+                        </select>
+
+                        <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </div>
                     </div>
-                </div>
 
-                <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                    Filter
-                </button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Filter
+                    </button>
+
+                </div>
             </div>
-        </div>
+        </form>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-white p-6 rounded-xl shadow-sm border text-center">
