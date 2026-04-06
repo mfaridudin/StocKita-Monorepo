@@ -156,50 +156,48 @@
     <x-footer />
 
     <x-cookie-consent />
-
     <script>
         const input = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
         const resultsBox = document.getElementById('searchResults');
 
+        let currentResults = [];
+        let activeIndex = -1;
+        let debounceTimer;
+
         input.addEventListener('input', function() {
-            if (this.value.length > 0) {
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(() => {
+                handleSearch(this.value);
+            }, 200);
+        });
+
+        function handleSearch(keyword) {
+            keyword = keyword.toLowerCase();
+
+            resultsBox.innerHTML = '';
+            resultsBox.classList.add('hidden');
+            removeHighlights();
+
+            activeIndex = -1;
+            currentResults = [];
+
+            if (keyword.length > 0) {
                 clearBtn.classList.remove('hidden');
             } else {
                 clearBtn.classList.add('hidden');
             }
-        });
-
-        clearBtn.addEventListener('click', function() {
-            input.value = '';
-            resultsBox.innerHTML = '';
-            resultsBox.classList.add('hidden');
-
-            removeHighlights();
-
-            clearBtn.classList.add('hidden');
-            input.focus();
-
-        });
-
-        input.addEventListener('input', function() {
-            const keyword = this.value.toLowerCase();
-
-            resultsBox.innerHTML = '';
-            resultsBox.classList.add('hidden');
-
-            removeHighlights();
 
             if (keyword.length < 2) return;
 
-            let results = [];
             const elements = document.querySelectorAll('h1, h2, h3, p, span, a, li');
 
             elements.forEach(el => {
                 const text = el.innerText.toLowerCase();
 
                 if (text.includes(keyword)) {
-                    results.push({
+                    currentResults.push({
                         element: el,
                         text: el.innerText
                     });
@@ -208,22 +206,23 @@
                 }
             });
 
-            if (results.length === 0) {
+            renderResults(keyword);
+        }
+
+        function renderResults(keyword) {
+            if (currentResults.length === 0) {
                 resultsBox.innerHTML = `<div class="p-3 text-sm text-gray-500">Tidak ditemukan</div>`;
             } else {
-                results.slice(0, 5).forEach((res, index) => {
+                currentResults.slice(0, 5).forEach((res, index) => {
                     const item = document.createElement('div');
-                    item.className = 'p-3 text-sm hover:bg-gray-100 cursor-pointer';
+                    item.className = 'p-3 text-sm cursor-pointer rounded-lg';
 
                     item.innerHTML = createSnippet(res.text, keyword)
                         .replace(new RegExp(`(${keyword})`, 'gi'),
                             '<span class="bg-yellow-200 rounded">$1</span>');
 
                     item.addEventListener('click', () => {
-                        res.element.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
+                        scrollToElement(res.element);
                     });
 
                     resultsBox.appendChild(item);
@@ -231,11 +230,57 @@
             }
 
             resultsBox.classList.remove('hidden');
+        }
+
+        input.addEventListener('keydown', function(e) {
+            const items = resultsBox.querySelectorAll('div');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) % items.length;
+                updateActive(items);
+            }
+
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1 + items.length) % items.length;
+                updateActive(items);
+            }
+
+            if (e.key === 'Enter') {
+                e.preventDefault();
+
+                if (items.length === 0) return;
+
+                if (activeIndex >= 0) {
+                    items[activeIndex].click();
+                } else {
+                    items[0].click(); // default ke hasil pertama
+                }
+            }
         });
+
+        function updateActive(items) {
+            items.forEach((item, index) => {
+                item.classList.remove('bg-emerald-100');
+
+                if (index === activeIndex) {
+                    item.classList.add('bg-emerald-100');
+                }
+            });
+        }
+
+        function scrollToElement(el) {
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            resultsBox.classList.add('hidden');
+        }
 
         function highlightWord(element, keyword) {
             const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-
             const nodes = [];
 
             while (walker.nextNode()) {
@@ -281,6 +326,23 @@
 
             return snippet;
         }
+
+        clearBtn.addEventListener('click', function() {
+            input.value = '';
+            resultsBox.innerHTML = '';
+            resultsBox.classList.add('hidden');
+
+            removeHighlights();
+
+            clearBtn.classList.add('hidden');
+            input.focus();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!resultsBox.contains(e.target) && e.target !== input) {
+                resultsBox.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 
