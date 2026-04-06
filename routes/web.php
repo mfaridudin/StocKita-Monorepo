@@ -45,6 +45,9 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // checkout
+    Route::get('/checkout', [PaymentController::class, 'checkout']);
+
     // Subscription (HARUS bisa diakses walau belum aktif)
     Route::get('/subscription', [PaymentController::class, 'index'])->name('subscription.index');
     Route::post('/subscription/upgrade', [PaymentController::class, 'upgrade'])->name('subscription.upgrade');
@@ -58,7 +61,6 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin|owner', 'subscription.active'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/checkout', [PaymentController::class, 'checkout']);
 
     // Search
     Route::get('/customers/search', function (Request $request) {

@@ -177,7 +177,7 @@
                     toast: true,
                     icon: 'error',
                     position: 'top-end',
-                    title: 'Terjadi Kesalahan',
+                    title: 'Terjadi Kesalahan dari backend',
                     showConfirmButton: false,
                     timer: 3000
                 });
