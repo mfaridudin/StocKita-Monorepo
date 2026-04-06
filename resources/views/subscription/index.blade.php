@@ -1,9 +1,9 @@
-<x-app-layout>
+<x-app-layout title="Subscription">
     @php
         $plans = $plans ?? [];
     @endphp
 
-    <section class="py-24 bg-gradient-to-b from-white to-emerald-50">
+    <section class="py-24 bg-gradient-to-b from-white rounded-2xl to-emerald-50">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-bold mb-4">Kelola Subscription</h2>
             @if ($subscription)
@@ -119,25 +119,60 @@
                         const data = await res.json();
 
                         if (data.free) {
-                            alert('Paket gratis aktif!');
-                            return;
+                            Swal.fire({
+                                toast: true,
+                                icon: 'success',
+                                position: 'top-end',
+                                title: 'Paket gratis aktif',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                            location.reload();
                         }
 
                         snap.pay(data.snap_token, {
                             onSuccess: function(result) {
-                                alert('Pembayaran sukses');
+                                Swal.fire({
+                                    toast: true,
+                                    icon: 'success',
+                                    position: 'top-end',
+                                    title: 'Pembayaran sukses',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
                                 location.reload();
                             },
                             onPending: function(result) {
-                                alert('Menunggu pembayaran');
+                                Swal.fire({
+                                    toast: true,
+                                    icon: 'success',
+                                    position: 'top-end',
+                                    title: 'Mengunggu pembayaran',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
                             },
                             onError: function(result) {
-                                alert('Pembayaran gagal');
+                                Swal.fire({
+                                    toast: true,
+                                    icon: 'success',
+                                    position: 'top-end',
+                                    title: 'Pembayaran gagal',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
                             }
                         });
                     } catch (err) {
                         console.error(err);
-                        alert('Terjadi error, cek console');
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            position: 'top-end',
+                            title: 'Terjadi kesalahan',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                     }
                 });
             });

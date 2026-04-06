@@ -175,7 +175,14 @@
 
                     // FREE PLAN
                     if (data.free) {
-                        alert('Paket gratis aktif!');
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            position: 'top-end',
+                            title: 'Paket gratis aktif, silahkan login!',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                         return;
                     }
 

@@ -31,6 +31,18 @@ class User extends Authenticatable
         ];
     }
 
+    public function activeSubscription()
+    {
+        return $this->hasOne(Subscription::class)
+            ->where('status', 'active')
+            ->where('current_period_end', '>', now());
+    }
+
+    public function hasActiveSubscription()
+    {
+        return $this->activeSubscription()->exists();
+    }
+
     public function products()
     {
         return $this->hasManyThrough(Product::class, Store::class, 'id', 'store_id', 'store_id', 'id');
