@@ -12,7 +12,6 @@
         const track = document.getElementById('marqueeTrack');
 
         const items = [
-            'UdinPOS',
             'KasirKita',
             'StokCepat',
             'Gudangin',
@@ -20,8 +19,7 @@
             'NotaKu',
             'Jualin',
             'LapakPro',
-            'RYPAY',
-            'RidzzPOS',
+            'CorePay',
             'TokoSmart',
             'ScanPay',
             'KasirX',
@@ -31,7 +29,9 @@
             'POSinAja',
             'JualCepat',
             'KassaNow',
-            'WarungDigital'
+            'WarungDigital',
+            'QuickPOS',
+            'SmartKasir'
         ];
 
         const totalItems = [...Array(50)].flatMap(() => items);
