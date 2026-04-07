@@ -60,6 +60,9 @@ return [
             'Tambah produk',
             'Isi data produk',
             'Simpan',
+            'Masuk menu Gudang',
+            'Buat gudang',
+            'Tambahkan produk dan isi stoknya',
         ],
 
         'benefits' => [
