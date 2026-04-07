@@ -40,6 +40,10 @@ class User extends Authenticatable
 
     public function hasActiveSubscription()
     {
+        if (! $this->hasRole('owner')) {
+            return true;
+        }
+
         return $this->activeSubscription()->exists();
     }
 
