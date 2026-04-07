@@ -151,8 +151,10 @@
                         class="px-4 py-2 bg-gray-200 rounded-xl">
                         Batal
                     </button>
-                    <button onclick="submitTransaction()" class="px-4 py-2 bg-green-500 text-white rounded-xl">
-                        Simpan
+                    <button onclick="submitTransaction()" id="submitBtn"
+                        class="px-4 py-2 bg-green-500 text-white rounded-xl flex items-center justify-center gap-2">
+
+                        <span id="btnText">Simpan</span>
                     </button>
                 </div>
 
@@ -289,7 +291,8 @@
             let visibleCount = 0;
 
             productCards.forEach(card => {
-                const productName = card.querySelector('p.font-medium')?.textContent.toLowerCase() || '';
+                const productName = card.querySelector('p.font-medium')?.textContent.toLowerCase() ||
+                    '';
                 const stockInfo = card.querySelector('p.text-xs')?.textContent.toLowerCase() || '';
                 const fullText = (productName + ' ' + stockInfo).trim();
 
@@ -332,7 +335,17 @@
             };
         }
 
+        let isSubmitting = false;
+
         async function submitTransaction() {
+            if (isSubmitting) return;
+
+            isSubmitting = true;
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+
             const paid = document.getElementById('paid').value;
             const payment_method = document.getElementById('payment_method').value;
             const paid_at = document.getElementById('paid_at').value;
@@ -372,39 +385,37 @@
                         showConfirmButton: false,
                         timer: 3000
                     });
+
                     location.href = '/transactions/' + data.data.id;
+
                 } else {
-                    let message = data.message || 'Gagal menyimpan transaksi';
-
-                    if (data.errors) {
-                        message = Object.values(data.errors).flat().join('<br>');
-                    }
-
-                    Swal.fire({
-                        toast: true,
-                        icon: 'warning',
-                        position: 'top-end',
-                        title: 'Transaksi Gagal',
-                        html: message,
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
+                    throw data;
                 }
 
             } catch (err) {
-                console.error(err);
+                let message = err.message || 'Gagal menyimpan transaksi';
+
+                if (err.errors) {
+                    message = Object.values(err.errors).flat().join('<br>');
+                }
+
                 Swal.fire({
                     toast: true,
+                    icon: 'warning',
                     position: 'top-end',
-                    icon: 'error',
-                    title: 'Server Error',
-                    text: 'Terjadi kesalahan pada server, coba lagi nanti',
+                    title: 'Transaksi Gagal',
+                    html: message,
                     showConfirmButton: false,
                     timer: 3000
                 });
+
+                isSubmitting = false;
+                btn.disabled = false;
+                btn.innerText = 'Simpan';
             }
         }
     </script>
+
     <script>
         const input = document.getElementById('customerInput');
         const dropdown = document.getElementById('customerDropdown');
