@@ -69,9 +69,9 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('admin');
+        $user->assignRole('owner');
 
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole('owner')) {
             $store = Store::create([
                 'name' => $user->name."'s Store",
                 'email' => $request->email,

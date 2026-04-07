@@ -33,10 +33,10 @@ class GoogleController extends Controller
                 'password' => bcrypt('password123'),
             ]);
 
-            $user->assignRole('admin');
+            $user->assignRole('owner');
         }
 
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole('owner')) {
             $store = Store::create([
                 'name' => $googleUser->name."'s Store",
                 'owner_id' => $user->id,
