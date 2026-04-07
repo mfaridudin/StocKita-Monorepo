@@ -93,7 +93,7 @@
                         Sistem role Admin, Owner, dan Buyer untuk kontrol penuh dan aman.
                     </p>
                 </div>
-                </daiv>
+            </a>
         </div>
     </div>
 </section>

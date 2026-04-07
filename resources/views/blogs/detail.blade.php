@@ -76,22 +76,22 @@
                 {!! $content !!}
 
             </div>
-
-            <div class="mt-16 bg-emerald-500 text-white rounded-2xl p-8 text-center shadow">
-                <h3 class="text-2xl font-bold">
-                    Siap Mengelola Bisnismu Lebih Mudah?
-                </h3>
-                <p class="mt-2 text-emerald-100">
-                    Gunakan sistem POS kami untuk meningkatkan efisiensi dan penjualan.
-                </p>
-                <a href="/register"
-                    class="inline-block mt-4 px-6 py-3 bg-white text-emerald-600 rounded-xl font-semibold hover:bg-gray-100 transition">
-                    Coba Sekarang
-                </a>
-            </div>
-
         </div>
     </section>
+
+    <section class="bg-emerald-600 text-white py-20 text-center">
+        <h3 class="text-2xl font-bold">
+            Siap Mengelola Bisnismu Lebih Mudah?
+        </h3>
+        <p class="mt-2 text-emerald-100">
+            Gunakan sistem POS kami untuk meningkatkan efisiensi dan penjualan.
+        </p>
+        <a href="/register"
+            class="inline-block mt-4 px-6 py-3 bg-white text-emerald-600 rounded-xl font-semibold hover:bg-gray-100 transition">
+            Coba Sekarang
+        </a>
+    </section>
+
 
     <footer class="bg-gray-50 border-t">
         <div class="max-w-6xl mx-auto px-6 py-8 text-center text-sm text-gray-500">
