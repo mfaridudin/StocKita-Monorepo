@@ -33,6 +33,13 @@
                                 class="absolute top-4 right-4 bg-white text-emerald-600 text-xs px-3 py-1 rounded-full">POPULER</span>
                         @endif
 
+                        @if ($plan->id == 1)
+                            <span
+                                class="absolute top-4 right-4 bg-emerald-100 text-emerald-600 text-xs px-3 py-1 rounded-full font-semibold">
+                                FREE TRIAL
+                            </span>
+                        @endif
+
                         <h3 class="text-xl font-semibold mb-2">{{ $plan->name }}</h3>
                         <p class="mb-6 {{ $plan->name == 'Pro' ? 'opacity-90' : 'text-gray-500' }}">
                             {{ $plan->description }}
