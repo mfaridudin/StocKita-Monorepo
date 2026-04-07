@@ -85,13 +85,57 @@
                             {{ $stock->qty }}
                         </span>
 
-                        <button @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} })"
-                            class="absolute top-3 right-2 flex items-center justify-center w-7 h-7 bg-green-500/90 backdrop-blur-sm text-white rounded-xl shadow-lg border border-white/50 group-hover:bg-green-600 transition-all duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg>
-                        </button>
+                        <div x-data="{ open: false }" class="absolute top-3 right-2">
+
+                            <button @click="open = !open"
+                                class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl">
+                                ⋮
+                            </button>
+
+                            <div x-show="open" @click.outside="open = false"
+                                class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border text-sm z-50">
+
+                                {{-- tambah --}}
+                                <button
+                                    @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} }); open=false"
+                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-green-50 text-green-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="2" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
+                                    Tambah
+                                </button>
+
+                                {{-- kurang --}}
+                                <button
+                                    @click="$dispatch('open-modal', { 
+                                        name: 'reduce-stock', 
+                                        id: {{ $stock->id }}, 
+                                        max: {{ $stock->qty }} 
+                                    }); open=false"
+                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-yellow-50 text-yellow-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="2" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                                    </svg>
+                                    Kurangi
+                                </button>
+
+                                {{--  hapus --}}
+                                <button
+                                    @click="$dispatch('open-modal', { name: 'delete-stock', id: {{ $stock->id }} }); open=false"
+                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-red-50 text-red-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="2" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    </svg>
+                                    Hapus
+                                </button>
+
+                            </div>
+                        </div>
                     </div>
 
                     <div class="p-4 space-y-2">
@@ -205,7 +249,7 @@
                 <div class="space-y-4">
                     <div>
                         <label class="text-sm font-medium">Masukan Stok</label>
-                        <input type="number" name="qty" value="{{ old('qty') }}"
+                        <input type="number" name="qty" value="{{ old('qty') }}" placeholder="Masukan Angka"
                             class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->addStock->get('qty')" class="mt-2 text-red-500 text-sm" />
                     </div>
@@ -225,4 +269,133 @@
         </div>
     </x-modal>
 
+    {{-- kurang modal --}}
+    <x-modal name="reduce-stock" maxWidth="md">
+        <div x-data="{
+            stockId: null,
+            qty: 1,
+            max: 0,
+        
+            init() {
+                this.$watch('qty', value => {
+                    if (value > this.max) this.qty = this.max
+                    if (value < 1) this.qty = 1
+                })
+            }
+        }"
+            x-on:open-modal.window="
+        if ($event.detail.name === 'reduce-stock') {
+            stockId = $event.detail.id
+            max = $event.detail.max ?? 0
+
+            qty = max
+        }"
+            class="p-6">
+
+            <form :action="`/stocks/${stockId}/reduce`" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-yellow-600">Kurangi Stok</h3>
+
+                    <button type="button" @click="$dispatch('close-modal', 'reduce-stock')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3">
+
+                    <button type="button" @click="if(qty > 1) qty--"
+                        class="w-10 h-10 flex items-center justify-center bg-yellow-100 text-yellow-700 rounded-xl hover:bg-yellow-200 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                        </svg>
+                    </button>
+
+                    <input type="number" name="qty" x-model="qty" min="1" :max="max"
+                        class="w-full h-10 text-center border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none">
+
+                    <button type="button" @click="if(qty < max) qty++"
+                        class="w-10 h-10 flex items-center justify-center bg-yellow-100 text-yellow-700 rounded-xl hover:bg-yellow-200 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </button>
+
+                </div>
+
+                <div class="flex justify-end gap-2 pt-5">
+
+                    <button type="button" @click="$dispatch('close-modal', 'reduce-stock')"
+                        class="px-3 py-2 text-sm bg-gray-200 rounded-lg">
+                        Batal
+                    </button>
+
+                    <button type="submit" :disabled="qty > max || max === 0"
+                        class="px-4 py-2 text-sm bg-yellow-500 text-white rounded-lg disabled:opacity-50">
+                        Kurangi
+                    </button>
+
+                </div>
+
+            </form>
+        </div>
+    </x-modal>
+
+    {{-- modal hapus --}}
+    <x-modal name="delete-stock" maxWidth="md">
+        <div x-data="{ stockId: null }"
+            x-on:open-modal.window="
+            if ($event.detail.name === 'delete-stock') {
+                stockId = $event.detail.id
+            }"
+            class="p-6">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Hapus Stok Produk
+                </h3>
+
+                <button type="button" @click="$dispatch('close-modal', 'delete-stock')"
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="text-center space-y-3">
+                <p class="text-gray-700 text-md">
+                    Apakah kamu yakin ingin menghapus stok produk ini?
+                </p>
+
+                <p class="text-sm text-gray-400">
+                    Data yang dihapus tidak dapat dikembalikan.
+                </p>
+            </div>
+
+            <form :action="`/stocks/${stockId}`" method="POST" class="mt-6">
+                @csrf
+                @method('DELETE')
+
+                <div class="flex gap-3">
+                    <button type="button" @click="$dispatch('close-modal', 'delete-stock')"
+                        class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-sm hover:shadow transition">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-modal>
 </x-app-layout>

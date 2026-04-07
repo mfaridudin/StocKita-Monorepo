@@ -64,7 +64,7 @@ Route::get('/features/{slug}', function ($slug) {
         'benefits' => $features[$slug]['benefits'],
         'faqs' => $features[$slug]['faqs'],
         'use_cases' => $features[$slug]['use_cases'],
-        'highlights' => $features[$slug]['highlights']
+        'highlights' => $features[$slug]['highlights'],
     ]);
 });
 
@@ -124,6 +124,8 @@ Route::middleware(['auth', 'role:admin|owner', 'subscription.active'])->group(fu
 
     Route::post('/stocks', [StockController::class, 'store'])->name('stocks.store');
     Route::put('/stocks/{id}', [StockController::class, 'update'])->name('stocks.update');
+    Route::put('/stocks/{id}/reduce', [StockController::class, 'reduce'])->name('stocks.reduce');
+    Route::delete('/stocks/{id}', [StockController::class, 'destroy'])->name('stocks.delete');
 
     // Settings
     Route::get('/settings', [SettingController::class, 'index']);

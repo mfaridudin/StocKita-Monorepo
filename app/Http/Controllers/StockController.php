@@ -117,11 +117,42 @@ class StockController extends Controller
         return redirect()->back()->with('success', 'Stok barang berhasil ditambah!');
     }
 
+    public function reduce(Request $request, string $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'qty' => ['required', 'integer', 'min:1'],
+        ], [
+            'qty.required' => 'Jumlah wajib diisi.',
+            'qty.integer' => 'Jumlah harus berupa angka.',
+            'qty.min' => 'Jumlah minimal 1.',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'addStock')
+                ->with('open_modal', 'add-stock')
+                ->with('stock_id', $id)
+                ->withInput();
+        }
+
+        $stock = Stock::findOrFail($id);
+
+        $stock->update([
+            'qty' => $request->qty,
+        ]);
+
+        return redirect()->back()->with('success', 'Stok barang berhasil dikurangi!');
+    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $warehouse = Stock::findOrFail($id);
+
+        $warehouse->delete();
+
+        return redirect()->back()->with('success', 'Stok barang berhasil dihapus!');
     }
 }
