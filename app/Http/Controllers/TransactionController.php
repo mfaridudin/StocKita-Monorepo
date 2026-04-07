@@ -10,6 +10,7 @@ use App\Models\TransactionItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -368,9 +369,23 @@ class TransactionController extends Controller
             mkdir($dir, 0755, true);
         }
 
-        $path = $dir.'/receipt-'.$transaction->id.'.png';
+        $tempPath = $dir.'/receipt-'.$transaction->id.'-temp.png';
+        $img->save($tempPath);
 
-        $img->save($path);
+        $finalPath = $dir.'/receipt-'.$transaction->id.'.png';
+        $quality = 60;
+
+        Log::info("Membuat temp receipt: $tempPath");
+
+        exec("magick convert $tempPath -strip -quality $quality $finalPath 2>&1", $output, $return_var);
+
+        Log::info('Output ImageMagick: '.json_encode($output));
+        Log::info("Return var: $return_var");
+
+        if ($return_var !== 0) {
+            Log::error('ImageMagick gagal membuat struk untuk transaksi '.$transaction->id);
+        }
+        @unlink($tempPath);
 
         return 'receipts/receipt-'.$transaction->id.'.png';
     }
