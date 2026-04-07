@@ -34,11 +34,45 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
 
-            $stocks = Stock::with(['product', 'warehouse'])->get();
+            $notifications = collect();
 
-            $outStock = $stocks->where('qty', 0);
+            // stok habis
+            $outStock = Stock::with(['product', 'warehouse'])
+                ->where('qty', 0)
+                ->get();
 
-            $view->with(compact('outStock'));
+            foreach ($outStock as $stock) {
+                $notifications->push([
+                    'type' => 'danger',
+                    'title' => 'Stok Habis',
+                    'message' => $stock->product->name.' - '.$stock->warehouse->name,
+                    'url' => '/warehouse/'.$stock->warehouse_id,
+                ]);
+            }
+
+            // stok menipis
+            $lowStock = Stock::with(['product', 'warehouse'])
+                ->where('qty', '>', 0)
+                ->where('qty', '<=', 5) // batas bisa lo ubah
+                ->get();
+
+            foreach ($lowStock as $stock) {
+                $notifications->push([
+                    'type' => 'warning',
+                    'title' => 'Stok Menipis',
+                    'message' => $stock->product->name.' sisa '.$stock->qty,
+                    'url' => '/warehouse/'.$stock->warehouse_id,
+                ]);
+            }
+
+            // $notifications->push([
+            //     'type' => 'info',
+            //     'title' => 'Transaksi Baru',
+            //     'message' => 'Ada transaksi baru hari ini',
+            //     'url' => '/transactions'
+            // ]);
+
+            $view->with(compact('notifications'));
         });
     }
 }

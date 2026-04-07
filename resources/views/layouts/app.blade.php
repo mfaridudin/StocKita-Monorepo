@@ -9,11 +9,11 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
+    {{-- font --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
+    {{-- tailwind --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -21,16 +21,16 @@
 
     <div class="flex w-full min-h-screen overflow-hidden">
 
-        <!-- Sidebar -->
+        {{-- sidebar --}}
         <x-sidebar />
 
-        <!-- Main -->
+        {{-- main content --}}
         <div id="mainContent" class="flex flex-col flex-1 min-w-0">
 
-            <!-- Header -->
+            {{-- header --}}
             <x-header :title="$title" />
-            @include('partials.stock-alert')
-            <!-- Content -->
+
+            {{-- content --}}
             <main class="flex-1 p-6 lg:p-8 overflow-y-auto w-full">
                 <div class=mx-auto">
                     {{ $slot }}
@@ -84,15 +84,12 @@
                                 </button>
                             </div>
                         </form>
-
                     </div>
                 </x-modal>
+
             </main>
-
         </div>
-
     </div>
-
 </body>
 
 </html>
