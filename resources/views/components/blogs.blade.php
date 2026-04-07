@@ -9,65 +9,72 @@
             </p>
         </div>
 
-        <div class="space-y-6">
+        <div class="grid md:grid-cols-3 gap-8">
+
             <a href="/blog/dashboard-pos"
-                class="blog-card flex flex-col md:flex-row gap-5 group bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-md transition">
+                class="blog-card group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition duration-200">
 
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800"
-                    class="w-full md:w-48 h-32 object-cover rounded-xl group-hover:scale-105 transition">
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800"
+                        class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                </div>
 
-                <div class="flex flex-col justify-center">
+                <div class="p-6">
                     <span class="text-sm text-emerald-600 font-semibold">
                         Getting Started
                     </span>
 
-                    <h3 class="text-lg font-bold mt-1 group-hover:text-emerald-600 transition">
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-emerald-600 transition">
                         Cara Menggunakan Dashboard POS untuk Pertama Kali
                     </h3>
 
-                    <p class="text-gray-600 text-sm mt-2">
+                    <p class="text-gray-600 mt-3 text-sm">
                         Pelajari langkah awal mulai dari login hingga melakukan transaksi pertama.
                     </p>
                 </div>
             </a>
 
             <a href="/blog/kelola-produk"
-                class="blog-card flex flex-col md:flex-row gap-5 group bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-md transition">
+                class="blog-card group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition duration-200">
 
-                <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800"
-                    class="w-full md:w-48 h-32 object-cover rounded-xl group-hover:scale-105 transition">
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800"
+                        class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                </div>
 
-                <div class="flex flex-col justify-center">
+                <div class="p-6">
                     <span class="text-sm text-emerald-600 font-semibold">
                         Produk & Stok
                     </span>
 
-                    <h3 class="text-lg font-bold mt-1 group-hover:text-emerald-600 transition">
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-emerald-600 transition">
                         Cara Menambahkan dan Mengelola Produk
                     </h3>
 
-                    <p class="text-gray-600 text-sm mt-2">
+                    <p class="text-gray-600 mt-3 text-sm">
                         Tambahkan produk baru, atur stok, dan kelola data barang dengan mudah.
                     </p>
                 </div>
             </a>
 
             <a href="/blog/cara-transaksi"
-                class="blog-card flex flex-col md:flex-row gap-5 group bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-md transition">
+                class="blog-card group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition duration-200">
 
-                <img src="https://images.unsplash.com/photo-1556740772-1a741367b93e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dHJhbnNhY3Rpb258ZW58MHx8MHx8fDA%3D"
-                    class="w-full md:w-48 h-32 object-cover rounded-xl group-hover:scale-105 transition">
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1556740772-1a741367b93e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dHJhbnNhY3Rpb258ZW58MHx8MHx8fDA%3D"
+                        class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                </div>
 
-                <div class="flex flex-col justify-center">
+                <div class="p-6">
                     <span class="text-sm text-emerald-600 font-semibold">
                         Transaksi
                     </span>
 
-                    <h3 class="text-lg font-bold mt-1 group-hover:text-emerald-600 transition">
-                        Cara Melakukan Transaksi di Sistem POS
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-emerald-600 transition">
+                        Cara Melakukan Transaksi di Sistem POS (Panduan Kasir)
                     </h3>
 
-                    <p class="text-gray-600 text-sm mt-2">
+                    <p class="text-gray-600 mt-3 text-sm">
                         Lakukan transaksi penjualan dengan cepat melalui sistem kasir yang sederhana dan efisien.
                     </p>
                 </div>
