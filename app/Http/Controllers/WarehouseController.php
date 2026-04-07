@@ -69,7 +69,7 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::where('store_id', Auth::user()->store->id)->findOrFail($id);
 
-        $products = Product::all();
+        $products = Product::where('store_id', Auth::user()->store->id)->get();
 
         $stocks = Stock::with('product')
             ->where('warehouse_id', $id)
