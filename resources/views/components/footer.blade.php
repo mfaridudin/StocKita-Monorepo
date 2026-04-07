@@ -25,7 +25,6 @@
                      <li><a href="/blog/kelola-produk" class="block hover:text-emerald-400">Manajemen Produk</a></li>
                      <li><a href="/features/pelanggan" class="block hover:text-emerald-400">Pelanggan</a></li>
                      <li><a href="#offer" class="block hover:text-emerald-400">Pembayaran</a></li>
-                     <li><a href="/login" class="block hover:text-emerald-400">Dashboard</a></li>
                  </ul>
              </div>
 
