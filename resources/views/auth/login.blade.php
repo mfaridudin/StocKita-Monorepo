@@ -1,5 +1,5 @@
 <x-guest-layout>
-     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let type =
@@ -16,7 +16,7 @@
             });
         </script>
     @endif
-    
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}" class="mx-auto p-2 ">
@@ -31,7 +31,8 @@
             <x-input-label for="email" :value="__('Email')" class="text-gray-800 font-semibold mb-2 block" />
             <x-text-input id="email"
                 class="block w-full border-2 border-green-200 focus:border-green-500 focus:ring-green-500 bg-green-50 text-gray-800 rounded-lg px-4 py-3"
-                type="email" name="email" :value="old('email')" required autofocus />
+                type="email" name="email" value="{{ old('email', request()->cookie('remember_email')) }}" required
+                autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-500 text-sm" />
         </div>
 
@@ -39,7 +40,8 @@
             <x-input-label for="password" :value="__('Password')" class="text-gray-800 font-semibold mb-2 block" />
             <x-text-input id="password"
                 class="block w-full border-2 border-green-200 focus:border-green-500 focus:ring-green-500 bg-green-50 text-gray-800 rounded-lg px-4 py-3"
-                type="password" name="password" required />
+                type="password" name="password" value="{{ old('password', request()->cookie('remember_password')) }}"
+                required />
             <x-input-error :messages="$errors->get('password')" class="mt-2 text-red-500 text-sm" />
         </div>
 

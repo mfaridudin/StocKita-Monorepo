@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -27,6 +28,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        if ($request->remember) {
+            Cookie::queue('remember_email', $request->email, 60 * 24 * 30);
+            Cookie::queue('remember_password', $request->password, 60 * 24 * 30);
+        } else {
+            Cookie::queue(Cookie::forget('remember_email'));
+            Cookie::queue(Cookie::forget('remember_password'));
+        }
 
         $user = auth()->user();
 
