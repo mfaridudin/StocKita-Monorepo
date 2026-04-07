@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Illuminate\Http\Request;
@@ -27,8 +28,8 @@ class TransactionController extends Controller
                 $search = $request->search;
 
                 $q->where(function ($query) use ($search) {
-                    $query->where('invoice', 'like', "%$search%")
-                        ->orWhere('product_name', 'like', "%$search%");
+                    $query->where('invoice_code', 'like', "%$search%")
+                        ->orWhere('customer_name', 'like', "%$search%");
                 });
             })
             ->when($request->status, function ($q) use ($request) {
@@ -224,6 +225,9 @@ class TransactionController extends Controller
 
     private function generateReceipt($transaction)
     {
+        $storeId = Auth::user()->store->id;
+        $store = Store::findOrFail($storeId);
+
         $manager = new ImageManager(new Driver);
 
         $width = 350;
@@ -238,7 +242,7 @@ class TransactionController extends Controller
 
         $y = 30;
 
-        $img->text(strtoupper(setting('store.name') ?? 'TOKO'), $center, $y, function ($font) use ($fontPath) {
+        $img->text(strtoupper($store->name ?? 'TOKO'), $center, $y, function ($font) use ($fontPath) {
             $font->file($fontPath);
             $font->size(22);
             $font->align('center');
@@ -246,7 +250,7 @@ class TransactionController extends Controller
 
         $y += 25;
 
-        $address = strtoupper(setting('store.address') ?? 'ALAMAT TOKO');
+        $address = strtoupper($store->address ?? 'ALAMAT TOKO');
 
         $charPerLine = floor(($width - ($leftX * 2)) / 7);
         $lines = explode("\n", wordwrap($address, $charPerLine, "\n", true));
