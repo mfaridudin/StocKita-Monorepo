@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Imagick;
 
 class ProductController extends Controller
 {
@@ -54,8 +55,33 @@ class ProductController extends Controller
         if (! auth()->user()->canCreateProduct()) {
             return back()->with('error', 'Limit produk habis');
         }
+
+        $imagePath = null;
+
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+            $file = $request->file('image');
+            $filename = time().'_'.$file->getClientOriginalName();
+
+            $image = new Imagick($file->getRealPath());
+
+            $size = min($image->getImageWidth(), $image->getImageHeight());
+            $image->cropImage($size, $size,
+                ($image->getImageWidth() - $size) / 2,
+                ($image->getImageHeight() - $size) / 2
+            );
+
+            $image->resizeImage(800, 800, Imagick::FILTER_LANCZOS, 1);
+
+            $image->setImageFormat('jpeg');
+            $image->setImageCompressionQuality(70);
+
+            $image->stripImage();
+
+            $image->writeImage(storage_path('app/public/products/'.$filename));
+            $image->clear();
+            $image->destroy();
+
+            $imagePath = 'products/'.$filename;
         }
 
         $product = Product::create([
@@ -65,7 +91,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'image' => $imagePath,
             'created_by' => auth()->id(),
-            'store_id' => Auth::user()->store->id,
+            'store_id' => auth()->user()->store->id,
             'warehouse_id' => $request->warehouse_id,
         ]);
 
@@ -136,23 +162,58 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil dihapus!');
     }
 
-    // update imaage
-    public function updateImage(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+    // update image
+public function updateImage(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
+    if ($request->hasFile('image')) {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
 
-            $imagePath = $request->file('image')->store('products', 'public');
+        $file = $request->file('image');
+        $filename = uniqid() . '.jpg';
+        $directory = storage_path('app/public/products');
+
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $path = $directory . '/' . $filename;
+
+        try {
+            $image = new Imagick($file->getRealPath());
+            $size = min($image->getImageWidth(), $image->getImageHeight());
+            $image->cropImage(
+                $size,
+                $size,
+                ($image->getImageWidth() - $size) / 2,
+                ($image->getImageHeight() - $size) / 2
+            );
+
+            $image->resizeImage(800, 800, Imagick::FILTER_LANCZOS, 1);
+
+            $image->setImageFormat('jpeg');
+            $image->setImageCompressionQuality(70);
+
+            $image->stripImage();
+
+            $image->writeImage($path);
+            $image->clear();
+            $image->destroy();
+
+            $imagePath = 'products/' . $filename;
 
             $product->update([
                 'image' => $imagePath,
             ]);
-        }
 
-        return redirect()->back()->with('success', 'Gambar produk berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal memproses gambar: ' . $e->getMessage());
+        }
     }
+
+    return redirect()->back()->with('success', 'Gambar produk berhasil diperbarui!');
+}
 }
