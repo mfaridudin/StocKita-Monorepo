@@ -7,14 +7,17 @@
 
         <form method="GET" class="flex flex-wrap gap-3">
 
-            <select name="status" class="border rounded-xl px-3 py-2">
+            <select name="status"
+                class=" appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 <option value="">Semua Status</option>
                 <option value="paid">Paid</option>
                 <option value="pending">Pending</option>
             </select>
 
-            <input type="date" name="start" class="border rounded-xl px-3 py-2">
-            <input type="date" name="end" class="border rounded-xl px-3 py-2">
+            <input type="date" name="start"
+                class="border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <input type="date" name="end"
+                class="border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
 
             <button class="bg-emerald-500 text-white px-4 rounded-xl">
                 Filter

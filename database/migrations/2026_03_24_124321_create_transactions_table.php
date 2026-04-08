@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('invoice_code')->unique();
             // $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('customer_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->nullOnDelete();
             $table->string('customer_name')->nullable();
             $table->integer('paid');
             $table->integer('change');

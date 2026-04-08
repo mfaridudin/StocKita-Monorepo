@@ -85,17 +85,17 @@ class CustomerController extends Controller
     public function show(string $id)
     {
         $customer = Customer::findOrFail($id);
-        $totalOrders = Transaction::where('customer_id', $customer->user->id)
+        $totalOrders = Transaction::where('customer_id', $customer->id)
             ->where('status', 'paid')
             ->count();
-        $totalSpent = Transaction::where('customer_id', $customer->user->id)
+        $totalSpent = Transaction::where('customer_id', $customer->id)
             ->where('status', 'paid')
             ->sum('total');
 
-        $lastOrder = optional(Transaction::where('customer_id', $customer->user->id)
+        $lastOrder = optional(Transaction::where('customer_id', $customer->id)
             ->latest()
             ->first())->created_at;
-        $orders = Transaction::where('customer_id', $customer->user->id)->get();
+        $orders = Transaction::where('customer_id', $customer->id)->get();
 
         // dd($orders);
 

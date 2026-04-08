@@ -70,7 +70,7 @@
             <div class="bg-white p-5 rounded-xl border shadow-sm">
                 <p class="text-sm text-gray-500">Terakhir Beli</p>
                 <p class="text-2xl font-bold text-gray-800 mt-1">
-                    {{ $lastOrder ?? '-' }}
+                    {{ $lastOrder->format('d M Y') ?? '-' }}
                 </p>
             </div>
 
