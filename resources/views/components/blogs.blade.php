@@ -38,7 +38,7 @@
                 class="blog-card group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition duration-200">
 
                 <div class="overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800"
+                    <img src="https://media.istockphoto.com/id/1484852942/photo/smart-warehouse-inventory-management-system-concept.webp?a=1&b=1&s=612x612&w=0&k=20&c=0AdwccZASPFJm1I99lN3q9RHz8lNkPUxMOrbHWYfr88="
                         class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
                 </div>
 

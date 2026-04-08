@@ -62,7 +62,7 @@ return [
 
     'kelola-produk' => [
         'title' => 'Cara Mengelola Produk & Stok dengan Efisien',
-        'image' => 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800',
+        'image' => 'https://media.istockphoto.com/id/1484852942/photo/smart-warehouse-inventory-management-system-concept.webp?a=1&b=1&s=612x612&w=0&k=20&c=0AdwccZASPFJm1I99lN3q9RHz8lNkPUxMOrbHWYfr88=',
         'content' => '
                 <p>Mengelola produk dan stok dengan baik adalah salah satu fondasi utama dalam menjalankan bisnis, terutama jika kamu menggunakan sistem POS. Tanpa manajemen yang rapi, kamu bisa mengalami kehabisan stok, overstock, bahkan kerugian tanpa sadar.</p>
 

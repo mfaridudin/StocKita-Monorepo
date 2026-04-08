@@ -5,7 +5,7 @@ return [
     'transaksi-kasir' => [
         'title' => 'POS Modern & Cepat',
         'excerpt' => 'Proses transaksi pelanggan dengan cepat langsung dari sistem kasir.',
-        'image' => 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800',
+        'image' => 'https://images.unsplash.com/photo-1718157582099-5227b1f7112d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fFBvaW50JTIwb2YlMjBzZWxsJTIwZGFzaGJvYXJkfGVufDB8fDB8fHww',
 
         'description' => 'Fitur kasir memungkinkan transaksi penjualan secara cepat, akurat, dan otomatis tanpa pencatatan manual.',
 

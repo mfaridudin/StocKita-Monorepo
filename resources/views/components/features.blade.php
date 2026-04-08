@@ -14,7 +14,7 @@
             <a href="/features/transaksi-kasir"
                 class="feature-item group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition duration-200">
                 <div class="overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800"
+                    <img src="https://images.unsplash.com/photo-1718157582099-5227b1f7112d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fFBvaW50JTIwb2YlMjBzZWxsJTIwZGFzaGJvYXJkfGVufDB8fDB8fHww"
                         class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
                 </div>
                 <div class="p-5">
