@@ -37,13 +37,12 @@ class GoogleController extends Controller
         }
 
         if ($user->hasRole('owner')) {
-            $store = Store::create([
-                'name' => $googleUser->name."'s Store",
+            Store::create([
+               'name' => $user->name."'s Store",
+                'email' => $googleUser->email,
                 'owner_id' => $user->id,
-                'slug' => $this->generateUniqueSlug($$googleUser->name.'-store'),
+                'slug' => $this->generateUniqueSlug($user->name.'-store'),
             ]);
-            $user->store_id = $store->id;
-            $user->save();
         }
 
         if ($user) {

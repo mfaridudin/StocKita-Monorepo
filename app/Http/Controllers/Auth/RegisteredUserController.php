@@ -72,14 +72,12 @@ class RegisteredUserController extends Controller
         $user->assignRole('owner');
 
         if ($user->hasRole('owner')) {
-            $store = Store::create([
+            Store::create([
                 'name' => $user->name."'s Store",
                 'email' => $request->email,
                 'owner_id' => $user->id,
                 'slug' => $this->generateUniqueSlug($user->name.'-store'),
             ]);
-            $user->store_id = $store->id;
-            $user->save();
         }
 
         $plan = session('plan_id');
