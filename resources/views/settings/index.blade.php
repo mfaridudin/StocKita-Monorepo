@@ -26,115 +26,73 @@
 
         <div class="space-y-8">
 
-            <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
-                <div x-data class="flex justify-between items-start mb-8">
-                    <div>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-1">General</h2>
-                        <p class="text-sm text-gray-500">Identitas aplikasi</p>
-                    </div>
-                    <button @click="$dispatch('open-modal', { name: 'edit-app'})"
-                        class="text-sm font-medium text-green-600 hover:text-green-700 px-3 py-1 border border-green-100 rounded-lg hover:bg-green-50 transition-colors">
-                        Edit
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="space-y-2">
-                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Nama Aplikasi</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ config('app.name', 'StocKita') }}</p>
-                    </div>
-                    <div class="space-y-2">
-                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Deskripsi</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ setting('app.description', 'POS ') }}</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- store --}}
-            <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm space-y-8">
-
-                {{-- header --}}
-                <div x-data class="flex justify-between items-start">
-                    <div>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-1">Store</h2>
-                        <p class="text-sm text-gray-500">Informasi toko & pemilik</p>
-                    </div>
-
-                    <div class="flex gap-2">
-                        {{-- edit --}}
-                        <button @click="$dispatch('open-modal', { name: 'edit-store'})"
-                            class="text-sm font-medium text-green-600 hover:text-green-700 px-3 py-1 border border-green-100 rounded-lg hover:bg-green-50">
-                            Edit Store
+            @role('admin')
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+                    <div x-data class="flex justify-between items-start mb-8">
+                        <div>
+                            <h2 class="text-2xl font-semibold text-gray-900 mb-1">General</h2>
+                            <p class="text-sm text-gray-500">Identitas aplikasi</p>
+                        </div>
+                        <button @click="$dispatch('open-modal', { name: 'edit-app'})"
+                            class="text-sm font-medium text-green-600 hover:text-green-700 px-3 py-1 border border-green-100 rounded-lg hover:bg-green-50 transition-colors">
+                            Edit
                         </button>
+                    </div>
 
-                        @role('admin')
-                            @if ($owner)
-                                <button @click="$dispatch('open-modal', { name: 'edit-owner', id: {{ $owner->id }} })"
-                                    class="text-sm font-medium text-blue-600 hover:text-blue-700 px-3 py-1 border border-blue-100 rounded-lg hover:bg-blue-50">
-                                    Edit Owner
-                                </button>
-                            @else
-                                <button @click="$dispatch('open-modal', { name: 'create-owner'})"
-                                    class="text-sm font-medium text-blue-600 hover:text-blue-700 px-3 py-1 border border-blue-100 rounded-lg hover:bg-blue-50">
-                                    Tambah Owner
-                                </button>
-                            @endif
-                        @endrole
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Nama Aplikasi</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ config('app.name', 'StocKita') }}</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Deskripsi</p>
+                            <p class="text-lg font-semibold text-gray-900">{{ setting('app.description', 'POS ') }}</p>
+                        </div>
                     </div>
                 </div>
+            @endrole
 
-                {{-- STORE INFO --}}
-                <div class="grid grid-cols-2 gap-8">
-                    <div>
-                        <p class="text-sm text-gray-500">Nama Toko</p>
-                        <p class="font-semibold text-lg">{{ $store?->name ?? '-' }}</p>
+            @role('owner')
+                {{-- store --}}
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm space-y-8">
+
+                    {{-- header --}}
+                    <div x-data class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-2xl font-semibold text-gray-900 mb-1">Store</h2>
+                            <p class="text-sm text-gray-500">Informasi toko & pemilik</p>
+                        </div>
+
+                        <div class="flex gap-2">
+                            {{-- edit --}}
+                            <button @click="$dispatch('open-modal', { name: 'edit-store'})"
+                                class="text-sm font-medium text-green-600 hover:text-green-700 px-3 py-1 border border-green-100 rounded-lg hover:bg-green-50">
+                                Edit Store
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Email</p>
-                        <p>{{ $store?->email ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">No HP</p>
-                        <p>{{ $store?->phone ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Alamat</p>
-                        <p>{{ $store?->address ?? '-' }}</p>
+
+                    {{-- STORE INFO --}}
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <p class="text-sm text-gray-500">Nama Toko</p>
+                            <p class="font-semibold text-lg">{{ $store?->name ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Email</p>
+                            <p>{{ $store?->email ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">No HP</p>
+                            <p>{{ $store?->phone ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Alamat</p>
+                            <p>{{ $store?->address ?? '-' }}</p>
+                        </div>
                     </div>
                 </div>
-                
-                {{-- OWNER INFO --}}
-                @role('admin')
-                    <div class="border-t pt-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Owner</h3>
-
-                        @if ($owner)
-                            <div class="grid grid-cols-2 gap-6">
-                                <div>
-                                    <p class="text-sm text-gray-500">Nama</p>
-                                    <p class="font-semibold text-gray-900">{{ $owner->name }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Email</p>
-                                    <p class="text-gray-900">{{ $owner->email }}</p>
-                                </div>
-
-                                <div>
-                                    <span class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded">
-                                        OWNER
-                                    </span>
-                                </div>
-                            </div>
-                        @else
-                            <p class="text-sm text-gray-400">
-                                Belum ada owner untuk toko ini
-                            </p>
-                        @endif
-                    </div>
-                @endrole
-
-            </div>
+            @endrole
 
             {{-- email --}}
             <div x-data class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
@@ -311,136 +269,6 @@
                     <button type="submit"
                         class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700">
                         Simpan
-                    </button>
-                </div>
-
-            </form>
-        </div>
-    </x-modal>
-
-    {{-- tambah owner --}}
-    <x-modal name="create-owner" maxWidth="lg">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    Tambah Owner
-                </h3>
-
-                <button type="button" @click="$dispatch('close-modal', 'create-owner')"
-                    class="text-gray-400 hover:text-gray-600 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <form method="POST" action="{{ route('owners.store') }}" class="space-y-5">
-                @csrf
-
-                <div class="space-y-4">
-
-                    {{-- NAMA --}}
-                    <div>
-                        <label class="text-sm font-medium">Nama Owner</label>
-                        <input type="text" name="name" class="w-full border px-3 py-2 rounded-xl"
-                            placeholder="Masukkan nama owner">
-                    </div>
-
-                    {{-- EMAIL --}}
-                    <div>
-                        <label class="text-sm font-medium">Email</label>
-                        <input type="email" name="email" class="w-full border px-3 py-2 rounded-xl"
-                            placeholder="Masukkan email">
-                    </div>
-
-                    {{-- PASSWORD --}}
-                    <div>
-                        <label class="text-sm font-medium">Password</label>
-                        <input type="password" name="password" class="w-full border px-3 py-2 rounded-xl"
-                            placeholder="Minimal 6 karakter">
-                    </div>
-
-                </div>
-
-                <div class="flex justify-end gap-2 pt-4 border-t">
-                    <button type="button" @click="$dispatch('close-modal', 'create-owner')"
-                        class="px-4 py-2 text-sm border rounded-lg">
-                        Batal
-                    </button>
-
-                    <button type="submit"
-                        class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700">
-                        Simpan
-                    </button>
-                </div>
-
-            </form>
-        </div>
-    </x-modal>
-
-    <x-modal name="edit-owner" maxWidth="lg">
-        <div x-data="{ owner: null }"
-            x-on:open-modal.window="
-            if ($event.detail.name === 'edit-owner') {
-                owner = {{ Js::from($owner) }};
-            }
-        "
-            class="p-6">
-            {{-- HEADER --}}
-            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    Edit Owner
-                </h3>
-
-                <button type="button" @click="$dispatch('close-modal', 'edit-owner')"
-                    class="text-gray-400 hover:text-gray-600 transition">
-                    ✕
-                </button>
-            </div>
-
-            {{-- FORM --}}
-            <form method="POST" :action="`/owner/${owner?.id}`" class="space-y-5">
-                @csrf
-                @method('PUT')
-
-                <div class="space-y-4">
-
-                    {{-- NAMA --}}
-                    <div>
-                        <label class="text-sm font-medium">Nama</label>
-                        <input type="text" name="name" x-model="owner.name"
-                            class="w-full border px-3 py-2 rounded-xl">
-                    </div>
-
-                    {{-- EMAIL --}}
-                    <div>
-                        <label class="text-sm font-medium">Email</label>
-                        <input type="email" name="email" x-model="owner.email"
-                            class="w-full border px-3 py-2 rounded-xl">
-                    </div>
-
-                    {{-- PASSWORD OPTIONAL --}}
-                    <div>
-                        <label class="text-sm font-medium">
-                            Password (opsional)
-                        </label>
-                        <input type="password" name="password" class="w-full border px-3 py-2 rounded-xl"
-                            placeholder="Kosongkan jika tidak diubah">
-                    </div>
-
-                </div>
-
-                {{-- ACTION --}}
-                <div class="flex justify-end gap-2 pt-4 border-t">
-                    <button type="button" @click="$dispatch('close-modal', 'edit-owner')"
-                        class="px-4 py-2 text-sm border rounded-lg">
-                        Batal
-                    </button>
-
-                    <button type="submit"
-                        class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        Update
                     </button>
                 </div>
 

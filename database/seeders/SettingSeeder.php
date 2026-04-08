@@ -13,14 +13,6 @@ class SettingSeeder extends Seeder
             'app.name' => 'StocKita',
             'app.description' => 'Sistem kasir modern',
 
-            'store.name' => 'Stoc Kita',
-            'store.email' => 'StocKita@email.com',
-            'store.phone' => '08123456789',
-            'store.address' => 'Jl. Pandanaran No. 123, Semarang, Jawa Tengah, 50241, Indonesia',
-
-            'subscription.plan' => 'free',
-            'subscription.product_limit' => '100',
-
             'email.welcome' => 'Halo {{name}},
 
             Selamat datang di {{store.name}} 👋

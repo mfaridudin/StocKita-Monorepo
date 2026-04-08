@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'store_id'])]
+#[Fillable(['name', 'email', 'password',])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -49,7 +49,14 @@ class User extends Authenticatable
 
     public function products()
     {
-        return $this->hasManyThrough(Product::class, Store::class, 'id', 'store_id', 'store_id', 'id');
+        return $this->hasManyThrough(
+            Product::class,
+            Store::class,
+            'owner_id',
+            'store_id',
+            'id',
+            'id'
+        );
     }
 
     public function customer()
@@ -67,9 +74,14 @@ class User extends Authenticatable
         return $this->hasMany(MidtransTransaction::class);
     }
 
+    // public function store()
+    // {
+    //     return $this->belongsTo(Store::class);
+    // }
+
     public function store()
     {
-        return $this->belongsTo(Store::class);
+        return $this->hasOne(Store::class, 'owner_id');
     }
 
     public function transactions()

@@ -11,8 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Schema::create('stores', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->text('address')->nullable();
+        //     $table->string('phone')->nullable();
+        //     $table->string('slug')->unique();
+        //     $table->text('description')->nullable();
+        //     $table->string('logo')->nullable();
+        //     $table->timestamps();
+        // });
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('owner_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
             $table->string('name');
             $table->string('email')->unique();
             $table->text('address')->nullable();
@@ -20,6 +36,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('logo')->nullable();
+
             $table->timestamps();
         });
     }

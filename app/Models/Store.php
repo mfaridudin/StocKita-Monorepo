@@ -8,10 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 #[Guarded(['id'])]
 class Store extends Model
 {
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
 
     public function products()
     {
@@ -31,5 +27,15 @@ class Store extends Model
     public function warehouse()
     {
         return $this->hasMany(Warehouse::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
     }
 }

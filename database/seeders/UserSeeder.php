@@ -15,25 +15,21 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $store = Store::where('slug', 'stoc-kita')->first();
         $users = [
             [
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'role' => 'admin',
-                'store_id' => $store->id,
             ],
             [
                 'name' => 'Owner',
                 'email' => 'owner@gmail.com',
                 'role' => 'owner',
-                'store_id' => $store->id,
             ],
             [
                 'name' => 'Buyer',
                 'email' => 'buyer@gmail.com',
                 'role' => 'buyer',
-                'store_id' => $store->id,
             ],
         ];
 
@@ -43,19 +39,11 @@ class UserSeeder extends Seeder
                 [
                     'name' => $data['name'],
                     'password' => Hash::make('password'),
-                    'store_id' => $data['store_id'],
                 ]
             );
 
             $user->syncRoles([$data['role']]);
 
-            if ($data['role'] === 'buyer') {
-                Customer::firstOrCreate([
-                    'user_id' => $user->id,
-                    'phone' => '+13059565677',
-                    'store_id' => $store->id,
-                ]);
-            }
         }
     }
 }

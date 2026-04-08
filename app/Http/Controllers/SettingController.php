@@ -19,7 +19,7 @@ class SettingController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $owner = User::role('owner')->where('store_id', $user->store_id)->first();
+        $owner = $user->store->owner;
         $store = $user->store;
 
         $subscription = Subscription::where('user_id', $user->id)
@@ -64,77 +64,6 @@ class SettingController extends Controller
         cache()->forget('settings');
 
         return back()->with('success', 'Setting berhasil disimpan');
-    }
-
-    public function storeOwner(Request $request)
-    {
-        $user = auth()->user();
-
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => ['required',  Password::min(8)
-                ->mixedCase()
-                ->numbers()
-                ->symbols(),
-            ],
-        ]);
-
-        DB::beginTransaction();
-
-        try {
-            $oldOwner = User::role('owner')->first();
-            if ($oldOwner) {
-                $oldOwner->removeRole('owner');
-            }
-
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'store_id' => $user->store_id,
-            ]);
-
-            $user->assignRole('owner');
-
-            DB::commit();
-
-            return back()->with('success', 'Owner berhasil disimpan');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return back()->with('error', 'Gagal menyimpan owner');
-        }
-    }
-
-    public function updateOwner(Request $request, $id)
-    {
-
-        $owner = User::findOrFail($id);
-
-        $request->validate([
-            'name' => 'required',
-            'email' => "required|email|unique:users,email,$id",
-            'password' => ['nullable',  Password::min(8)
-                ->mixedCase()
-                ->numbers()
-                ->symbols(),
-            ],
-        ]);
-
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-        ];
-
-        if ($request->filled('password')) {
-            $data['password'] = bcrypt($request->password);
-        }
-
-        $owner->update($data);
-
-        return back()->with('success', 'Owner berhasil diupdate');
     }
 
     public function updateStore(Request $request, $id)
