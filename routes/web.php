@@ -14,6 +14,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WarehouseController;
+use App\Models\Customer;
 use App\Models\User;
 // Buyer
 use Illuminate\Http\Request;
@@ -97,13 +98,20 @@ Route::middleware(['auth', 'role:admin|owner', 'subscription.active'])->group(fu
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Search
     Route::get('/customers/search', function (Request $request) {
-        return User::role('buyer')
-            ->where('name', 'like', '%'.$request->q.'%')
-            ->limit(5)
-            ->get(['id', 'name']);
-    });
+    return Customer::with('user')
+        ->whereHas('user', function ($q) use ($request) {
+            $q->where('name', 'like', '%'.$request->q.'%');
+        })
+        ->limit(5)
+        ->get()
+        ->map(function ($customer) {
+            return [
+                'id' => $customer->id,
+                'name' => $customer->user->name
+            ];
+        });
+});
 
     // Resources
     Route::resources([
@@ -131,8 +139,6 @@ Route::middleware(['auth', 'role:admin|owner', 'subscription.active'])->group(fu
     Route::get('/settings', [SettingController::class, 'index']);
     Route::post('/settings', [SettingController::class, 'update']);
 
-    Route::post('/owner', [SettingController::class, 'storeOwner'])->name('owners.store');
-    Route::put('/owner/{id}', [SettingController::class, 'updateOwner']);
     Route::put('/store/{id}', [SettingController::class, 'updateStore']);
 });
 

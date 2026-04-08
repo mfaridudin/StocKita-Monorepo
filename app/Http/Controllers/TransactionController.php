@@ -30,7 +30,9 @@ class TransactionController extends Controller
 
                 $q->where(function ($query) use ($search) {
                     $query->where('invoice_code', 'like', "%$search%")
-                        ->orWhere('customer_name', 'like', "%$search%");
+                        ->orWhereHas('customer.user', function ($q) use ($search) {
+                            $q->where('name', 'like', "%$search%");
+                        });
                 });
             })
             ->when($request->status, function ($q) use ($request) {
@@ -56,6 +58,8 @@ class TransactionController extends Controller
             ->latest()
             ->paginate(10)
             ->withQueryString();
+
+            // dd($transactions);
 
         return view('transaksi.index', compact('transactions', 'stats'));
     }
