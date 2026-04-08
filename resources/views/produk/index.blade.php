@@ -209,8 +209,9 @@
                                     <p class="text-xs text-gray-500">PNG, JPG, GIF (max 5MB)</p>
                                 </label>
                             </div>
-                            <div id="imagePreview" class="mt-4 hidden cursor-pointer">
-                                <img class="w-full h-48 object-cover rounded-lg shadow-md" alt="Preview">
+                            <div id="imagePreview"
+                                class="mx-auto w-60 aspect-square overflow-hidden rounded-lg border hidden cursor-pointer">
+                                <img class="w-full h-full object-cover">
                             </div>
                         </div>
                         <x-input-error :messages="$errors->get('image')" class="mt-2 text-red-500 text-sm" />
