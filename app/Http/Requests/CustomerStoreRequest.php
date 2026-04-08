@@ -24,14 +24,18 @@ class CustomerStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $customer = Customer::findOrFail($this->route('customer'));
+        $customerId = $this->route('customer');
+
+        $customer = $customerId ? Customer::find($customerId) : null;
 
         return [
             'name' => 'required|string|max:100',
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users', 'email')->ignore($customer->user->id),
+                $customer
+                    ? Rule::unique('users', 'email')->ignore($customer->user->id)
+                    : Rule::unique('users', 'email'),
             ],
             'phone' => 'required|string|max:25',
             'type' => 'required|in:regular,exclusive',

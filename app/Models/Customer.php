@@ -22,9 +22,11 @@ class Customer extends Model
                 $search = request('search');
 
                 return $q->where(function ($query) use ($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%")
-                        ->orWhere('phone', 'LIKE', "%{$search}%");
+                    $query->where('phone', 'LIKE', "%{$search}%")
+                        ->orWhereHas('user', function ($q) use ($search) {
+                            $q->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('email', 'LIKE', "%{$search}%");
+                        });
                 });
             })
             ->when(request('type'), function ($q) {
@@ -56,5 +58,10 @@ class Customer extends Model
         } catch (\Exception $e) {
             return $this->phone;
         }
+    }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
     }
 }
