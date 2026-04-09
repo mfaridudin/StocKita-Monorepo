@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Buyer\DashboardController as BuyerDashboardController;
 use App\Http\Controllers\Buyer\OrderController;
@@ -97,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
 */
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
+    Route::resource('/admin/categories', AdminCategoryController::class);
     Route::resource('admin/roles',  RoleController::class);
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
