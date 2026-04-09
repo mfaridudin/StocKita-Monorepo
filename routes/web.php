@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\StockController as AdminStockController;
+use App\Http\Controllers\Admin\WarehouseController as AdminWarehouseController;
 use App\Http\Controllers\Buyer\DashboardController as BuyerDashboardController;
 use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\CategoryController;
@@ -101,10 +103,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
     Route::resource('/admin/categories', AdminCategoryController::class);
     Route::resource('/admin/products', AdminProductController::class);
+    Route::resource('admin/warehouse', AdminWarehouseController::class);
     Route::resource('admin/roles',  RoleController::class);
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
     Route::post('/settings', [SettingController::class, 'update']);
+
+    // stock
+    Route::post('/admin/stocks', [AdminStockController::class, 'store'])->name('stocks.store');
+    Route::put('/admin/stocks/{id}', [AdminStockController::class, 'update'])->name('stocks.update');
+    Route::put('/admin/stocks/{id}/reduce', [AdminStockController::class, 'reduce'])->name('stocks.reduce');
+    Route::delete('/admin/stocks/{id}', [AdminStockController::class, 'destroy'])->name('stocks.delete');
 
     Route::get('/admin/categories-by-store/{store}', function ($storeId) {
         return Category::where('store_id', $storeId)->get();

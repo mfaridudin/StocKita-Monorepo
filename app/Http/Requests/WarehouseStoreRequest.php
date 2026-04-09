@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class WarehouseStoreRequest extends FormRequest
 {
@@ -26,6 +28,11 @@ class WarehouseStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'location' => ['required', 'string'],
             'description' => ['required', 'string'],
+
+            'store_id' => [
+                Rule::requiredIf(Auth::user()->hasRole('admin')),
+                'exists:stores,id'
+            ],
         ];
     }
 
@@ -38,6 +45,9 @@ class WarehouseStoreRequest extends FormRequest
             'location.required' => 'Lokasi wajib diisi.',
 
             'description.required' => 'Deskripsi wajib diisi.',
+
+            'store_id.required' => 'Toko wajib dipilih.',
+            'store_id.exists' => 'Toko yang dipilih tidak valid.',
         ];
     }
 }
