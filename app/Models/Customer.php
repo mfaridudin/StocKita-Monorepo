@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 
@@ -25,7 +26,7 @@ class Customer extends Model
                     $query->where('phone', 'LIKE', "%{$search}%")
                         ->orWhereHas('user', function ($q) use ($search) {
                             $q->where('name', 'LIKE', "%{$search}%")
-                            ->orWhere('email', 'LIKE', "%{$search}%");
+                                ->orWhere('email', 'LIKE', "%{$search}%");
                         });
                 });
             })
@@ -34,6 +35,9 @@ class Customer extends Model
             })
             ->when(request('status'), function ($q) {
                 return $q->where('status', request('status'));
+            })
+            ->when(Auth::user()->hasRole('admin') && request('store'), function ($q) {
+                return $q->where('store_id', request('store'));
             });
     }
 

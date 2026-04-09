@@ -118,7 +118,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-right">
-                                    <a href="/transactions/{{ $order->id }}"
+                                    <a href="/admin/transactions/{{ $order->id }}"
                                         class="text-blue-500 text-xs hover:underline">
                                         Detail
                                     </a>

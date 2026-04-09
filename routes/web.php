@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StockController as AdminStockController;
@@ -103,7 +104,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
     Route::resource('/admin/categories', AdminCategoryController::class);
     Route::resource('/admin/products', AdminProductController::class);
-    Route::resource('admin/warehouse', AdminWarehouseController::class);
+    Route::resource('/admin/warehouse', AdminWarehouseController::class);
+    Route::resource('/admin/customers', AdminCustomerController::class);
     Route::resource('admin/roles',  RoleController::class);
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
@@ -118,6 +120,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/categories-by-store/{store}', function ($storeId) {
         return Category::where('store_id', $storeId)->get();
     });
+
+    // kirim email
+        Route::post('/admin/customers/{id}/send-email', [CustomerController::class, 'sendEmail']);
 });
 
 /*

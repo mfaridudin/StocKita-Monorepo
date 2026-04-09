@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Customer;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class CustomerStoreRequest extends FormRequest
@@ -27,6 +28,7 @@ class CustomerStoreRequest extends FormRequest
         $customerId = $this->route('customer');
 
         $customer = $customerId ? Customer::find($customerId) : null;
+        $isUpdate = $this->method() === 'PUT' || $this->method() === 'PATCH';
 
         return [
             'name' => 'required|string|max:100',
@@ -40,6 +42,14 @@ class CustomerStoreRequest extends FormRequest
             'phone' => 'required|string|max:25',
             'type' => 'required|in:regular,exclusive',
             'status' => 'required|in:active,inactive',
+
+            'store_id' => [
+                Rule::requiredIf(
+                    Auth::user()->hasRole('admin') && !$isUpdate
+                ),
+                'nullable',
+                'exists:stores,id'
+            ],
         ];
     }
 
@@ -63,6 +73,9 @@ class CustomerStoreRequest extends FormRequest
 
             'status.required' => 'Status wajib dipilih.',
             'status.in' => 'Status harus berupa active atau inactive.',
+
+            'store_id.required' => 'Toko wajib dipilih.',
+            'store_id.exists' => 'Toko yang dipilih tidak valid.',
         ];
     }
 }
