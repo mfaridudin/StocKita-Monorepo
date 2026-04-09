@@ -1,61 +1,63 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Imagick;
 
 class ProductController extends Controller
 {
-    // generate sku
-    private function generateSku()
-    {
-        $date = now()->format('Ymd');
-
-        $lastProduct = Product::whereDate('created_at', now())
-            ->latest()
-            ->first();
-
-        if ($lastProduct) {
-            $lastNumber = (int) substr($lastProduct->sku, -3);
-            $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        } else {
-            $newNumber = '001';
-        }
-
-        return "PRD-$date-$newNumber";
-    }
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::where('store_id', Auth::user()->store->id)->get();
-        $categories = Category::where('store_id', Auth::user()->store->id)->get();
+        $productQuery = Product::with('store')
+            ->when($request->search, function ($q) use ($request) {
+                $search = $request->search;
 
-        return view('produk.index', compact('products', 'categories'));
+                $q->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%$search%")
+                        ->orWhereHas('category', function ($q) use ($search) {
+                            $q->where('name', 'like', "%$search%");
+                        })
+                        ->orWhereHas('store', function ($q) use ($search) {
+                            $q->where('name', 'like', "%$search%");
+                        })
+                        ->orWhereHas('store.owner', function ($q) use ($search) {
+                            $q->where('name', 'like', "%$search%");
+                        });
+                });
+            })
+            ->when($request->store, function ($q) use ($request) {
+                $q->where('store_id', $request->store);
+            });
+
+        $products = $productQuery->latest()->get();
+        $stores = Store::all();
+        $categories = Category::all();
+
+        return view('admin.produk.index', compact('products', 'categories', 'stores'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create() {}
+    public function create()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(ProductStoreRequest $request)
     {
-        if (! auth()->user()->canCreateProduct()) {
-            return back()->with('error', 'Limit produk habis');
-        }
-
         $imagePath = null;
 
         if ($request->hasFile('image')) {
@@ -93,7 +95,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'image' => $imagePath,
             'created_by' => auth()->id(),
-            'store_id' => auth()->user()->store->id,
+            'store_id' => $request->store_id,
             'warehouse_id' => $request->warehouse_id,
         ]);
 
@@ -103,12 +105,12 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+   public function show(string $id)
     {
-        $product = Product::where('store_id', Auth::user()->store->id)->findOrFail($id);
-        $categories = Category::where('store_id', Auth::user()->store->id)->get();
+        $product = Product::findOrFail($id);
+        $categories = Category::where('store_id', $product->store->id)->get();
 
-        return view('produk.show', compact('product', 'categories'));
+        return view('.admin.produk.show', compact('product', 'categories'));
     }
 
     /**
@@ -122,7 +124,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+      public function update(Request $request, string $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -164,57 +166,22 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil dihapus!');
     }
 
-    // update image
-    public function updateImage(Request $request, $id)
+    // generate sku
+    private function generateSku()
     {
-        $product = Product::findOrFail($id);
+        $date = now()->format('Ymd');
 
-        if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
+        $lastProduct = Product::whereDate('created_at', now())
+            ->latest()
+            ->first();
 
-            $file = $request->file('image');
-            $filename = uniqid() . '.jpg';
-            $directory = storage_path('app/public/products');
-
-            if (!file_exists($directory)) {
-                mkdir($directory, 0755, true);
-            }
-
-            $path = $directory . '/' . $filename;
-
-            try {
-                $image = new Imagick($file->getRealPath());
-                $size = min($image->getImageWidth(), $image->getImageHeight());
-                $image->cropImage(
-                    $size,
-                    $size,
-                    ($image->getImageWidth() - $size) / 2,
-                    ($image->getImageHeight() - $size) / 2
-                );
-
-                $image->resizeImage(800, 800, Imagick::FILTER_LANCZOS, 1);
-
-                $image->setImageFormat('jpeg');
-                $image->setImageCompressionQuality(70);
-
-                $image->stripImage();
-
-                $image->writeImage($path);
-                $image->clear();
-                $image->destroy();
-
-                $imagePath = 'products/' . $filename;
-
-                $product->update([
-                    'image' => $imagePath,
-                ]);
-            } catch (\Exception $e) {
-                return back()->with('error', 'Gagal memproses gambar: ' . $e->getMessage());
-            }
+        if ($lastProduct) {
+            $lastNumber = (int) substr($lastProduct->sku, -3);
+            $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        } else {
+            $newNumber = '001';
         }
 
-        return redirect()->back()->with('success', 'Gambar produk berhasil diperbarui!');
+        return "PRD-$date-$newNumber";
     }
 }

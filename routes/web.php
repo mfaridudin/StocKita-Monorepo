@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Buyer\DashboardController as BuyerDashboardController;
 use App\Http\Controllers\Buyer\OrderController;
@@ -16,13 +17,14 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WarehouseController;
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\User;
 // Buyer
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('welcome'));
+Route::get('/', fn() => view('welcome'));
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +51,6 @@ Route::get('/blog/{slug}', function ($slug) {
         'content' => $articles[$slug]['content'],
         'image' => $articles[$slug]['image'],
     ]);
-
 });
 
 Route::get('/features/{slug}', function ($slug) {
@@ -99,11 +100,15 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
     Route::resource('/admin/categories', AdminCategoryController::class);
+    Route::resource('/admin/products', AdminProductController::class);
     Route::resource('admin/roles',  RoleController::class);
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
     Route::post('/settings', [SettingController::class, 'update']);
-    
+
+    Route::get('/admin/categories-by-store/{store}', function ($storeId) {
+        return Category::where('store_id', $storeId)->get();
+    });
 });
 
 /*
@@ -116,18 +121,18 @@ Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/customers/search', function (Request $request) {
-    return Customer::with('user')
-        ->whereHas('user', function ($q) use ($request) {
-            $q->where('name', 'like', '%'.$request->q.'%');
-        })
-        ->limit(5)
-        ->get()
-        ->map(function ($customer) {
-            return [
-                'id' => $customer->id,
-                'name' => $customer->user->name
-            ];
-        });
+        return Customer::with('user')
+            ->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%');
+            })
+            ->limit(5)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->user->name
+                ];
+            });
     });
 
     // Resources
@@ -173,4 +178,4 @@ Route::middleware(['auth', 'role:buyer'])
         Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
