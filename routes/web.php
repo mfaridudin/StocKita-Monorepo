@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Buyer\DashboardController as BuyerDashboardController;
 use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\CategoryController;
@@ -9,7 +11,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Midtrans\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransactionController;
@@ -91,10 +92,24 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin & Owner (BUTUH subscription)
+| Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin|owner', 'subscription.active'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
+    Route::resource('admin/roles',  RoleController::class);
+
+    Route::get('/admin/settings', [SettingController::class, 'index']);
+    Route::post('/settings', [SettingController::class, 'update']);
+    
+});
+
+/*
+|--------------------------------------------------------------------------
+| Owner (BUTUH subscription)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -111,11 +126,10 @@ Route::middleware(['auth', 'role:admin|owner', 'subscription.active'])->group(fu
                 'name' => $customer->user->name
             ];
         });
-});
+    });
 
     // Resources
     Route::resources([
-        'roles' => RoleController::class,
         'products' => ProductController::class,
         'categories' => CategoryController::class,
         'warehouse' => WarehouseController::class,

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Setting;
 use App\Models\Stock;
+use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -53,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
             // stok menipis
             $lowStock = Stock::with(['product', 'warehouse'])
                 ->where('qty', '>', 0)
-                ->where('qty', '<=', 5) // batas bisa lo ubah
+                ->where('qty', '<=', 5)
                 ->get();
 
             foreach ($lowStock as $stock) {
@@ -65,12 +66,18 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
 
-            // $notifications->push([
-            //     'type' => 'info',
-            //     'title' => 'Transaksi Baru',
-            //     'message' => 'Ada transaksi baru hari ini',
-            //     'url' => '/transactions'
-            // ]);
+            $newOwners = User::role('owner')
+                ->whereDate('created_at', today())
+                ->count();
+
+            if ($newOwners > 0) {
+                $notifications->push([
+                    'type' => 'success',
+                    'title' => 'Owner Baru',
+                    'message' => "Ada {$newOwners} owner baru hari ini",
+                    'url' => '/admin/users'
+                ]);
+            }
 
             $view->with(compact('notifications'));
         });
