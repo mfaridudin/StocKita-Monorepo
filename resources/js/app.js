@@ -12,8 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleMobile = document.getElementById("toggleSidebar");
     const toggleCollapse = document.getElementById("toggleCollapse");
     const overlay = document.getElementById("overlay");
+    const titles = document.querySelectorAll(".sidebar-title");
     const texts = document.querySelectorAll(".sidebar-text");
     const main = document.getElementById("mainContent");
+    const groups = document.querySelectorAll(".group-item");
 
     let isMobileOpen = false;
     let collapsed = false;
@@ -60,6 +62,20 @@ document.addEventListener("DOMContentLoaded", () => {
             duration: 0.2,
             ease: "power3.inOut"
         });
+
+        gsap.to(groups, {
+            marginTop: 0,
+            duration: 0.2,
+            ease: "power2.out"
+        });
+
+        gsap.to(titles, {
+            opacity: 0,
+            height: 0,
+            marginTop: 0,
+            duration: 0.15,
+            stagger: 0.02
+        });
     }
 
     function expandSidebar() {
@@ -82,6 +98,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 x: 0,
                 duration: 0.2,
                 delay: 0.1,
+                stagger: 0.03
+            }
+        );
+
+        gsap.to(groups, {
+            marginTop: 12,
+            duration: 0.2,
+            ease: "power2.out"
+        });
+
+        gsap.fromTo(titles,
+            { opacity: 0, height: 0 },
+            {
+                opacity: 1,
+                height: "auto",
+                duration: 0.2,
                 stagger: 0.03
             }
         );
