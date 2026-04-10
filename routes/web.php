@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\StockController as AdminStockController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\WarehouseController as AdminWarehouseController;
@@ -94,6 +95,7 @@ Route::middleware(['auth'])->group(function () {
     // Subscription (HARUS bisa diakses walau belum aktif)
     Route::get('/subscription', [PaymentController::class, 'index'])->name('subscription.index');
     Route::post('/subscription/upgrade', [PaymentController::class, 'upgrade'])->name('subscription.upgrade');
+    Route::post('/settings', [SettingController::class, 'update']);
 });
 
 /*
@@ -110,8 +112,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/admin/transactions', AdminTransactionController::class);
     Route::resource('admin/roles',  RoleController::class);
 
-    Route::get('/admin/settings', [SettingController::class, 'index']);
-    Route::post('/settings', [SettingController::class, 'update']);
+    Route::get('/admin/settings', [AdminSettingController::class, 'index']);
+    Route::post('/admin/settings', [AdminSettingController::class, 'update']);
+    Route::put('/admin/plans/{id}', [AdminSettingController::class, 'updatePlan']);
+
 
     // stock
     Route::post('/admin/stocks', [AdminStockController::class, 'store'])->name('stocks.store');
@@ -150,7 +154,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
             });
     });
 
-    Route::get('/customers/by-store', [CustomerController::class, 'byStore']);
+    Route::get('/customers/by-store', [AdminTransactionController::class, 'byStore']);
 });
 
 /*
@@ -200,7 +204,6 @@ Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function
 
     // Settings
     Route::get('/settings', [SettingController::class, 'index']);
-    Route::post('/settings', [SettingController::class, 'update']);
 
     Route::put('/store/{id}', [SettingController::class, 'updateStore']);
 });

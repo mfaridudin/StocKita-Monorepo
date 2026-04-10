@@ -18,6 +18,9 @@ return new class extends Migration
             $table->integer('yearly_price')->nullable();
             $table->integer('max_products')->nullable();
             $table->integer('max_orders')->nullable();
+            $table->integer('max_warehouses')->nullable();
+            $table->integer('max_categories')->nullable();
+            $table->integer('max_customers')->nullable();
             $table->integer('duration_days');
             $table->json('features')->nullable();
             $table->timestamps();

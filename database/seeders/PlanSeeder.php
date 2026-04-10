@@ -21,6 +21,9 @@ class PlanSeeder extends Seeder
             'price' => 0,
             'max_products' => 10,
             'max_orders' => 50,
+            'max_customers' => 5,
+            'max_categories' => 100,
+            'max_warehouses' => 5,
             'duration_days' => 30,
             'features' => [
                 'Kelola produk',
@@ -34,6 +37,9 @@ class PlanSeeder extends Seeder
             'price' => 99000,
             'yearly_price' => 990000,
             'max_products' => 100,
+            'max_customers' => 100,
+            'max_categories' => 500,
+            'max_warehouses' => 50,
             'max_orders' => 500,
             'duration_days' => 30,
             'features' => [
@@ -49,6 +55,9 @@ class PlanSeeder extends Seeder
             'yearly_price' => 1990000,
             'max_products' => null,
             'max_orders' => null,
+            'max_customers' => null,
+            'max_categories' => null,
+            'max_warehouses' => null,
             'duration_days' => 30,
             'features' => [
                 'Semua fitur Pro',
