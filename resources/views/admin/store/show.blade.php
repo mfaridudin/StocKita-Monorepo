@@ -20,26 +20,25 @@
     <div class="space-y-8">
 
         {{-- HEADER --}}
-        <div class="bg-green-500 p-6 rounded-2xl text-white shadow-lg">
+        <div class="bg-green-50 p-6 rounded-2xl shadow-sm border border-green-100">
             <div class="flex justify-between items-center">
 
                 <div>
-                    <h1 class="text-3xl font-bold">
+                    <h1 class="text-3xl font-bold text-green-800">
                         {{ $store->name }}
                     </h1>
-                    <p class="text-green-100 text-sm mt-1">
+                    <p class="text-green-600 text-sm mt-1">
                         {{ $store->slug }}
                     </p>
                 </div>
 
                 <button x-data @click="$dispatch('open-modal', { name: 'edit-store' })"
-                    class="bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
                     Edit
                 </button>
 
             </div>
         </div>
-
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
