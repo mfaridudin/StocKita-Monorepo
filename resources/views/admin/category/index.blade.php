@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <form method="GET" action="{{ route('categories.index') }}">
+        <form method="GET" action="{{ route('admin.categories.index') }}">
             <div class="bg-white p-4 rounded-xl shadow-sm border">
                 <div class="flex flex-col sm:flex-row gap-3">
 
@@ -163,13 +163,6 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-medium">Nama</label>
-                        <input type="text" name="name"
-                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
-                        <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
-                    </div>
-
-                    <div>
                         <label class="text-sm font-medium">Toko</label>
                         <select name="store"
                             class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
@@ -182,6 +175,13 @@
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('store')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium">Nama</label>
+                        <input type="text" name="name"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                        <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
                     </div>
 
                     <div class="flex justify-end gap-2 pt-4">
@@ -232,13 +232,6 @@
                 @method('PUT')
 
                 <div>
-                    <label class="text-sm font-medium">Nama</label>
-                    <input type="text" name="name" x-model="categoryName"
-                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
-                    <x-input-error :messages="$errors->editCategory->get('name')" class="mt-2 text-red-500 text-sm" />
-                </div>
-
-                <div>
                     <label class="text-sm font-medium">Toko</label>
                     <select name="store" x-model="storeId"
                         class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
@@ -253,6 +246,13 @@
 
                     </select>
                     <x-input-error :messages="$errors->get('store')" class="mt-2 text-red-500 text-sm" />
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium">Nama</label>
+                    <input type="text" name="name" x-model="categoryName"
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                    <x-input-error :messages="$errors->editCategory->get('name')" class="mt-2 text-red-500 text-sm" />
                 </div>
 
                 <div class="flex justify-end gap-2 pt-4">

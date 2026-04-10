@@ -144,7 +144,7 @@
     {{-- modal edit --}}
     <x-modal name="edit-customer" maxWidth="md" :show="$errors->any()">
         <div class="p-6">
-            <form action="{{ route('customers.update', $customer->id) }}" method="POST">
+            <form action="{{ route('admin.customers.update', $customer->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 

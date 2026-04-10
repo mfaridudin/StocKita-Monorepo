@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('roles.index') }}"
+                <a href="{{ route('admin.roles.index') }}"
                     class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -31,7 +31,7 @@
         </div>
 
         <div class="bg-white shadow-2xl rounded-2xl border border-gray-200 overflow-hidden">
-            <form method="POST" action="{{ route('roles.update', $role) }}" class="p-8">
+            <form method="POST" action="{{ route('admin.roles.update', $role) }}" class="p-8">
                 @csrf
                 @method('PUT')
                 <div class="mb-10">
@@ -111,7 +111,7 @@
                         </svg>
                         Update Role
                     </button>
-                    <a href="{{ route('roles.index') }}"
+                    <a href="{{ route('admin.roles.index') }}"
                         class="flex-1 text-center py-4 px-6 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
                         Batal
                     </a>

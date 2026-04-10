@@ -236,7 +236,7 @@
                                             </button>
                                         </form>
                                         <a title="Detail Pelanggan"
-                                            href="{{ route('customers.show', $customer->id) }}"
+                                            href="{{ route('admin.customers.show', $customer->id) }}"
                                             class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

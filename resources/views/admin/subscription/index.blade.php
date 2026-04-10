@@ -179,7 +179,7 @@
                                 <td class="px-6 py-4">
                                     <div x-data class="flex items-center gap-2">
 
-                                        <form action="{{ route('subscriptions.toggle', $subscription->id) }}"
+                                        <form action="{{ route('admin.subscriptions.toggle', $subscription->id) }}"
                                             method="POST">
                                             @csrf
                                             @method('PATCH')

@@ -168,7 +168,7 @@
     {{-- create modal --}}
     <x-modal name="create-stock" maxWidth="md" :show="session('open_modal') === 'create-stock'">
         <div class="p-6">
-            <form action="{{ route('stocks.store') }}" method="POST">
+            <form action="{{ route('admin.stocks.store') }}" method="POST">
                 @csrf
 
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">

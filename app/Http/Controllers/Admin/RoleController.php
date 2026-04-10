@@ -31,7 +31,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->permissions);
 
-        return redirect()->route('roles.index');
+        return redirect()->route('admin.roles.index');
     }
 
     public function edit(Role $role)
@@ -49,7 +49,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->permissions);
 
-        return redirect()->route('roles.index');
+        return redirect()->route('admin.roles.index');
     }
 
     public function destroy(Role $role)

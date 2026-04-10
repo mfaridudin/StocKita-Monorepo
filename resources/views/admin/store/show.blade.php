@@ -1,4 +1,21 @@
 <x-app-layout title="Detail Toko">
+    @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                let type =
+                    "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: type,
+                    title: "{{ $message }}",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+        </script>
+    @endif
 
     <div class="space-y-8">
 

@@ -97,7 +97,26 @@ Route::middleware(['auth'])->group(function () {
     // Subscription (HARUS bisa diakses walau belum aktif)
     Route::get('/subscription', [PaymentController::class, 'index'])->name('subscription.index');
     Route::post('/subscription/upgrade', [PaymentController::class, 'upgrade'])->name('subscription.upgrade');
+
     Route::post('/settings', [SettingController::class, 'update']);
+
+    // search transaksi
+    Route::get('/products/by-store', function () {
+        $storeId = request('store_id');
+        $products = \App\Models\Product::with('stocks')
+            ->where('store_id', $storeId)->get();
+        return response()->json($products);
+    });
+
+    Route::get('/customers/search', function (Request $request) {
+        return Customer::with('user')->whereHas('user', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->q . '%');
+        })->limit(5)->get()->map(function ($customer) {
+            return ['id' => $customer->id, 'name' => $customer->user->name];
+        });
+    });
+
+    Route::get('/customers/by-store', [AdminTransactionController::class, 'byStore']);
 });
 
 /*
@@ -105,66 +124,48 @@ Route::middleware(['auth'])->group(function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
-    Route::resource('/admin/categories', AdminCategoryController::class);
-    Route::resource('/admin/products', AdminProductController::class);
-    Route::resource('/admin/warehouse', AdminWarehouseController::class);
-    Route::resource('/admin/customers', AdminCustomerController::class);
-    Route::resource('/admin/store', StoreController::class);
-    Route::resource('/admin/transactions', AdminTransactionController::class);
-    Route::resource('admin/roles',  RoleController::class);
-    Route::resource('admin/subscriptions', SubscriptionController::class);
-    
-    Route::patch('/admin/subscriptions/{id}/toggle', [SubscriptionController::class, 'toggle'])
-    ->name('subscriptions.toggle');
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('/admin/settings', [AdminSettingController::class, 'index']);
-    Route::post('/admin/settings', [AdminSettingController::class, 'update']);
-    Route::put('/admin/plans/{id}', [AdminSettingController::class, 'updatePlan']);
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // update gambar produk
-    Route::put('/admin/product/update-img/{id}', [AdminProductController::class, 'updateImage']);
+        Route::resources([
+            'categories' => AdminCategoryController::class,
+            'products' => AdminProductController::class,
+            'warehouse' => AdminWarehouseController::class,
+            'customers' => AdminCustomerController::class,
+            'store' => StoreController::class,
+            'transactions' => AdminTransactionController::class,
+            'roles' => RoleController::class,
+            'subscriptions' => SubscriptionController::class,
+        ]);
 
-    // stock
-    Route::post('/admin/stocks', [AdminStockController::class, 'store'])->name('stocks.store');
-    Route::put('/admin/stocks/{id}', [AdminStockController::class, 'update'])->name('stocks.update');
-    Route::put('/admin/stocks/{id}/reduce', [AdminStockController::class, 'reduce'])->name('stocks.reduce');
-    Route::delete('/admin/stocks/{id}', [AdminStockController::class, 'destroy'])->name('stocks.delete');
+        Route::patch('/subscriptions/{id}/toggle', [SubscriptionController::class, 'toggle'])
+            ->name('subscriptions.toggle');
 
-    Route::get('/admin/categories-by-store/{store}', function ($storeId) {
-        return Category::where('store_id', $storeId)->get();
+        Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings');
+        Route::post('/settings', [AdminSettingController::class, 'update']);
+
+        Route::put('/product/update-img/{id}', [AdminProductController::class, 'updateImage'])
+            ->name('products.update-image');
+
+        Route::post('/stocks', [AdminStockController::class, 'store'])->name('stocks.store');
+        Route::put('/stocks/{id}', [AdminStockController::class, 'update'])->name('stocks.update');
+        Route::put('/stocks/{id}/reduce', [AdminStockController::class, 'reduce'])->name('stocks.reduce');
+        Route::delete('/stocks/{id}', [AdminStockController::class, 'destroy'])->name('stocks.delete');
+
+        // plans
+        Route::put('/plans/{id}', [AdminSettingController::class, 'updatePlan']);
+
+        // kirim email
+        Route::post('/customers/{id}/send-email', [CustomerController::class, 'sendEmail']);
+
+        Route::get('/categories-by-store/{store}', function ($storeId) {
+            return Category::where('store_id', $storeId)->get();
+        });
     });
-
-    // kirim email
-    Route::post('/admin/customers/{id}/send-email', [CustomerController::class, 'sendEmail']);
-
-    // 
-    Route::get('/products/by-store', function () {
-        $storeId = request('store_id');
-
-        $products = \App\Models\Product::with('stocks')->where('store_id', $storeId)->get();
-
-        return response()->json($products);
-    });
-
-    Route::get('/customers/search', function (Request $request) {
-        return Customer::with('user')
-            ->whereHas('user', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->q . '%');
-            })
-            ->limit(5)
-            ->get()
-            ->map(function ($customer) {
-                return [
-                    'id' => $customer->id,
-                    'name' => $customer->user->name
-                ];
-            });
-    });
-
-    Route::get('/customers/by-store', [AdminTransactionController::class, 'byStore']);
-});
 
 /*
 |--------------------------------------------------------------------------

@@ -112,7 +112,7 @@
                 <div class="flex justify-between items-center mb-6 pb-4 border-b">
                     <h3 class="text-lg font-semibold">Tambah Toko</h3>
 
-                    <button type="button" @click="$dispatch('close-modal', 'create-store')">
+                    <button type="button" @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-store')">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12">
@@ -170,7 +170,7 @@
 
                     {{-- ACTION --}}
                     <div class="flex justify-end gap-2 pt-4">
-                        <button type="button" @click="$dispatch('close-modal', 'create-store')"
+                        <button type="button" @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-store')"
                             class="px-4 py-2 bg-gray-200 rounded-lg">
                             Batal
                         </button>

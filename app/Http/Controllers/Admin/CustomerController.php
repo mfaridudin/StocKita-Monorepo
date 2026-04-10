@@ -85,7 +85,7 @@ class CustomerController extends Controller
 
         // dd($orders);
 
-        return view('pelanggan.show', compact('customer', 'totalOrders', 'totalSpent', 'lastOrder', 'orders'));
+        return view('admin.pelanggan.show', compact('customer', 'totalOrders', 'totalSpent', 'lastOrder', 'orders'));
     }
 
     public function update(CustomerStoreRequest $request, string $id)

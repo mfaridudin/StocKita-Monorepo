@@ -36,7 +36,7 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <form method="GET" action="{{ route('warehouse.index') }}" class="p-4">
+            <form method="GET" action="{{ route('admin.warehouse.index') }}" class="p-4">
                 <div class="flex flex-col sm:flex-row gap-3">
 
                     <input type="text" name="search" value="{{ request('search') }}"

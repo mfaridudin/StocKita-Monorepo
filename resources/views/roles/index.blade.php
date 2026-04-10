@@ -84,7 +84,7 @@
                                     </td>
                                     <td class="px-6 py-5 text-right">
                                         <div class="flex items-center justify-end space-x-2">
-                                            <a href="{{ route('roles.edit', $role) }}"
+                                            <a href="{{ route('admin.roles.edit', $role) }}"
                                                 class="text-blue-600 hover:text-blue-900 font-medium text-sm p-2 -m-2 rounded-lg hover:bg-blue-50 transition-all duration-200 flex items-center gap-1"
                                                 title="Edit Role">
                                                 {{-- <svg class="w-4 h-4" fill="none" stroke="currentColor"
@@ -120,7 +120,7 @@
                     <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada role</h3>
                     <p class="mt-1 text-sm text-gray-500">Mulai dengan membuat role pertama Anda.</p>
                     <div class="mt-6">
-                        <a href="{{ route('roles.create') }}"
+                        <a href="{{ route('admin.roles.create') }}"
                             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             Buat Role Pertama
                         </a>

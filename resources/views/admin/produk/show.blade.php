@@ -191,7 +191,7 @@
     {{-- modal edit produk --}}
     <x-modal name="edit-produk" maxWidth="lg" :show="$errors->any()">
         <div class="p-6">
-            <form action="{{ route('products.update', $product->id) }}" method="POST"
+            <form action="{{ route('admin.products.update', $product->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
