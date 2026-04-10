@@ -68,4 +68,9 @@ class Customer extends Model
     {
         return $this->belongsTo(Store::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

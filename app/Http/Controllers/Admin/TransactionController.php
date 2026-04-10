@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Store;
@@ -17,27 +19,22 @@ use Intervention\Image\ImageManager;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $storeId = Auth::user()->store->id;
+        $transactionQuery = Transaction::when($request->search, function ($q) use ($request) {
+            $search = $request->search;
 
-        $transactionQuery = Transaction::where('store_id', $storeId)
-            ->when($request->search, function ($q) use ($request) {
-                $search = $request->search;
-
-                $q->where(function ($query) use ($search) {
-                    $query->where('invoice_code', 'like', "%$search%")
-                        ->orWhereHas('customer.user', function ($q) use ($search) {
-                            $q->where('name', 'like', "%$search%");
-                        });
-                });
-            })
-            ->when($request->status, function ($q) use ($request) {
-                $q->where('status', $request->status);
+            $q->where(function ($query) use ($search) {
+                $query->where('invoice_code', 'like', "%$search%")
+                    ->orWhereHas('customer.user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%$search%");
+                    });
             });
+        })->when($request->status, function ($q) use ($request) {
+            $q->where('status', $request->status);
+        })->when($request->store, function ($q) use ($request) {
+            $q->where('store_id', $request->store);
+        });
 
         $stats = [
             'total' => (clone $transactionQuery)->count(),
@@ -48,8 +45,8 @@ class TransactionController extends Controller
                 ->where('status', '!=', 'paid')
                 ->count(),
 
-            'items' => TransactionItem::whereHas('transaction', function ($q) use ($storeId) {
-                $q->where('store_id', $storeId);
+            'items' => TransactionItem::whereHas('transaction', function ($q) {
+                $q;
             })->count(),
         ];
 
@@ -59,30 +56,22 @@ class TransactionController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        // dd($transactions);
+        $stores = Store::all();
 
-        return view('transaksi.index', compact('transactions', 'stats'));
+        return view('admin.transaksi.index', compact('transactions', 'stats', 'stores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $products = Product::where('store_id', Auth::user()->store->id)->get();
+        $products = Product::all();
+        $stores = Store::all();
 
-        return view('transaksi.create', compact('products'));
+        return view('admin.transaksi.create', compact('products', 'stores'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // tambah
     public function store(Request $request)
     {
-        if (! auth()->user()->canCreateTransaction()) {
-            return response()->json(['message' => 'Limit transaksi habis'], 400);
-        }
-
         DB::beginTransaction();
 
         try {
@@ -109,7 +98,7 @@ class TransactionController extends Controller
                 'customer_id' => $request->filled('customer_id') ? $request->customer_id : null,
                 'customer_name' => $request->filled('customer_id') ? null : $request->customer_name,
                 'total' => $total,
-                'store_id' => Auth::user()->store->id,
+                'store_id' => $request->store_id,
                 'payment_method' => $request->payment_method,
                 'paid_at' => $request->paid_at,
                 'notes' => $request->notes,
@@ -167,6 +156,7 @@ class TransactionController extends Controller
 
             // buat struk
             $transaction->load('items.product');
+            // Log::info('ini log',$transaction->load('items.product')->toArray());
             $receiptPath = $this->generateReceipt($transaction);
             $transaction->update(['receipt' => $receiptPath]);
 
@@ -183,9 +173,7 @@ class TransactionController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // detail
     public function show($id)
     {
         $transaction = Transaction::with(['items.product', 'customer'])
@@ -194,25 +182,7 @@ class TransactionController extends Controller
         return view('transaksi.show', compact('transaction'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
+    // hapus
     public function destroy(string $id)
     {
         $transaksi = Transaction::findOrFail($id);
@@ -223,12 +193,33 @@ class TransactionController extends Controller
 
         $transaksi->delete();
 
-        return redirect()->back()->with('success', 'Data transaksi berhasil dihapus');
+        return back()->with('success', 'Data transaksi berhasil dihapus');
     }
 
+    // search
+    public function byStore(Request $request)
+    {
+        $storeId = $request->store_id;
+
+        $customers = Customer::with('user')->where('store_id', $storeId)->whereHas('user', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->q . '%');
+        })
+            ->limit(5)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->user->name
+                ];
+            });;
+
+        return response()->json($customers);
+    }
+
+    // buat struk
     private function generateReceipt($transaction)
     {
-        $storeId = Auth::user()->store->id;
+        $storeId = $transaction->store_id;
         $store = Store::findOrFail($storeId);
 
         $manager = new ImageManager(new Driver);

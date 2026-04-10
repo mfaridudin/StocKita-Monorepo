@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StockController as AdminStockController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\WarehouseController as AdminWarehouseController;
 use App\Http\Controllers\Buyer\DashboardController as BuyerDashboardController;
 use App\Http\Controllers\Buyer\OrderController;
@@ -106,6 +107,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/admin/products', AdminProductController::class);
     Route::resource('/admin/warehouse', AdminWarehouseController::class);
     Route::resource('/admin/customers', AdminCustomerController::class);
+    Route::resource('/admin/transactions', AdminTransactionController::class);
     Route::resource('admin/roles',  RoleController::class);
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
@@ -122,7 +124,33 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     // kirim email
-        Route::post('/admin/customers/{id}/send-email', [CustomerController::class, 'sendEmail']);
+    Route::post('/admin/customers/{id}/send-email', [CustomerController::class, 'sendEmail']);
+
+    // 
+    Route::get('/products/by-store', function () {
+        $storeId = request('store_id');
+
+        $products = \App\Models\Product::with('stocks')->where('store_id', $storeId)->get();
+
+        return response()->json($products);
+    });
+
+    Route::get('/customers/search', function (Request $request) {
+        return Customer::with('user')
+            ->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%');
+            })
+            ->limit(5)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->user->name
+                ];
+            });
+    });
+
+    Route::get('/customers/by-store', [CustomerController::class, 'byStore']);
 });
 
 /*
