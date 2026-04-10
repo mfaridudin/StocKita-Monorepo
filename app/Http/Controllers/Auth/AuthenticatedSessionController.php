@@ -32,14 +32,11 @@ class AuthenticatedSessionController extends Controller
         if ($request->remember) {
             Cookie::queue('remember_email', $request->email, 60 * 24 * 30);
             Cookie::queue('remember_password', $request->password, 60 * 24 * 30);
-        } else {
-            Cookie::queue(Cookie::forget('remember_email'));
-            Cookie::queue(Cookie::forget('remember_password'));
         }
 
         $user = auth()->user();
 
-        if ($user->hasRole('admin')) {
+         if ($user->hasRole('admin')) {
             return redirect()->intended('/admin/dashboard');
         }
 
