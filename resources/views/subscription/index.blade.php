@@ -67,6 +67,7 @@
         </div>
     </section>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
     </script>
     <script>
@@ -125,6 +126,8 @@
 
                         const data = await res.json();
 
+                        console.log('ini data dari midtrans', data)
+
                         if (data.free) {
                             Swal.fire({
                                 toast: true,
@@ -174,7 +177,7 @@
                         console.error(err);
                         Swal.fire({
                             toast: true,
-                            icon: 'success',
+                            icon: 'error',
                             position: 'top-end',
                             title: 'Terjadi kesalahan dibackend, cek console',
                             showConfirmButton: false,
