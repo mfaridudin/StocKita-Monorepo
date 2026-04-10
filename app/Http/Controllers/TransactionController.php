@@ -374,12 +374,12 @@ class TransactionController extends Controller
         $tempPath = $dir . '/receipt-' . $transaction->id . '-temp.png';
         $img->save($tempPath);
 
-        $finalPath = $dir . '/receipt-' . $transaction->id . '.png';
+      $finalPath = $dir . '/receipt-' . $transaction->id . '.webp';
         $quality = 60;
 
         Log::info("Membuat temp receipt: $tempPath");
 
-        exec("magick convert $tempPath -strip -quality $quality $finalPath 2>&1", $output, $return_var);
+        exec("magick convert $tempPath -strip -quality 40 -define webp:method=6 $finalPath 2>&1", $output, $return_var);
 
         Log::info('Output ImageMagick: ' . json_encode($output));
         Log::info("Return var: $return_var");
@@ -389,6 +389,6 @@ class TransactionController extends Controller
         }
         @unlink($tempPath);
 
-        return 'receipts/receipt-' . $transaction->id . '.png';
+        return 'receipts/receipt-' . $transaction->id . '.webp';
     }
 }
