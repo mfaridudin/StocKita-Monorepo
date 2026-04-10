@@ -60,7 +60,9 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = 'prd-' . time() . '.webp';
+
+            $path = storage_path('app/public/products/' . $filename);
 
             $image = new Imagick($file->getRealPath());
 
@@ -72,21 +74,23 @@ class ProductController extends Controller
                 ($image->getImageHeight() - $size) / 2
             );
 
-            $image->resizeImage(800, 800, Imagick::FILTER_LANCZOS, 1);
+            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
 
-            $image->setImageFormat('jpeg');
-            $image->setImageCompressionQuality(70);
+            $image->setImageFormat('webp');
+            $image->setImageCompressionQuality(30);
+            $image->setOption('webp:method', '6');
 
             $image->stripImage();
 
-            $image->writeImage(storage_path('app/public/products/' . $filename));
+            $image->writeImage($path);
+
             $image->clear();
             $image->destroy();
 
             $imagePath = 'products/' . $filename;
         }
 
-        $product = Product::create([
+        Product::create([
             'name' => $request->name,
             'sku' => $this->generateSku(),
             'price' => $request->price,
@@ -175,7 +179,7 @@ class ProductController extends Controller
             }
 
             $file = $request->file('image');
-            $filename = uniqid() . '.jpg';
+            $filename = 'prd-' . time() . '.webp';
             $directory = storage_path('app/public/products');
 
             if (!file_exists($directory)) {
@@ -186,6 +190,7 @@ class ProductController extends Controller
 
             try {
                 $image = new Imagick($file->getRealPath());
+
                 $size = min($image->getImageWidth(), $image->getImageHeight());
                 $image->cropImage(
                     $size,
@@ -194,14 +199,16 @@ class ProductController extends Controller
                     ($image->getImageHeight() - $size) / 2
                 );
 
-                $image->resizeImage(800, 800, Imagick::FILTER_LANCZOS, 1);
+                $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
 
-                $image->setImageFormat('jpeg');
-                $image->setImageCompressionQuality(70);
+                $image->setImageFormat('webp');
+                $image->setImageCompressionQuality(30);
+                $image->setOption('webp:method', '6');
 
                 $image->stripImage();
 
                 $image->writeImage($path);
+
                 $image->clear();
                 $image->destroy();
 

@@ -152,8 +152,8 @@
                 </button>
             </div>
 
-            <form action="{{ route('products.update-image', $product->id) }}" method="POST"
-                enctype="multipart/form-data" class="space-y-6">
+            <form action="/admin/product/update-img/{{ $product->id }}" method="POST" enctype="multipart/form-data"
+                class="space-y-6">
                 @csrf
                 @method('PUT')
 

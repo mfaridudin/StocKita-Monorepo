@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Imagick;
 
 class ProductController extends Controller
@@ -62,7 +63,9 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = 'prd-' . time() . '.webp';
+
+            $path = storage_path('app/public/products/' . $filename);
 
             $image = new Imagick($file->getRealPath());
 
@@ -74,21 +77,23 @@ class ProductController extends Controller
                 ($image->getImageHeight() - $size) / 2
             );
 
-            $image->resizeImage(800, 800, Imagick::FILTER_LANCZOS, 1);
+            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
 
-            $image->setImageFormat('jpeg');
-            $image->setImageCompressionQuality(70);
+            $image->setImageFormat('webp');
+            $image->setImageCompressionQuality(30);
+            $image->setOption('webp:method', '6');
 
             $image->stripImage();
 
-            $image->writeImage(storage_path('app/public/products/' . $filename));
+            $image->writeImage($path);
+
             $image->clear();
             $image->destroy();
 
             $imagePath = 'products/' . $filename;
         }
 
-        $product = Product::create([
+        Product::create([
             'name' => $request->name,
             'sku' => $this->generateSku(),
             'price' => $request->price,
@@ -105,7 +110,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-   public function show(string $id)
+    public function show(string $id)
     {
         $product = Product::findOrFail($id);
         $categories = Category::where('store_id', $product->store->id)->get();
@@ -124,7 +129,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-      public function update(Request $request, string $id)
+    public function update(Request $request, string $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -153,6 +158,64 @@ class ProductController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Produk berhasil diperbarui!');
+    }
+
+    // update image
+     // update image
+    public function updateImage(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $file = $request->file('image');
+            $filename = 'prd-' . time() . '.webp';
+            $directory = storage_path('app/public/products');
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            $path = $directory . '/' . $filename;
+
+            try {
+                $image = new Imagick($file->getRealPath());
+
+                $size = min($image->getImageWidth(), $image->getImageHeight());
+                $image->cropImage(
+                    $size,
+                    $size,
+                    ($image->getImageWidth() - $size) / 2,
+                    ($image->getImageHeight() - $size) / 2
+                );
+
+                $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+
+                $image->setImageFormat('webp');
+                $image->setImageCompressionQuality(30);
+                $image->setOption('webp:method', '6');
+
+                $image->stripImage();
+
+                $image->writeImage($path);
+
+                $image->clear();
+                $image->destroy();
+
+                $imagePath = 'products/' . $filename;
+
+                $product->update([
+                    'image' => $imagePath,
+                ]);
+            } catch (\Exception $e) {
+                return back()->with('error', 'Gagal memproses gambar: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->back()->with('success', 'Gambar produk berhasil diperbarui!');
     }
 
     /**

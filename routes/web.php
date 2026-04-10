@@ -118,6 +118,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/settings', [AdminSettingController::class, 'update']);
     Route::put('/admin/plans/{id}', [AdminSettingController::class, 'updatePlan']);
 
+    // update gambar produk
+    Route::put('/admin/product/update-img/{id}', [AdminProductController::class, 'updateImage']);
 
     // stock
     Route::post('/admin/stocks', [AdminStockController::class, 'store'])->name('stocks.store');
