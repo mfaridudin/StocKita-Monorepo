@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\StockController as AdminStockController;
 use App\Http\Controllers\Admin\StoreController;
+use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\WarehouseController as AdminWarehouseController;
 use App\Http\Controllers\Buyer\DashboardController as BuyerDashboardController;
@@ -113,6 +114,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/admin/store', StoreController::class);
     Route::resource('/admin/transactions', AdminTransactionController::class);
     Route::resource('admin/roles',  RoleController::class);
+    Route::resource('admin/subscriptions', SubscriptionController::class);
+    
+    Route::patch('/admin/subscriptions/{id}/toggle', [SubscriptionController::class, 'toggle'])
+    ->name('subscriptions.toggle');
 
     Route::get('/admin/settings', [AdminSettingController::class, 'index']);
     Route::post('/admin/settings', [AdminSettingController::class, 'update']);
