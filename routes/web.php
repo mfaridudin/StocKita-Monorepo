@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\StockController as AdminStockController;
+use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\WarehouseController as AdminWarehouseController;
 use App\Http\Controllers\Buyer\DashboardController as BuyerDashboardController;
@@ -109,6 +110,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/admin/products', AdminProductController::class);
     Route::resource('/admin/warehouse', AdminWarehouseController::class);
     Route::resource('/admin/customers', AdminCustomerController::class);
+    Route::resource('/admin/store', StoreController::class);
     Route::resource('/admin/transactions', AdminTransactionController::class);
     Route::resource('admin/roles',  RoleController::class);
 
