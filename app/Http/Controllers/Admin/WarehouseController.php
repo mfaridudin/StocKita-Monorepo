@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 
 class WarehouseController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:manage warehouse')->only(['index', 'show', 'store', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      */

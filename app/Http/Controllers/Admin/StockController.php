@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class StockController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:manage stock movement')->only(['store', 'update', 'reduce', 'destroy']);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
