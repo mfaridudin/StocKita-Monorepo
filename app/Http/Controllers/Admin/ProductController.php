@@ -13,6 +13,19 @@ use Imagick;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view products')->only(['index', 'show']);
+
+        $this->middleware('permission:create products')->only(['create', 'store']);
+
+        $this->middleware('permission:edit products')->only(['edit', 'update']);
+
+        $this->middleware('permission:delete products')->only(['destroy']);
+
+        $this->middleware('permission:upload product images')->only(['updateImage']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -62,35 +75,25 @@ class ProductController extends Controller
         $imagePath = null;
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = 'prd-' . time() . '.webp';
-
-            $path = storage_path('app/public/products/' . $filename);
-
-            $image = new Imagick($file->getRealPath());
-
-            $size = min($image->getImageWidth(), $image->getImageHeight());
-            $image->cropImage(
-                $size,
-                $size,
-                ($image->getImageWidth() - $size) / 2,
-                ($image->getImageHeight() - $size) / 2
-            );
-
-            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-
-            $image->setImageFormat('webp');
-            $image->setImageCompressionQuality(30);
-            $image->setOption('webp:method', '6');
-
-            $image->stripImage();
-
-            $image->writeImage($path);
-
-            $image->clear();
-            $image->destroy();
-
-            $imagePath = 'products/' . $filename;
+            if (auth()->user()->can('upload product images')) {
+                $file = $request->file('image');
+                $filename = 'prd-' . time() . '.webp';
+                $path = storage_path('app/public/products/' . $filename);
+                $image = new Imagick($file->getRealPath());
+                $size = min($image->getImageWidth(), $image->getImageHeight());
+                $image->cropImage($size, $size, ($image->getImageWidth() - $size) / 2, ($image->getImageHeight() - $size) / 2);
+                $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+                $image->setImageFormat('webp');
+                $image->setImageCompressionQuality(30);
+                $image->setOption('webp:method', '6');
+                $image->stripImage();
+                $image->writeImage($path);
+                $image->clear();
+                $image->destroy();
+                $imagePath = 'products/' . $filename;
+            } else {
+                session()->flash('error', 'Gambar tidak diupload karena tidak punya izin');
+            }
         }
 
         Product::create([
@@ -161,7 +164,7 @@ class ProductController extends Controller
     }
 
     // update image
-     // update image
+    // update image
     public function updateImage(Request $request, $id)
     {
         $product = Product::findOrFail($id);

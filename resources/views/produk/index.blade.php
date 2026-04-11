@@ -235,16 +235,47 @@
     </x-modal>
 
     <script>
+        const canUploadImage = @json(auth()->user()->can('upload product images'));
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const imageUpload = document.getElementById('imageUpload');
             const imagePreview = document.getElementById('imagePreview');
             const uploadPlaceholder = document.getElementById('uploadPlaceholder');
 
-            if (!imageUpload || !imagePreview) return; // safety
+            if (!imageUpload || !imagePreview) return;
 
             const img = imagePreview.querySelector('img');
 
+            imageUpload.addEventListener('click', function(e) {
+                if (!canUploadImage) {
+                    e.preventDefault();
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        position: 'top-end',
+                        title: 'Kamu tidak punya izin upload gambar!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                }
+            });
+
             imageUpload.addEventListener('change', function(e) {
+                if (!canUploadImage) {
+                    imageUpload.value = '';
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        position: 'top-end',
+                        title: 'Kamu tidak punya izin upload gambar!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    return;
+                }
+
                 const file = e.target.files[0];
 
                 if (file) {
@@ -264,6 +295,18 @@
             });
 
             imagePreview.addEventListener('click', function() {
+                if (!canUploadImage) {
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        position: 'top-end',
+                        title: 'Kamu tidak punya izin upload gambar!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    return;
+                }
+
                 imageUpload.click();
             });
         });
