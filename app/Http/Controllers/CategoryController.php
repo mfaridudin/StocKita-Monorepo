@@ -8,8 +8,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
+
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view categories')->only(['index', 'show']);
+
+        $this->middleware('permission:create categories')->only(['create', 'store']);
+
+        $this->middleware('permission:edit categories')->only(['edit', 'update']);
+
+        $this->middleware('permission:delete categories')->only(['destroy']);
+    }
+
     private function generateUniqueSlug($name)
     {
         $slug = Str::slug($name);

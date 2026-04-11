@@ -38,6 +38,12 @@ class PermissionSeeder extends Seeder
             'delete customers',
             'send customer email',
 
+            // Categories
+            'view categories',
+            'create categories',
+            'edit categories',
+            'delete categories',
+
             // Profile
             'edit own profile',
             'edit customer profile',
