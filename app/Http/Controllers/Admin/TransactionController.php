@@ -19,6 +19,15 @@ use Intervention\Image\ImageManager;
 
 class TransactionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view transactions')->only(['index', 'show']);
+
+        $this->middleware('permission:create transactions')->only(['create', 'store']);
+
+        $this->middleware('permission:delete transactions')->only(['destroy']);
+    }
+
     public function index(Request $request)
     {
         $transactionQuery = Transaction::when($request->search, function ($q) use ($request) {

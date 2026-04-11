@@ -17,6 +17,15 @@ use Intervention\Image\ImageManager;
 
 class TransactionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view transactions')->only(['index', 'show']);
+
+        $this->middleware('permission:create transactions')->only(['create', 'store']);
+
+        $this->middleware('permission:delete transactions')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -374,7 +383,7 @@ class TransactionController extends Controller
         $tempPath = $dir . '/receipt-' . $transaction->id . '-temp.png';
         $img->save($tempPath);
 
-      $finalPath = $dir . '/receipt-' . $transaction->id . '.webp';
+        $finalPath = $dir . '/receipt-' . $transaction->id . '.webp';
         $quality = 60;
 
         Log::info("Membuat temp receipt: $tempPath");

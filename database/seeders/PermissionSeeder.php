@@ -28,8 +28,7 @@ class PermissionSeeder extends Seeder
             // Transactions
             'view transactions',
             'create transactions',
-            'manage payments',
-            'print receipts',
+            'delete transactions',
 
             // Customers
             'view customers',
