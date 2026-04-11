@@ -18,13 +18,13 @@ class WarehouseController extends Controller
 
         $lastRecord = Warehouse::orderBy('code', 'desc')->first();
         if (! $lastRecord) {
-            return $prefix.'0001';
+            return $prefix . '0001';
         }
         $lastNumber = substr($lastRecord->code, strlen($prefix));
         $nextNumber = (int) $lastNumber + 1;
         $formattedNumber = str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
-        return $prefix.$formattedNumber;
+        return $prefix . $formattedNumber;
     }
 
     /**
@@ -50,6 +50,9 @@ class WarehouseController extends Controller
      */
     public function store(WarehouseStoreRequest $request)
     {
+        if (! auth()->user()->canCreateWarehouse()) {
+            return back()->with('error', 'Limit Gudang habis');
+        }
 
         $product = Warehouse::create([
             'name' => $request->name,

@@ -52,10 +52,14 @@ class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request)
     {
+        if (! auth()->user()->canCreateCustomers()) {
+            return back()->with('error', 'Limit pelanggan habis');
+        }
+
         $phone = preg_replace('/[^0-9+]/', '', $request->phone);
         if (! str_starts_with($phone, '+')) {
             if (str_starts_with($phone, '0')) {
-                $phone = '+62'.substr($phone, 1);
+                $phone = '+62' . substr($phone, 1);
             }
         }
 
@@ -121,7 +125,7 @@ class CustomerController extends Controller
         $phone = preg_replace('/[^0-9+]/', '', $request->phone);
         if (! str_starts_with($phone, '+')) {
             if (str_starts_with($phone, '0')) {
-                $phone = '+62'.substr($phone, 1);
+                $phone = '+62' . substr($phone, 1);
             }
         }
 

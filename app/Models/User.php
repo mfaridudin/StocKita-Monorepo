@@ -116,4 +116,52 @@ class User extends Authenticatable
         // Bandingkan dengan limit plan
         return $transactionCount < $subscription->plan->max_orders;
     }
+
+    public function canCreateWarehouse()
+    {
+        $subscription = $this->subscription;
+
+        // Cek ada subscription aktif
+        if (! $subscription || $subscription->status !== 'active') {
+            return false;
+        }
+
+        // Hitung warehouse yang sudah dibuat
+        $warehouseCount = $this->store->warehouse()->count();
+
+        // Bandingkan dengan limit plan
+        return $warehouseCount < $subscription->plan->max_warehouses;
+    }
+
+    public function canCreateCategories()
+    {
+        $subscription = $this->subscription;
+
+        // Cek ada subscription aktif
+        if (! $subscription || $subscription->status !== 'active') {
+            return false;
+        }
+
+        // Hitung kategori yang sudah dibuat
+        $categoriesCount = $this->store->categories()->count();
+
+        // Bandingkan dengan limit plan
+        return $categoriesCount < $subscription->plan->max_categories;
+    }
+
+    public function canCreateCustomers()
+    {
+        $subscription = $this->subscription;
+
+        // Cek ada subscription aktif
+        if (! $subscription || $subscription->status !== 'active') {
+            return false;
+        }
+
+        // Hitung kategori yang sudah dibuat
+        $customersCount = $this->store->customers()->count();
+
+        // Bandingkan dengan limit plan
+        return $customersCount < $subscription->plan->max_customers;
+    }
 }

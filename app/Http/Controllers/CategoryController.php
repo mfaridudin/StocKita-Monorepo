@@ -13,7 +13,7 @@ class CategoryController extends Controller
     private function generateUniqueSlug($name)
     {
         $slug = Str::slug($name);
-        $count = Category::where('slug', 'LIKE', $slug.'%')->count();
+        $count = Category::where('slug', 'LIKE', $slug . '%')->count();
 
         return $count ? "{$slug}-{$count}" : $slug;
     }
@@ -41,6 +41,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        if (! auth()->user()->canCreateCategories()) {
+            return back()->with('error', 'Limit Kategori habis');
+        }
+
         $request->validate([
             'name' => 'required',
         ], [
