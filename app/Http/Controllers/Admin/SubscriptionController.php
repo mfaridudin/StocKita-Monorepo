@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Plan;
 use App\Models\Store;
 use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
@@ -43,6 +44,42 @@ class SubscriptionController extends Controller
         $stores = Store::all();
 
         return view('admin.subscription.index', compact('subscriptions', 'stores', 'plans'));
+    }
+
+    public function create()
+    {
+        $plans = Plan::all();
+        $owners = User::role('owner')
+            ->whereDoesntHave('subscription')
+            ->get();
+
+
+        return view('admin.subscription.create', compact('owners', 'plans'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'plan_id' => 'required|exists:plans,id',
+            'interval' => 'required|in:monthly,yearly',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $plan = Plan::findOrFail($request->plan_id);
+
+        $user->subscription()->create([
+            'plan_id' => $plan->id,
+            'interval' => $request->interval,
+            'status' => 'active',
+            'started_at' => now(),
+            'current_period_end' => $request->interval === 'yearly'
+                ? now()->addYear()
+                : now()->addMonth(),
+        ]);
+
+        return redirect('/admin/subscriptions')
+            ->with('success', 'Langganan berhasil dibuat!');
     }
 
     public function toggle($id)
