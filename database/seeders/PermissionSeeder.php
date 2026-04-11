@@ -44,10 +44,6 @@ class PermissionSeeder extends Seeder
             'edit categories',
             'delete categories',
 
-            // Profile
-            'edit own profile',
-            'edit customer profile',
-
             // Settings
             'manage store settings',
             'manage subscription',

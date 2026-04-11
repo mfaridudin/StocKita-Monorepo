@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Mail;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view customers')->only(['index', 'show']);
+
+        $this->middleware('permission:create customers')->only(['create', 'store']);
+
+        $this->middleware('permission:edit customers')->only(['edit', 'update']);
+
+        $this->middleware('permission:delete customers')->only(['destroy']);
+
+        $this->middleware('permission:send customer email')->only(['sendEmail']);
+    }
+
     /**
      * Display a listing of the resource.
      */
