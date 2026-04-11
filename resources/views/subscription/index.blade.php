@@ -57,9 +57,10 @@
                         </ul>
 
                         <button
-                            class="w-full py-3 rounded-xl {{ $plan->name == 'Pro' ? 'bg-white text-emerald-600 font-semibold' : 'bg-gray-900 text-white' }} pay-btn"
+                            class="w-full py-3 rounded-xl transition-all duration-200
+                            {{ $plan->name == 'Pro' ? 'bg-white text-emerald-600 font-semibold' : 'bg-gray-900 text-white' }} 
+                            pay-btn"
                             data-plan-id="{{ $plan->id }}">
-                            {{ $subscription && $subscription->plan_id == $plan->id ? 'Aktif' : 'Pilih Paket' }}
                         </button>
                     </div>
                 @endforeach
@@ -92,11 +93,49 @@
                 });
             }
 
+            function updateButtons() {
+                const currentPlanId = {{ $subscription->plan_id ?? 'null' }};
+                const currentInterval = "{{ $subscription->interval ?? '' }}";
+
+                document.querySelectorAll('.pay-btn').forEach(btn => {
+                    const planId = parseInt(btn.dataset.planId);
+
+                    let isSamePlan = currentPlanId === planId;
+                    let isDowngrade = currentPlanId && planId < currentPlanId;
+                    let isSameInterval = currentInterval === (isYearly ? 'yearly' : 'monthly');
+
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-300',
+                        'text-gray-500');
+                    btn.classList.remove('bg-green-100', 'text-green-700');
+
+                    if (isSamePlan) {
+                        btn.disabled = true;
+                        btn.classList.add('bg-green-500', 'text-green-700', 'cursor-not-allowed');
+
+                        btn.innerText = isSameInterval ? 'Aktif' : 'Paket aktif';
+
+                    } else if (isDowngrade) {
+                        btn.disabled = true;
+
+                        btn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed',
+                            'opacity-50');
+
+                        btn.innerText = 'Tidak tersedia';
+
+                    } else {
+                        btn.disabled = false;
+
+                        btn.innerText = 'Pilih Paket';
+                    }
+                });
+            }
+
             monthlyBtn.onclick = () => {
                 isYearly = false;
                 monthlyBtn.classList.add('bg-white', 'shadow');
                 yearlyBtn.classList.remove('bg-white', 'shadow');
                 updatePrice();
+                updateButtons();
             };
 
             yearlyBtn.onclick = () => {
@@ -104,6 +143,7 @@
                 yearlyBtn.classList.add('bg-white', 'shadow');
                 monthlyBtn.classList.remove('bg-white', 'shadow');
                 updatePrice();
+                updateButtons();
             };
 
             document.querySelectorAll('.pay-btn').forEach(btn => {
@@ -187,6 +227,7 @@
                 });
             });
             updatePrice()
+            updateButtons()
         });
     </script>
 </x-app-layout>

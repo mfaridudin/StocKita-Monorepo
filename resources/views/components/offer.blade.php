@@ -1,6 +1,9 @@
 @php
+    $user_id = auth()->id();
     $plans = App\Models\Plan::get();
+    $subscription = App\Models\Subscription::where('user_id', $user_id)->where('status', 'active')->first();
 @endphp
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <section id="offer" class="py-24 bg-gray-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6">
@@ -100,6 +103,9 @@
     </div>
 </section>
 
+<script>
+    const subscription = @json($subscription);
+</script>
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
 </script>
 
@@ -138,11 +144,49 @@
             });
         }
 
+        function updateButtons() {
+            const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+
+            if (!isLoggedIn) return;
+
+            const currentPlanId = subscription?.plan_id ?? null;
+            const currentInterval = subscription?.interval ?? null;
+
+            document.querySelectorAll('.pay-btn').forEach(btn => {
+                const planId = parseInt(btn.dataset.planId);
+
+                let isSamePlan = currentPlanId === planId;
+                let isDowngrade = currentPlanId && planId < currentPlanId;
+
+                if (isSamePlan) {
+                    btn.disabled = true;
+
+                    btn.classList.add('bg-green-500', 'text-green-700', 'cursor-not-allowed');
+
+                    btn.innerText = 'Aktif';
+
+                } else if (isDowngrade) {
+                    btn.disabled = true;
+
+                    btn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed',
+                        'opacity-50');
+
+                    btn.innerText = 'Tidak tersedia';
+
+                } else {
+                    btn.disabled = false;
+
+                    btn.innerText = 'Pilih Paket';
+                }
+            });
+        }
+
         monthlyBtn.onclick = () => {
             isYearly = false;
             monthlyBtn.classList.add('bg-white', 'shadow');
             yearlyBtn.classList.remove('bg-white', 'shadow');
             updatePrice();
+            updateButtons();
         };
 
         yearlyBtn.onclick = () => {
@@ -150,6 +194,7 @@
             yearlyBtn.classList.add('bg-white', 'shadow');
             monthlyBtn.classList.remove('bg-white', 'shadow');
             updatePrice();
+            updateButtons();
         };
 
 
@@ -242,6 +287,7 @@
             });
         });
         updatePrice();
+        updateButtons();
     });
 </script>
 
