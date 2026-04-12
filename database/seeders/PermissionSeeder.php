@@ -16,7 +16,6 @@ class PermissionSeeder extends Seeder
 
             // Dashboard
             'view dashboard stats',
-            'view low stock indicator',
 
             // Products
             'view products',
@@ -59,14 +58,6 @@ class PermissionSeeder extends Seeder
             'manage users',
             'manage roles',
             'manage permissions',
-
-            // Legal
-            'view privacy policy',
-            'view terms',
-            'view dmca',
-
-            // Cookie
-            'accept cookies',
         ];
 
         foreach ($permissions as $perm) {

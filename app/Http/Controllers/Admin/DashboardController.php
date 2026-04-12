@@ -12,6 +12,11 @@ use Carbon\CarbonPeriod;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view dashboard stats')->only(['index']);
+    }
+
     public function index(Request $request)
     {
         // card data

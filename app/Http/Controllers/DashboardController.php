@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view dashboard stats')->only(['index']);
+    }
+
     public function index(Request $request)
     {
         $storeId = Auth::user()->store->id;
@@ -25,7 +30,7 @@ class DashboardController extends Controller
                 $today->copy()->endOfDay(),
             ])
             ->get()
-            ->groupBy(fn ($t) => Carbon::parse($t->created_at)->format('Y-m-d'));
+            ->groupBy(fn($t) => Carbon::parse($t->created_at)->format('Y-m-d'));
 
         $todayData = $transactions[$today->format('Y-m-d')] ?? collect();
         $yesterdayData = $transactions[$yesterday->format('Y-m-d')] ?? collect();
@@ -59,7 +64,7 @@ class DashboardController extends Controller
                 return '-100%';
             }
 
-            return round($value, 1).'%';
+            return round($value, 1) . '%';
         };
 
         $percentOrderLabel = $formatPercent($percentOrder);
@@ -70,10 +75,12 @@ class DashboardController extends Controller
 
         $totalStock = $stocks->sum('qty');
 
-        $todayStock = $stocks->filter(fn ($s) => Carbon::parse($s->updated_at)->isToday()
+        $todayStock = $stocks->filter(
+            fn($s) => Carbon::parse($s->updated_at)->isToday()
         )->sum('qty');
 
-        $yesterdayStock = $stocks->filter(fn ($s) => Carbon::parse($s->updated_at)->isYesterday()
+        $yesterdayStock = $stocks->filter(
+            fn($s) => Carbon::parse($s->updated_at)->isYesterday()
         )->sum('qty');
 
         if ($yesterdayStock == 0) {
@@ -84,14 +91,16 @@ class DashboardController extends Controller
 
         $percentStockLabel = $formatPercent($percentStock);
 
-        $lowStock = $stocks->filter(fn ($s) => $s->qty <= 5 && $s->qty > 0);
+        $lowStock = $stocks->filter(fn($s) => $s->qty <= 5 && $s->qty > 0);
 
         $lowStockCount = $lowStock->count();
 
-        $todayLow = $lowStock->filter(fn ($s) => Carbon::parse($s->updated_at)->isToday()
+        $todayLow = $lowStock->filter(
+            fn($s) => Carbon::parse($s->updated_at)->isToday()
         )->count();
 
-        $yesterdayLow = $lowStock->filter(fn ($s) => Carbon::parse($s->updated_at)->isYesterday()
+        $yesterdayLow = $lowStock->filter(
+            fn($s) => Carbon::parse($s->updated_at)->isYesterday()
         )->count();
 
         if ($yesterdayLow == 0) {
