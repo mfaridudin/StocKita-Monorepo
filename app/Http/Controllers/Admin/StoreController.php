@@ -12,6 +12,11 @@ use Illuminate\Validation\Rule;
 
 class StoreController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:manage store')->only(['index', 'store', 'show', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $stores = Store::all();

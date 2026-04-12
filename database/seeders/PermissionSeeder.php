@@ -43,6 +43,7 @@ class PermissionSeeder extends Seeder
             'delete categories',
 
             // Settings
+            'manage store',
             'manage store settings',
             'manage subscription',
 

@@ -13,6 +13,11 @@ use Illuminate\Validation\Rules\Password;
 
 class SettingController extends Controller
 {
+     public function __construct()
+    {
+        $this->middleware('permission:manage store settings')->only(['updateStore']);
+    }
+    
     /**
      * Display a listing of the resource.
      */
