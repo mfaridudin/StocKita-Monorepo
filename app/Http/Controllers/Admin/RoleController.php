@@ -9,6 +9,11 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:manage roles')->only(['index', 'store', 'edit', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $roles = Role::with('permissions')->get();
