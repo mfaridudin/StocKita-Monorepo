@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+     public function __construct()
+    {
+        $this->middleware('permission:view own orders')->only(['index', 'show']);
+    }
+
     public function index(Request $request)
     {
         $userId = Auth::id();
