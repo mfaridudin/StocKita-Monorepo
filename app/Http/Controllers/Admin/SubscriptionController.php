@@ -11,6 +11,11 @@ use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:manage subscription')->only(['index', 'create', 'store', 'toggle', 'destroy']);
+    }
+
     public function index(Request $request)
     {
         $subscriptions = Subscription::with(['user', 'plan'])
