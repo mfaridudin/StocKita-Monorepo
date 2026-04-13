@@ -11,6 +11,11 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission: edit own profile');
+    }
+
     /**
      * Display the user's profile form.
      */
