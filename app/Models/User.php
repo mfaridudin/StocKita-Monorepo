@@ -98,7 +98,7 @@ class User extends Authenticatable
             return false;
         }
 
-        return $this->products()->count() < $subscription->plan->max_products;
+        return $this->products()->where('is_active', true)->count() < $subscription->plan->max_products;
     }
 
     public function canCreateTransaction()
@@ -111,7 +111,7 @@ class User extends Authenticatable
         }
 
         // Hitung transaksi yang sudah dibuat
-        $transactionCount = $this->transactions()->count();
+        $transactionCount = $this->transactions()->where('is_active', true)->count();
 
         // Bandingkan dengan limit plan
         return $transactionCount < $subscription->plan->max_orders;
@@ -127,7 +127,7 @@ class User extends Authenticatable
         }
 
         // Hitung warehouse yang sudah dibuat
-        $warehouseCount = $this->store->warehouse()->count();
+        $warehouseCount = $this->store->warehouse()->where('is_active', true)->count();
 
         // Bandingkan dengan limit plan
         return $warehouseCount < $subscription->plan->max_warehouses;
@@ -143,7 +143,7 @@ class User extends Authenticatable
         }
 
         // Hitung kategori yang sudah dibuat
-        $categoriesCount = $this->store->categories()->count();
+        $categoriesCount = $this->store->categories()->where('is_active', true)->count();
 
         // Bandingkan dengan limit plan
         return $categoriesCount < $subscription->plan->max_categories;
@@ -159,9 +159,80 @@ class User extends Authenticatable
         }
 
         // Hitung kategori yang sudah dibuat
-        $customersCount = $this->store->customers()->count();
+        $customersCount = $this->store->customers()->where('is_active', true)->count();
 
         // Bandingkan dengan limit plan
         return $customersCount < $subscription->plan->max_customers;
+    }
+
+    // sync syncProductsLimit
+    private function syncLimit($query, $limit)
+    {
+        $items = $query->orderBy('created_at', 'asc')->get();
+
+        foreach ($items as $index => $item) {
+            $item->is_active = $index < $limit;
+            $item->save();
+        }
+    }
+
+    public function syncAllLimits()
+    {
+        if (! $this->store) {
+            return;
+        }
+
+        $subscription = $this->subscription()->with('plan')->first();
+
+        if (! $subscription || $subscription->status !== 'active') {
+            return;
+        }
+
+        $plan = $subscription->plan;
+
+        // produk
+        $this->syncLimit(
+            $this->products(),
+            $plan->max_products
+        );
+
+        // kategori
+        $this->syncLimit(
+            $this->store->categories(),
+            $plan->max_categories
+        );
+
+        // gudang
+        $this->syncLimit(
+            $this->store->warehouse(),
+            $plan->max_warehouses
+        );
+
+        // customer
+        $this->syncLimit(
+            $this->store->customers(),
+            $plan->max_customers
+        );
+
+        // transaksi
+        $this->syncLimit(
+            $this->transactions(),
+            $plan->max_orders
+        );
+    }
+
+    public function deactivateAllData()
+    {
+        if (! $this->store) return;
+
+        $this->products()->update(['is_active' => false]);
+
+        $this->store->categories()->update(['is_active' => false]);
+
+        $this->store->warehouse()->update(['is_active' => false]);
+
+        $this->store->customers()->update(['is_active' => false]);
+
+        $this->transactions()->update(['is_active' => false]);
     }
 }
