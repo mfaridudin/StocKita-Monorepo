@@ -1,4 +1,8 @@
 <x-app-layout title="Detail Gudang">
+    <script>
+        const canManageStockMovement = @json(auth()->user()->can('manage stock movement'));
+    </script>
+
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -42,8 +46,21 @@
                 </div>
 
                 <div x-data class="flex flex-wrap gap-4">
-                    <button @click="$dispatch('open-modal', {name:'create-stock'})"
-                        class="group relative px-6 py-3 bg-green-500 text-white font-semibold rounded-2xl shadow-md transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
+                    <button
+                        @click="if (!canManageStockMovement) {
+                            Swal.fire({
+                                toast: true,
+                                icon: 'error',
+                                position: 'top-end',
+                                title: 'Kamu tidak punya izin menambah barang!',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        } else {
+                            $dispatch('open-modal', {name:'create-stock'})
+                        }"
+                        class="group relative px-6 py-3 text-white font-semibold rounded-2xl flex items-center gap-2 
+                        {{ auth()->user()->can('manage stock movement') ? 'bg-green-500 shadow-md transform hover:scale-105 transition-all duration-300' : 'bg-green-200 cursor-not-allowed' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -87,8 +104,20 @@
 
                         <div x-data="{ open: false }" class="absolute top-3 right-2">
 
-                            <button @click="open = !open"
-                                class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl">
+                            <button
+                                @click="if (!canManageStockMovement) {
+                                    Swal.fire({
+                                        toast: true,
+                                        icon: 'error',
+                                        position: 'top-end',
+                                        title: 'Kamu tidak punya izin edit barang!',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                } else { 
+                                    open = !open
+                                }"
+                                class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl {{ auth()->user()->can('manage stock movement') ? '' : 'cursor-not-allowed' }}">
                                 ⋮
                             </button>
 
@@ -249,7 +278,8 @@
                 <div class="space-y-4">
                     <div>
                         <label class="text-sm font-medium">Masukan Stok</label>
-                        <input type="number" name="qty" value="{{ old('qty') }}" placeholder="Masukan Angka"
+                        <input type="number" name="qty" value="{{ old('qty') }}"
+                            placeholder="Masukan Angka"
                             class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->addStock->get('qty')" class="mt-2 text-red-500 text-sm" />
                     </div>
