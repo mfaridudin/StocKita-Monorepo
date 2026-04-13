@@ -1,4 +1,9 @@
 <x-app-layout title="Manajemen Transaksi & Stok">
+    <script>
+        const canCreateTransactions = @json(auth()->user()->can('create transactions'));
+        const canDeleteTransactions = @json(auth()->user()->can('delete transactions'));
+    </script>
+
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -25,20 +30,29 @@
             </div>
 
             <div class="flex gap-2">
-                {{-- <button
-                    class="px-4 py-2 text-sm font-medium rounded-lg 
-                {{ request('type') != 'out' ? 'bg-blue-600 text-white shadow' : 'bg-gray-100 text-gray-700' }}">
-                    Masuk
-                </button>
-                <button
-                    class="px-4 py-2 text-sm font-medium rounded-lg 
-                {{ request('type') == 'out' ? 'bg-red-600 text-white shadow' : 'bg-gray-100 text-gray-700' }}">
-                    Keluar
-                </button> --}}
-                <a href="/transactions/create"
-                    class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg shadow hover:bg-green-700">
-                    + Transaksi Baru
-                </a>
+                @can('create transactions')
+                    <button
+                        class="px-4 py-2 text-white text-sm rounded-lg shadow transition-all 
+                        {{ auth()->user()->can('create transactions')
+                            ? 'bg-green-600 hover:bg-green-700'
+                            : 'bg-green-300 cursor-not-allowed' }}"
+                        @click="
+                        if (!canCreateTransactions) {
+                            Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            position: 'top-end',
+                            title: 'Kamu tidak punya izin menambah transaksi!',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                        } else {
+                            window.location.href = '{{ route('transactions.create') }}';
+                        }
+                        ">
+                        + Transaksi Baru
+                    </button>
+                @endcan
             </div>
         </div>
 
@@ -81,7 +95,8 @@
                 <div class="text-sm text-gray-500">Total Transaksi</div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border text-center">
-                <div class="text-2xl font-bold text-green-600">Rp {{ number_format($stats['total_amount'] ?? 0) }}</div>
+                <div class="text-2xl font-bold text-green-600">Rp {{ number_format($stats['total_amount'] ?? 0) }}
+                </div>
                 <div class="text-sm text-gray-500">Total Nilai</div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border text-center">
@@ -167,16 +182,31 @@
                             class="px-3 py-2 text-xs bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200">
                             Edit
                         </a> --}}
+                        @can('view transactions')
+                            <a href="/transactions/{{ $trx->id }}"
+                                class="px-3 py-2 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                                Detail
+                            </a>
+                        @endcan
 
-                        <a href="/transactions/{{ $trx->id }}"
-                            class="px-3 py-2 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                            Detail
-                        </a>
-
-                        <button @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
-                            class="px-3 py-2 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
-                            Hapus
-                        </button>
+                        @can('delete transactions')
+                            <button
+                                @click="if (!canDeleteTransactions) {
+                                Swal.fire({
+                                    toast: true,
+                                    icon: 'error',
+                                    position: 'top-end',
+                                    title: 'Kamu tidak punya izin menghapus produk!',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                            } else {
+                                $dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })
+                            }"
+                                class="px-3 py-2 text-xs bg-red-100 text-red-700 rounded-lg {{ auth()->user()->can('delete transactions') ? 'hover:bg-red-200' : 'cursor-not-allowed opacity-50' }}">
+                                Hapus
+                            </button>
+                        @endcan
                     </div>
                 </div>
             @empty
@@ -191,11 +221,6 @@
                         </div>
                     </div>
                     <h3 class="text-xl font-semibold mb-2 text-gray-500">Belum ada transaksi</h3>
-                    <p class="mb-6">Mulai dengan membuat transaksi masuk atau keluar pertama</p>
-                    <a href="/transactions/create"
-                        class="px-6 py-3 bg-green-600 text-white rounded-xl shadow-lg hover:bg-green-700">
-                        + Transaksi Pertama
-                    </a>
                 </div>
             @endforelse
         </div>

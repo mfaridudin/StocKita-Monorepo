@@ -189,10 +189,12 @@
 
                         <div class="flex gap-2">
                             {{-- edit --}}
-                            <button @click="$dispatch('open-modal', { name: 'edit-store'})"
-                                class="text-sm font-medium text-green-600 hover:text-green-700 px-3 py-1 border border-green-100 rounded-lg hover:bg-green-50">
-                                Edit Store
-                            </button>
+                            @can('manage store settings')
+                                <button @click="$dispatch('open-modal', { name: 'edit-store'})"
+                                    class="text-sm font-medium text-green-600 hover:text-green-700 px-3 py-1 border border-green-100 rounded-lg hover:bg-green-50">
+                                    Edit Store
+                                </button>
+                            @endcan
                         </div>
                     </div>
 

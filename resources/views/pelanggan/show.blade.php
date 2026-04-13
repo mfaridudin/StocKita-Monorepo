@@ -41,8 +41,9 @@
             </div>
 
             <div x-data class="flex gap-2">
-                <button
-                    @click="if (!canEditCustomers) {
+                @can('edit customers')
+                    <button
+                        @click="if (!canEditCustomers) {
                         Swal.fire({
                             toast: true,
                             icon: 'error',
@@ -54,10 +55,10 @@
                     } else {
                         $dispatch('open-modal', { name: 'edit-customer' })
                     }"
-                    class="px-4 py-2 text-blue-600 rounded-lg text-sm bg-blue-100 {{ auth()->user()->can('edit customers') ? 'hover:bg-blue-200' : 'opacity-50 cursor-not-allowed' }}">
-                    Edit
-                </button>
-
+                        class="px-4 py-2 text-blue-600 rounded-lg text-sm bg-blue-100 {{ auth()->user()->can('edit customers') ? 'hover:bg-blue-200' : 'opacity-50 cursor-not-allowed' }}">
+                        Edit
+                    </button>
+                @endcan
                 {{-- <form action="/customers/{{ $customer->id }}/email" method="POST">
                     @csrf
                     <button class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">

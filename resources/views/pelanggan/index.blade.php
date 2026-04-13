@@ -130,8 +130,9 @@
                             Filter
                         </button>
 
-                        <button type="button"
-                            @click="if (!canCreateCustomers) {
+                        @can('create customers')
+                            <button type="button"
+                                @click="if (!canCreateCustomers) {
                                 Swal.fire({
                                     toast: true,
                                     icon: 'error',
@@ -143,13 +144,15 @@
                             } else {
                                 $dispatch('open-modal', { name: 'create-customer' })
                             }"
-                            class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Pelanggan Baru
-                        </button>
+                                class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Pelanggan Baru
+                            </button>
+                        @endcan
+
                     </div>
                 </div>
             </form>
@@ -199,14 +202,15 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div x-data class="flex items-center gap-2">
-                                        <form action="{{ route('customers.sendEmail', $customer->id) }}"
-                                            method="POST">
-                                            @csrf
+                                        @can('send customer email')
+                                            <form action="{{ route('customers.sendEmail', $customer->id) }}"
+                                                method="POST">
+                                                @csrf
 
-                                            <button type="submit"
-                                                class="p-1.5 text-gray-400 rounded-lg transition-all {{ auth()->user()->can('send customer email') ? 'hover:text-blue-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
-                                                title="Kirim Email"
-                                                @click.prevent="if (!{{ auth()->user()->can('send customer email') ? 'true' : 'false' }}) {
+                                                <button type="submit"
+                                                    class="p-1.5 text-gray-400 rounded-lg transition-all {{ auth()->user()->can('send customer email') ? 'hover:text-blue-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
+                                                    title="Kirim Email"
+                                                    @click.prevent="if (!{{ auth()->user()->can('send customer email') ? 'true' : 'false' }}) {
                                                     Swal.fire({
                                                         toast: true,
                                                         icon: 'error',
@@ -219,32 +223,38 @@
                                                     $el.closest('form').submit();
                                                 }">
 
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="size-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                                    </svg>
+
+                                                </button>
+                                            </form>
+                                        @endcan
+
+                                        @can('view customers')
+                                            <a title="Detail Pelanggan"
+                                                href="{{ route('customers.show', $customer->id) }}"
+                                                class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                     class="size-4">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                 </svg>
 
-                                            </button>
-                                        </form>
-                                        <a title="Detail Pelanggan"
-                                            href="{{ route('customers.show', $customer->id) }}"
-                                            class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="size-4">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                            </svg>
+                                            </a>
+                                        @endcan
 
-                                        </a>
-                                        <button title="Hapus Pelanggan"
-                                            class="p-1.5 text-gray-400 rounded-lg transition-all 
+                                        @can('delete customers')
+                                            <button title="Hapus Pelanggan"
+                                                class="p-1.5 text-gray-400 rounded-lg transition-all 
                                             {{ auth()->user()->can('delete customers') ? 'hover:text-red-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
-                                            @click="if (!canDeleteCustomers) {
+                                                @click="if (!canDeleteCustomers) {
                                                 Swal.fire({
                                                     toast: true,
                                                     icon: 'error',
@@ -256,13 +266,14 @@
                                             } else {
                                                 $dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })
                                             }">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

@@ -31,8 +31,9 @@
             </div>
 
             <div class="flex gap-3">
-                <button x-data
-                    @click="
+                @can('create categories')
+                    <button x-data
+                        @click="
                         if (!canCreateCategories) {
                             Swal.fire({
                                 toast: true,
@@ -45,15 +46,17 @@
                         } else {
                             $dispatch('open-modal', { name: 'create-category' })
                         }"
-                    class="inline-flex items-center gap-2 px-6 py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create categories')
-                        ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
-                        : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Tambah Kategori
-                </button>
+                        class="inline-flex items-center gap-2 px-6 py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create categories')
+                            ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
+                            : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Kategori
+                    </button>
+                @endcan
+
             </div>
         </div>
 
@@ -89,8 +92,9 @@
                             <td class="px-6 py-4">
                                 <div x-data class="flex justify-end gap-2">
 
-                                    <button
-                                        @click="if (!canEditCategories) {
+                                    @can('edit categories')
+                                        <button
+                                            @click="if (!canEditCategories) {
                                                 Swal.fire({
                                                     toast: true,
                                                     icon: 'error',
@@ -102,12 +106,14 @@
                                             } else {
                                                 $dispatch('open-modal', { name: 'edit-category', id: {{ $cat->id }}, categoryName: '{{ $cat->name }}' })
                                             }"
-                                        class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-50 text-blue-600 {{ auth()->user()->can('edit categories') ? 'hover:bg-blue-100 transition' : 'cursor-not-allowed' }}">
-                                        Edit
-                                    </button>
+                                            class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-50 text-blue-600 {{ auth()->user()->can('edit categories') ? 'hover:bg-blue-100 transition' : 'cursor-not-allowed' }}">
+                                            Edit
+                                        </button>
+                                    @endcan
 
-                                    <button
-                                        @click="if (!canDeleteCategories) {
+                                    @can('delete categories')
+                                        <button
+                                            @click="if (!canDeleteCategories) {
                                             Swal.fire({
                                                 toast: true,
                                                 icon: 'error',
@@ -119,10 +125,10 @@
                                         } else {
                                             $dispatch('open-modal', { name: 'delete-category', id: {{ $cat->id }} })
                                         }"
-                                        class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete categories') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}">
-                                        Hapus
-                                    </button>
-
+                                            class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete categories') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}">
+                                            Hapus
+                                        </button>
+                                    @endcan
                                 </div>
                             </td>
 
