@@ -25,8 +25,22 @@
             </div>
 
             <div x-data class="flex gap-3">
-                <button @click.prevent="$dispatch('open-modal', { name: 'add-produk'})"
-                    class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium text-sm rounded-xl shadow-lg hover:shadow-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:-translate-y-0.5">
+                <button
+                    @click.prevent="if (!canCreateProducts) {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            position: 'top-end',
+                            title: 'Kamu tidak punya izin menambah produk!',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    } else {
+                        $dispatch('open-modal', { name: 'add-produk'})
+                    }"
+                    class="inline-flex items-center gap-2 px-6 py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
+                        ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
+                        : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -128,8 +142,19 @@
                                     </a>
 
                                     <button
-                                        class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
-                                        @click="$dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })">
+                                        class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
+                                        @click="if (!canDeleteProducts) {
+                                            Swal.fire({
+                                                toast: true,
+                                                icon: 'error',
+                                                position: 'top-end',
+                                                title: 'Kamu tidak punya izin menghapus produk!',
+                                                showConfirmButton: false,
+                                                timer: 3000
+                                            });
+                                        } else {
+                                            $dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })
+                                        }">
                                         Hapus
                                     </button>
                                 </div>
@@ -288,6 +313,8 @@
     </x-modal>
 
     <script>
+        const canCreateProducts = @json(auth()->user()->can('create products'));
+        const canDeleteProducts = @json(auth()->user()->can('delete products'));
         const canUploadImage = @json(auth()->user()->can('upload product images'));
     </script>
 
