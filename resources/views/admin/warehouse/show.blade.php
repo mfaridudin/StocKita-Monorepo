@@ -46,8 +46,9 @@
                 </div>
 
                 <div x-data class="flex flex-wrap gap-4">
-                    <button
-                        @click="if (!canManageStockMovement) {
+                    @can('manage stock movement')
+                        <button
+                            @click="if (!canManageStockMovement) {
                             Swal.fire({
                                 toast: true,
                                 icon: 'error',
@@ -59,14 +60,15 @@
                         } else {
                             $dispatch('open-modal', {name:'create-stock'})
                         }"
-                        class="group relative px-6 py-3 text-white font-semibold rounded-2xl flex items-center gap-2 
+                            class="group relative px-6 py-3 text-white font-semibold rounded-2xl flex items-center gap-2 
                         {{ auth()->user()->can('manage stock movement') ? 'bg-green-500 shadow-md transform hover:scale-105 transition-all duration-300' : 'bg-green-200 cursor-not-allowed' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Tambah Barang
-                    </button>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Tambah Barang
+                        </button>
+                    @endcan
                 </div>
             </div>
 
@@ -104,8 +106,9 @@
 
                         <div x-data="{ open: false }" class="absolute top-3 right-2">
 
-                            <button
-                                @click="if (!canManageStockMovement) {
+                            @can('manage stock movement')
+                                <button
+                                    @click="if (!canManageStockMovement) {
                                     Swal.fire({
                                         toast: true,
                                         icon: 'error',
@@ -117,9 +120,10 @@
                                 } else { 
                                     open = !open
                                 }"
-                                class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl {{ auth()->user()->can('manage stock movement') ? '' : 'cursor-not-allowed' }}">
-                                ⋮
-                            </button>
+                                    class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl {{ auth()->user()->can('manage stock movement') ? '' : 'cursor-not-allowed' }}">
+                                    ⋮
+                                </button>
+                            @endcan
 
                             <div x-show="open" @click.outside="open = false"
                                 class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border text-sm z-50">

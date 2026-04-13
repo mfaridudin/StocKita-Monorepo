@@ -46,27 +46,30 @@
                 </div>
 
                 <div x-data class="flex flex-wrap gap-4">
-                    <button
-                        @click="if (!canManageStockMovement) {
-                            Swal.fire({
-                                toast: true,
-                                icon: 'error',
-                                position: 'top-end',
-                                title: 'Kamu tidak punya izin menambah barang!',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-                        } else {
-                            $dispatch('open-modal', {name:'create-stock'})
-                        }"
-                        class="group relative px-6 py-3 text-white font-semibold rounded-2xl flex items-center gap-2 
-                        {{ auth()->user()->can('manage stock movement') ? 'bg-green-500 shadow-md transform hover:scale-105 transition-all duration-300' : 'bg-green-200 cursor-not-allowed' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Tambah Barang
-                    </button>
+                    @can('manage stock movement')
+                        <button
+                            @click="if (!canManageStockMovement) {
+                                Swal.fire({
+                                    toast: true,
+                                    icon: 'error',
+                                    position: 'top-end',
+                                    title: 'Kamu tidak punya izin menambah barang!',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                            } else {
+                                $dispatch('open-modal', {name:'create-stock'})
+                            }"
+                            class="group relative px-6 py-3 text-white font-semibold rounded-2xl flex items-center gap-2 
+                            {{ auth()->user()->can('manage stock movement') ? 'bg-green-500 shadow-md transform hover:scale-105 transition-all duration-300' : 'bg-green-200 cursor-not-allowed' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Tambah Barang
+                        </button>
+                    @endcan
+
                 </div>
             </div>
 
@@ -101,11 +104,11 @@
                             class="absolute top-3 left-2 flex items-center justify-center w-7 h-7 px-1 text-xs font-bold bg-green-500/90 backdrop-blur-sm text-white rounded-xl shadow-lg border border-white/50">
                             {{ $stock->qty }}
                         </span>
+                        @can('manage stock movement')
+                            <div x-data="{ open: false }" class="absolute top-3 right-2">
 
-                        <div x-data="{ open: false }" class="absolute top-3 right-2">
-
-                            <button
-                                @click="if (!canManageStockMovement) {
+                                <button
+                                    @click="if (!canManageStockMovement) {
                                     Swal.fire({
                                         toast: true,
                                         icon: 'error',
@@ -117,54 +120,55 @@
                                 } else { 
                                     open = !open
                                 }"
-                                class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl {{ auth()->user()->can('manage stock movement') ? '' : 'cursor-not-allowed' }}">
-                                ⋮
-                            </button>
-
-                            <div x-show="open" @click.outside="open = false"
-                                class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border text-sm z-50">
-
-                                {{-- tambah --}}
-                                <button
-                                    @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} }); open=false"
-                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-green-50 text-green-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 4.5v15m7.5-7.5h-15" />
-                                    </svg>
-                                    Tambah
+                                    class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl {{ auth()->user()->can('manage stock movement') ? '' : 'cursor-not-allowed' }}">
+                                    ⋮
                                 </button>
 
-                                {{-- kurang --}}
-                                <button
-                                    @click="$dispatch('open-modal', { 
+                                <div x-show="open" @click.outside="open = false"
+                                    class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border text-sm z-50">
+
+                                    {{-- tambah --}}
+                                    <button
+                                        @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} }); open=false"
+                                        class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-green-50 text-green-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 4.5v15m7.5-7.5h-15" />
+                                        </svg>
+                                        Tambah
+                                    </button>
+
+                                    {{-- kurang --}}
+                                    <button
+                                        @click="$dispatch('open-modal', { 
                                         name: 'reduce-stock', 
                                         id: {{ $stock->id }}, 
                                         max: {{ $stock->qty }} 
                                     }); open=false"
-                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-yellow-50 text-yellow-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
-                                    </svg>
-                                    Kurangi
-                                </button>
+                                        class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-yellow-50 text-yellow-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                                        </svg>
+                                        Kurangi
+                                    </button>
 
-                                {{--  hapus --}}
-                                <button
-                                    @click="$dispatch('open-modal', { name: 'delete-stock', id: {{ $stock->id }} }); open=false"
-                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-red-50 text-red-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                    </svg>
-                                    Hapus
-                                </button>
+                                    {{--  hapus --}}
+                                    <button
+                                        @click="$dispatch('open-modal', { name: 'delete-stock', id: {{ $stock->id }} }); open=false"
+                                        class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-red-50 text-red-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                        Hapus
+                                    </button>
 
+                                </div>
                             </div>
-                        </div>
+                        @endcan
                     </div>
 
                     <div class="p-4 space-y-2">
