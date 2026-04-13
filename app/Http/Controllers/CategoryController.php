@@ -35,7 +35,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::where('store_id', Auth::user()->store->id)->latest()->get();
+        $categories = Category::where('store_id', Auth::user()->store->id)->where('is_active', true)->latest()->get();
 
         return view('category.index', compact('categories'));
     }

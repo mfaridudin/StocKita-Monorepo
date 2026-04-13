@@ -21,7 +21,8 @@ class WarehouseController extends Controller
     {
         $prefix = 'GDG-';
 
-        $lastRecord = Warehouse::orderBy('code', 'desc')->first();
+        $lastRecord = Warehouse::where('is_active', true)
+            ->orderBy('code', 'desc')->first();
         if (! $lastRecord) {
             return $prefix . '0001';
         }

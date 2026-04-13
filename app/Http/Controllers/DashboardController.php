@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $today = Carbon::today();
         $yesterday = Carbon::yesterday();
 
-        $transactions = Transaction::where('store_id', $storeId)
+        $transactions = Transaction::where('store_id', $storeId)->where('is_active', true)
             ->whereBetween('created_at', [
                 $today->copy()->subDays(30)->startOfDay(),
                 $today->copy()->endOfDay(),

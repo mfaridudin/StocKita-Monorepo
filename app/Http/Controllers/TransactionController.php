@@ -34,6 +34,7 @@ class TransactionController extends Controller
         $storeId = Auth::user()->store->id;
 
         $transactionQuery = Transaction::where('store_id', $storeId)
+            ->where('is_active', true)
             ->when($request->search, function ($q) use ($request) {
                 $search = $request->search;
 

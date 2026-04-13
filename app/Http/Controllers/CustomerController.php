@@ -32,7 +32,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customers = Customer::where('store_id', Auth::user()->store->id)->filter([
+        $customers = Customer::where('store_id', Auth::user()->store->id)->where('is_active', true)->filter([
             'search' => $request->search,
             'type' => $request->type,
             'status' => $request->status,

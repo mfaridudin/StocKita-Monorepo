@@ -49,7 +49,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::where('store_id', Auth::user()->store->id)->get();
+        $products = Product::where('store_id', Auth::user()->store->id)->where('is_active', true)->get();
         $categories = Category::where('store_id', Auth::user()->store->id)->get();
 
         return view('produk.index', compact('products', 'categories'));
