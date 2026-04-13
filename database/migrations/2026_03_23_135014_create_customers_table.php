@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('total_orders')->default(0);
             $table->timestamp('last_contacted')->nullable();
             $table->text('notes')->nullable();
+            $table->boolean('is_active')->default(true);
 
             $table->timestamps();
         });

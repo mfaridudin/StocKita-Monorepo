@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('store_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('location')->nullable();
             $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

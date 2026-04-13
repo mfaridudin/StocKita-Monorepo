@@ -31,6 +31,8 @@ return new class extends Migration
 
             $table->string('receipt')->nullable();
 
+            $table->boolean('is_active')->default(true);
+
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
 
             $table->timestamps();
