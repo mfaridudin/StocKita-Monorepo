@@ -178,6 +178,7 @@
                                 timer: 3000
                             });
                             location.reload();
+                            return;
                         }
 
                         snap.pay(data.snap_token, {
