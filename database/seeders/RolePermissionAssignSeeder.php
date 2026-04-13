@@ -17,34 +17,41 @@ class RolePermissionAssignSeeder extends Seeder
         $admin->syncPermissions(Permission::all());
 
         $owner->syncPermissions([
+            // Dashboard
             'view dashboard stats',
-            'view low stock indicator',
 
+            // Categories
+            'view categories',
+            'create categories',
+            'edit categories',
+            'delete categories',
+
+            // Products
             'view products',
             'create products',
             'edit products',
             'delete products',
             'upload product images',
 
-            'view transactions',
-            'create transactions',
-            'manage payments',
-            'print receipts',
+            // Inventory
+            'manage warehouse',
+            'manage stock movement',
 
+            // Customers
             'view customers',
             'create customers',
             'edit customers',
             'delete customers',
             'send customer email',
 
-            'edit own profile',
-            'edit customer profile',
+            // Transactions
+            'view transactions',
+            'create transactions',
+            'delete transactions',
 
+            // Settings
             'manage store settings',
-            'manage subscription',
-
-            'manage warehouse',
-            'manage stock movement',
+            'edit own profile'
         ]);
 
         $buyer->syncPermissions([

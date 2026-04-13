@@ -46,6 +46,7 @@ class PermissionSeeder extends Seeder
             'manage store',
             'manage store settings',
             'manage subscription',
+            'edit own profile',
 
             // Inventory
             'manage warehouse',
