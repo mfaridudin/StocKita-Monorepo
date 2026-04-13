@@ -131,6 +131,7 @@ class DashboardController extends Controller
 
         // top produk
         $topProducts = DB::table('transaction_items')
+            ->where('store_id', $storeId)
             ->select('products.name', DB::raw('SUM(transaction_items.qty) as total_sold'))
             ->join('products', 'transaction_items.product_id', '=', 'products.id')
             ->groupBy('products.id', 'products.name')
