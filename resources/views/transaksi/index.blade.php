@@ -31,27 +31,10 @@
 
             <div class="flex gap-2">
                 @can('create transactions')
-                    <button
-                        class="px-4 py-2 text-white text-sm rounded-lg shadow transition-all 
-                        {{ auth()->user()->can('create transactions')
-                            ? 'bg-green-600 hover:bg-green-700'
-                            : 'bg-green-300 cursor-not-allowed' }}"
-                        @click="
-                        if (!canCreateTransactions) {
-                            Swal.fire({
-                            toast: true,
-                            icon: 'error',
-                            position: 'top-end',
-                            title: 'Kamu tidak punya izin menambah transaksi!',
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
-                        } else {
-                            window.location.href = '{{ route('transactions.create') }}';
-                        }
-                        ">
+                    <a href="/transactions/create"
+                        class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg shadow hover:bg-green-700">
                         + Transaksi Baru
-                    </button>
+                    </a>
                 @endcan
             </div>
         </div>
