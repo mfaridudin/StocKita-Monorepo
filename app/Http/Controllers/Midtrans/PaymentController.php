@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MidtransTransaction;
 use App\Models\Plan;
 use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
@@ -44,6 +45,8 @@ class PaymentController extends Controller
                 ]
             );
 
+            $user = User::find($user->id);
+            $user->syncAllLimits();
             return response()->json(['free' => true]);
         }
 
@@ -56,7 +59,7 @@ class PaymentController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        $orderId = 'ORDER-'.uniqid();
+        $orderId = 'ORDER-' . uniqid();
 
         $params = [
             'transaction_details' => [
@@ -104,6 +107,9 @@ class PaymentController extends Controller
                 ]
             );
 
+            $user = User::find($user->id);
+            $user->syncAllLimits();
+
             return response()->json(['free' => true]);
         }
 
@@ -116,7 +122,7 @@ class PaymentController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        $orderId = 'ORDER-'.uniqid();
+        $orderId = 'ORDER-' . uniqid();
 
         $params = [
             'transaction_details' => [
@@ -178,19 +184,18 @@ class PaymentController extends Controller
                     ),
                 ]
             );
-
+            $user = User::find($transaction->user_id);
+            $user->syncAllLimits();
         } elseif ($status == 'pending') {
 
             $transaction->update([
                 'status' => 'pending',
             ]);
-
         } elseif ($status == 'expire') {
 
             $transaction->update([
                 'status' => 'expired',
             ]);
-
         } elseif ($status == 'cancel') {
 
             $transaction->update([

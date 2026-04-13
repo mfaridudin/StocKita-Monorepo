@@ -82,6 +82,8 @@ class SubscriptionController extends Controller
                 ? now()->addYear()
                 : now()->addMonth(),
         ]);
+        $user = User::find($request->user_id);
+        $user->syncAllLimits();
 
         return redirect('/admin/subscriptions')
             ->with('success', 'Langganan berhasil dibuat!');

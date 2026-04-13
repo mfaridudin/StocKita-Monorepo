@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Plan;
 use App\Models\Store;
 use App\Models\Subscription;
 use App\Models\User;
@@ -40,11 +41,14 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed',  Password::min(8)
-                ->mixedCase()
-                ->numbers()
-                ->symbols(),
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
             ],
         ], [
             'name.required' => 'Nama wajib diisi.',
@@ -73,21 +77,32 @@ class RegisteredUserController extends Controller
 
         if ($user->hasRole('owner')) {
             Store::create([
-                'name' => $user->name."'s Store",
+                'name' => $user->name . "'s Store",
                 'email' => $request->email,
                 'owner_id' => $user->id,
-                'slug' => $this->generateUniqueSlug($user->name.'-store'),
+                'slug' => $this->generateUniqueSlug($user->name . '-store'),
             ]);
         }
 
         $plan = session('plan_id');
         $interval = session('interval');
 
+        Auth::login($user);
+
         if ($plan) {
-            Auth::login($user);
+
+            $planModel = Plan::find($plan);
+
+            session()->forget(['plan_id', 'interval']);
+
+            if ($planModel && $planModel->price == 0) {
+                return redirect("/dashboard");
+            }
 
             return redirect("/checkout?plan={$plan}&interval={$interval}");
         }
+
+        return redirect("/dashboard");
 
         if ($user) {
             Subscription::updateOrCreate(
@@ -109,7 +124,7 @@ class RegisteredUserController extends Controller
     private function generateUniqueSlug($name)
     {
         $slug = Str::slug($name);
-        $count = Store::where('slug', 'LIKE', $slug.'%')->count();
+        $count = Store::where('slug', 'LIKE', $slug . '%')->count();
 
         return $count ? "{$slug}-{$count}" : $slug;
     }
