@@ -1,4 +1,9 @@
 <x-app-layout title="Pelanggan & Marketing">
+    <script>
+        const canCreateCustomers = @json(auth()->user()->can('create customers'));
+        const canDeleteCustomers = @json(auth()->user()->can('delete customers'))
+    </script>
+
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -125,8 +130,20 @@
                             Filter
                         </button>
 
-                        <button type="button" @click="$dispatch('open-modal', { name: 'create-customer' })"
-                            class="px-6 whitespace-nowrap py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+                        <button type="button"
+                            @click="if (!canCreateCustomers) {
+                                Swal.fire({
+                                    toast: true,
+                                    icon: 'error',
+                                    position: 'top-end',
+                                    title: 'Kamu tidak punya izin menambah pelanggan!',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                            } else {
+                                $dispatch('open-modal', { name: 'create-customer' })
+                            }"
+                            class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -182,23 +199,25 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div x-data class="flex items-center gap-2">
-                                        {{-- <button title="Hapus Pelanggan"
-                                            class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-all"
-                                            @click="$dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-4">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                                            </svg>
-
-                                        </button> --}}
                                         <form action="{{ route('customers.sendEmail', $customer->id) }}"
                                             method="POST">
                                             @csrf
 
                                             <button type="submit"
-                                                class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-all"
-                                                title="Kirim Email">
+                                                class="p-1.5 text-gray-400 rounded-lg transition-all {{ auth()->user()->can('send customer email') ? 'hover:text-blue-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
+                                                title="Kirim Email"
+                                                @click.prevent="if (!{{ auth()->user()->can('send customer email') ? 'true' : 'false' }}) {
+                                                    Swal.fire({
+                                                        toast: true,
+                                                        icon: 'error',
+                                                        position: 'top-end',
+                                                        title: 'Kamu tidak punya izin mengirim email!',
+                                                        showConfirmButton: false,
+                                                        timer: 3000
+                                                    });
+                                                } else {
+                                                    $el.closest('form').submit();
+                                                }">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -223,8 +242,20 @@
 
                                         </a>
                                         <button title="Hapus Pelanggan"
-                                            class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-gray-100 rounded-lg transition-all"
-                                            @click="$dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })">
+                                            class="p-1.5 text-gray-400 rounded-lg transition-all 
+                                            {{ auth()->user()->can('delete customers') ? 'hover:text-red-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
+                                            @click="if (!canDeleteCustomers) {
+                                                Swal.fire({
+                                                    toast: true,
+                                                    icon: 'error',
+                                                    position: 'top-end',
+                                                    title: 'Kamu tidak punya izin menghapus pelanggan!',
+                                                    showConfirmButton: false,
+                                                    timer: 3000
+                                                });
+                                            } else {
+                                                $dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })
+                                            }">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -249,8 +280,20 @@
                                     </div>
                                     <h3 class="text-lg font-semibold mb-2">Belum ada pelanggan</h3>
                                     <p class="mb-4">Mulai tambahkan pelanggan pertama Anda</p>
-                                    <button @click="$dispatch('open-modal', { name: 'create-customer' })"
-                                        class="px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600">
+                                    <button
+                                        @click="if (!canCreateCustomers) {
+                                            Swal.fire({
+                                                toast: true,
+                                                icon: 'error',
+                                                position: 'top-end',
+                                                title: 'Kamu tidak punya izin menambah pelanggan!',
+                                                showConfirmButton: false,
+                                                timer: 3000
+                                            });
+                                        } else {
+                                            $dispatch('open-modal', { name: 'create-customer' })
+                                        }"
+                                        class="px-4 py-2 text-white rounded-lg font-medium {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600' : 'bg-green-200 cursor-not-allowed' }}">
                                         + Tambah Pelanggan
                                     </button>
                                 </td>
