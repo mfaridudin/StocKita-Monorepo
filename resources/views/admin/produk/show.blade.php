@@ -26,8 +26,9 @@
                     Terakhir diupdate: {{ $product->updated_at->format('d M Y, H:i') }}
                 </p>
             </div>
-            <button
-                @click.prevent="if (!canEditProducts) {
+            @can('edit products')
+                <button
+                    @click.prevent="if (!canEditProducts) {
                     Swal.fire({
                         toast: true,
                         icon: 'error',
@@ -39,11 +40,12 @@
                 } else {
                     $dispatch('open-modal', { name: 'edit-produk'})
                 }"
-                class="px-4 py-2 text-white rounded-lg text-sm font-medium {{ auth()->user()->can('edit products')
-                    ? 'bg-green-500 hover:bg-green-600 transition-colors shadow-sm'
-                    : 'bg-green-200 cursor-not-allowed' }} ">
-                Edit
-            </button>
+                    class="px-4 py-2 text-white rounded-lg text-sm font-medium {{ auth()->user()->can('edit products')
+                        ? 'bg-green-500 hover:bg-green-600 transition-colors shadow-sm'
+                        : 'bg-green-200 cursor-not-allowed' }} ">
+                    Edit
+                </button>
+            @endcan
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

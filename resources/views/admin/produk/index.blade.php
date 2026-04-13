@@ -25,8 +25,9 @@
             </div>
 
             <div x-data class="flex gap-3">
-                <button
-                    @click.prevent="if (!canCreateProducts) {
+                @can('create products')
+                    <button
+                        @click.prevent="if (!canCreateProducts) {
                         Swal.fire({
                             toast: true,
                             icon: 'error',
@@ -38,15 +39,16 @@
                     } else {
                         $dispatch('open-modal', { name: 'add-produk'})
                     }"
-                    class="inline-flex items-center gap-2 px-6 py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
-                        ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
-                        : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Tambah Produk
-                </button>
+                        class="inline-flex items-center gap-2 px-6 py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
+                            ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
+                            : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Produk
+                    </button>
+                @endcan
             </div>
         </div>
 
@@ -141,9 +143,10 @@
                                         Detail
                                     </a>
 
-                                    <button
-                                        class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
-                                        @click="if (!canDeleteProducts) {
+                                    @can('delete products')
+                                        <button
+                                            class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
+                                            @click="if (!canDeleteProducts) {
                                             Swal.fire({
                                                 toast: true,
                                                 icon: 'error',
@@ -155,8 +158,9 @@
                                         } else {
                                             $dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })
                                         }">
-                                        Hapus
-                                    </button>
+                                            Hapus
+                                        </button>
+                                    @endcan
                                 </div>
                             </td>
 

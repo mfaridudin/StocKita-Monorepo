@@ -24,16 +24,18 @@
                 <p class="text-gray-600 mt-1">Kelola semua pembayaran</p>
             </div>
 
-            <div x-data class="flex gap-3">
-                <a href="/admin/transactions/create"
-                    class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-medium text-sm rounded-xl">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Transaksi Baru
-                </a>
-            </div>
+            @can('create transactions')
+                <div x-data class="flex gap-3">
+                    <a href="/admin/transactions/create"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-medium text-sm rounded-xl">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Transaksi Baru
+                    </a>
+                </div>
+            @endcan
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -171,12 +173,13 @@
                                         Detail
                                     </a>
 
-                                    <button
-                                        @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
-                                        class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
-                                        Hapus
-                                    </button>
-
+                                    @can('delete transactions')
+                                        <button
+                                            @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
+                                            class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                                            Hapus
+                                        </button>
+                                    @endcan
                                 </div>
                             </td>
 
