@@ -17,15 +17,16 @@
         </script>
     @endif
     <div class="space-y-4">
+
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Manajemen Gudang</h1>
-                <p class="text-gray-600 mt-1">Kelola semua Gudang</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Manajemen Gudang</h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">Kelola semua Gudang</p>
             </div>
 
             <div x-data class="flex gap-3">
                 <button @click="$dispatch('open-modal', { name: 'create-warehouse' })"
-                    class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-medium text-sm rounded-xl shadow-lg">
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -70,54 +71,57 @@
 
                 </div>
             </form>
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
-                    <tr>
-                        <th class="p-3 text-left">Kode</th>
-                        <th class="p-3 text-left">Nama</th>
-                        <th class="p-3 text-left">Toko</th>
-                        <th class="p-3 text-left">Lokasi</th>
-                        <th class="p-3 text-left">Deskripsi</th>
-                        <th class="px-6 py-3 text-right">Aksi</th>
-                    </tr>
-                </thead>
 
-                <tbody class="divide-y">
-                    @forelse ($warehouses as $w)
-                        <tr class="hover:bg-gray-50 transition">
-
-                            <td class="p-3 font-medium">{{ $w->code }}</td>
-                            <td class="p-3">{{ $w->name }}</td>
-                            <td class="p-3">{{ $w->store->name }}</td>
-                            <td class="p-3 text-gray-500">{{ $w->location }}</td>
-                            <td class="p-3 text-gray-500">{{ $w->description }}</td>
-
-                            <td x-data class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
-
-                                    <a href="/admin/warehouse/{{ $w->id }}"
-                                        class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                                        Detail
-                                    </a>
-
-                                    <button
-                                        @click="$dispatch('open-modal', { name: 'delete-warehouse', id: {{ $w->id }} })"
-                                        class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
-                                        Hapus
-                                    </button>
-                                </div>
-                            </td>
-
-                        </tr>
-                    @empty
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-400">
-                                Belum ada gudang
-                            </td>
+                            <th class="p-3 text-left">Kode</th>
+                            <th class="p-3 text-left">Nama</th>
+                            <th class="p-3 text-left">Toko</th>
+                            <th class="p-3 text-left">Lokasi</th>
+                            <th class="p-3 text-left">Deskripsi</th>
+                            <th class="px-6 py-3 text-right">Aksi</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody class="divide-y">
+                        @forelse ($warehouses as $w)
+                            <tr class="hover:bg-gray-50 transition">
+
+                                <td class="p-3 font-medium whitespace-nowrap">{{ $w->code }}</td>
+                                <td class="p-3 whitespace-nowrap">{{ $w->name }}</td>
+                                <td class="p-3 whitespace-nowrap">{{ $w->store->name }}</td>
+                                <td class="p-3 text-gray-500 whitespace-nowrap">{{ $w->location }}</td>
+                                <td class="p-3 text-gray-500 whitespace-nowrap">{{ $w->description }}</td>
+
+                                <td x-data class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+
+                                        <a href="/admin/warehouse/{{ $w->id }}"
+                                            class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                                            Detail
+                                        </a>
+
+                                        <button
+                                            @click="$dispatch('open-modal', { name: 'delete-warehouse', id: {{ $w->id }} })"
+                                            class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                                            Hapus
+                                        </button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-10 text-gray-400">
+                                    Belum ada gudang
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

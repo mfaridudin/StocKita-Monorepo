@@ -26,53 +26,55 @@
             </button>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
-                    <tr>
-                        <th class="p-3 text-left">Kode</th>
-                        <th class="p-3 text-left">Nama</th>
-                        <th class="p-3 text-left">Lokasi</th>
-                        <th class="p-3 text-left">Deskripsi</th>
-                        <th class="px-6 py-3 text-right">Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody class="divide-y">
-                    @forelse ($warehouses as $w)
-                        <tr class="hover:bg-gray-50 transition">
-
-                            <td class="p-3 font-medium">{{ $w->code }}</td>
-                            <td class="p-3">{{ $w->name }}</td>
-                            <td class="p-3 text-gray-500">{{ $w->location }}</td>
-                            <td class="p-3 text-gray-500">{{ $w->description }}</td>
-
-                            <td x-data class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
-
-                                    <a href="/warehouse/{{ $w->id }}"
-                                        class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                                        Detail
-                                    </a>
-
-                                    <button
-                                        @click="$dispatch('open-modal', { name: 'delete-warehouse', id: {{ $w->id }} })"
-                                        class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
-                                        Hapus
-                                    </button>
-                                </div>
-                            </td>
-
-                        </tr>
-                    @empty
+        <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-400">
-                                Belum ada gudang
-                            </td>
+                            <th class="p-3 text-left">Kode</th>
+                            <th class="p-3 text-left">Nama</th>
+                            <th class="p-3 text-left">Lokasi</th>
+                            <th class="p-3 text-left">Deskripsi</th>
+                            <th class="px-6 py-3 text-right">Aksi</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody class="divide-y">
+                        @forelse ($warehouses as $w)
+                            <tr class="hover:bg-gray-50 transition">
+
+                                <td class="p-3 font-medium whitespace-nowrap">{{ $w->code }}</td>
+                                <td class="p-3 whitespace-nowrap">{{ $w->name }}</td>
+                                <td class="p-3 text-gray-500 whitespace-nowrap">{{ $w->location }}</td>
+                                <td class="p-3 text-gray-500 whitespace-nowrap">{{ $w->description }}</td>
+
+                                <td x-data class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+
+                                        <a href="/warehouse/{{ $w->id }}"
+                                            class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                                            Detail
+                                        </a>
+
+                                        <button
+                                            @click="$dispatch('open-modal', { name: 'delete-warehouse', id: {{ $w->id }} })"
+                                            class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                                            Hapus
+                                        </button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-10 text-gray-400">
+                                    Belum ada gudang
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

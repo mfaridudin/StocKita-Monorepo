@@ -20,127 +20,131 @@
             });
         </script>
     @endif
-    <div class="space-y-6">
 
-        <div class="bg-white border border-slate-100 rounded-3xl p-8">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-md">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                </path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1
-                                class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-slate-800 bg-clip-text text-transparent">
-                                {{ $warehouse->name }}
-                            </h1>
-                            <p class="text-sm font-medium text-slate-600 mt-1">
-                                {{ $warehouse->location ?? 'Lokasi tidak tersedia' }}
-                            </p>
-                        </div>
+    <div class="space-y-6">
+        <div class="bg-white border border-slate-100 rounded-2xl p-4 sm:p-6 lg:p-8">
+
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+                <div class="flex items-start sm:items-center gap-3">
+
+                    <div
+                        class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-xl flex items-center justify-center shadow-md">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                            </path>
+                        </svg>
                     </div>
+
+                    <div>
+                        <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
+                            {{ $warehouse->name }}
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-500">
+                            {{ $warehouse->location ?? 'Lokasi tidak tersedia' }}
+                        </p>
+                    </div>
+
                 </div>
 
-                <div x-data class="flex flex-wrap gap-4">
+                <div x-data class="w-full sm:w-auto">
                     @can('manage stock movement')
                         <button
                             @click="if (!canManageStockMovement) {
-                            Swal.fire({
-                                toast: true,
-                                icon: 'error',
-                                position: 'top-end',
-                                title: 'Kamu tidak punya izin menambah barang!',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-                        } else {
-                            $dispatch('open-modal', {name:'create-stock'})
-                        }"
-                            class="group relative px-6 py-3 text-white font-semibold rounded-2xl flex items-center gap-2 
-                        {{ auth()->user()->can('manage stock movement') ? 'bg-green-500 shadow-md transform hover:scale-105 transition-all duration-300' : 'bg-green-200 cursor-not-allowed' }}">
+                        Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            position: 'top-end',
+                            title: 'Tidak punya izin!',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    } else {
+                        $dispatch('open-modal', {name:'create-stock'})
+                    }"
+                            class="w-full sm:w-auto justify-center px-4 py-3 text-sm sm:text-base
+                    rounded-xl flex items-center gap-2 text-white font-semibold
+                    {{ auth()->user()->can('manage stock movement')
+                        ? 'bg-green-500 hover:scale-[1.02] active:scale-95 transition'
+                        : 'bg-green-200 cursor-not-allowed' }}">
+
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                             </svg>
+
                             Tambah Barang
                         </button>
                     @endcan
                 </div>
+
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-slate-200">
-                <div class="text-center p-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/50">
-                    <div class="text-2xl font-bold text-green-600">{{ $stocks->count() }}</div>
-                    <div class="text-sm text-slate-600">Total Produk</div>
-                </div>
-                <div class="text-center p-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/50">
-                    <div class="text-2xl font-bold text-blue-600">{{ $stocks->sum('qty') }}</div>
-                    <div class="text-sm text-slate-600">Total Stok</div>
-                </div>
-                <div class="text-center p-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/50">
-                    <div class="text-2xl font-bold text-emerald-600">Rp
-                        {{ number_format($stocks->sum(function ($stock) {return $stock->qty * $stock->product->price;}),0,',','.') }}
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 mt-6 pt-6 border-t">
+
+                <div class="p-4 rounded-xl border text-center">
+                    <div class="text-xl sm:text-2xl font-bold text-green-600">
+                        {{ $stocks->count() }}
                     </div>
-                    <div class="text-sm text-slate-600">Nilai Stok</div>
+                    <div class="text-xs sm:text-sm text-slate-500">Total Produk</div>
                 </div>
+
+                <div class="p-4 rounded-xl border text-center">
+                    <div class="text-xl sm:text-2xl font-bold text-blue-600">
+                        {{ $stocks->sum('qty') }}
+                    </div>
+                    <div class="text-xs sm:text-sm text-slate-500">Total Stok</div>
+                </div>
+
+                <div class="p-4 rounded-xl border text-center">
+                    <div class="text-lg sm:text-2xl font-bold text-emerald-600">
+                        Rp {{ number_format($stocks->sum(fn($s) => $s->qty * $s->product->price), 0, ',', '.') }}
+                    </div>
+                    <div class="text-xs sm:text-sm text-slate-500">Nilai Stok</div>
+                </div>
+
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
 
             @forelse ($stocks as $stock)
-                <div
-                    class="bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
+                <div class="bg-white border rounded-xl overflow-hidden group">
 
-                    <div x-data class="relative h-40 bg-gray-100 overflow-hidden">
+                    <div class="relative aspect-[4/3] bg-gray-100">
+
                         <img src="{{ asset('storage/' . $stock->product->image) }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            class="w-full h-full object-cover group-hover:scale-105 transition">
+
+                        <!-- QTY -->
                         <span
-                            class="absolute top-3 left-2 flex items-center justify-center w-7 h-7 px-1 text-xs font-bold bg-green-500/90 backdrop-blur-sm text-white rounded-xl shadow-lg border border-white/50">
+                            class="absolute top-2 left-2 text-xs font-bold bg-green-500 text-white px-2 py-1 rounded-lg">
                             {{ $stock->qty }}
                         </span>
 
-                        <div x-data="{ open: false }" class="absolute top-3 right-2">
+                        <div x-data="{ open: false }" class="absolute top-2 right-2">
 
-                            @can('manage stock movement')
-                                <button
-                                    @click="if (!canManageStockMovement) {
-                                    Swal.fire({
-                                        toast: true,
-                                        icon: 'error',
-                                        position: 'top-end',
-                                        title: 'Kamu tidak punya izin edit barang!',
-                                        showConfirmButton: false,
-                                        timer: 3000
-                                    });
-                                } else { 
-                                    open = !open
-                                }"
-                                    class="w-7 h-7 flex items-center justify-center bg-black/40 text-white rounded-xl {{ auth()->user()->can('manage stock movement') ? '' : 'cursor-not-allowed' }}">
-                                    ⋮
-                                </button>
-                            @endcan
+                            <button @click="open = !open"
+                                class="w-6 h-6 flex items-center justify-center bg-black/40 text-white rounded-lg">
+                                ⋮
+                            </button>
 
-                            <div x-show="open" @click.outside="open = false"
-                                class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border text-sm z-50">
+                            <div x-show="open" @click.outside="open=false"
+                                class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow border text-xs z-50">
 
-                                {{-- tambah --}}
                                 <button
                                     @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} }); open=false"
                                     class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-green-50 text-green-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-5">
+                                        stroke-width="2" stroke="currentColor" class="size-3">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M12 4.5v15m7.5-7.5h-15" />
                                     </svg>
                                     Tambah
                                 </button>
 
-                                {{-- kurang --}}
                                 <button
                                     @click="$dispatch('open-modal', { 
                                         name: 'reduce-stock', 
@@ -149,18 +153,17 @@
                                     }); open=false"
                                     class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-yellow-50 text-yellow-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-5">
+                                        stroke-width="2" stroke="currentColor" class="size-3">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                                     </svg>
                                     Kurangi
                                 </button>
 
-                                {{--  hapus --}}
                                 <button
                                     @click="$dispatch('open-modal', { name: 'delete-stock', id: {{ $stock->id }} }); open=false"
                                     class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-red-50 text-red-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-5">
+                                        stroke-width="2" stroke="currentColor" class="size-3">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                     </svg>
@@ -171,9 +174,9 @@
                         </div>
                     </div>
 
-                    <div class="p-4 space-y-2">
+                    <div class="p-3">
 
-                        <h3 class="font-semibold text-gray-800 truncate">
+                        <h3 class="text-sm font-semibold truncate">
                             {{ $stock->product->name }}
                         </h3>
 
@@ -181,7 +184,7 @@
                             {{ $stock->product->sku }}
                         </p>
 
-                        <p class="text-sm font-bold text-green-600">
+                        <p class="text-sm font-bold text-green-600 mt-1">
                             Rp {{ number_format($stock->product->price, 0, ',', '.') }}
                         </p>
 
@@ -195,7 +198,6 @@
             @endforelse
 
         </div>
-
     </div>
 
     {{-- create modal --}}
