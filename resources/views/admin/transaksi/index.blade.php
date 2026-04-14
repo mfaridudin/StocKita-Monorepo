@@ -20,22 +20,22 @@
     <div class="space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Manajemen Transaksi</h1>
-                <p class="text-gray-600 mt-1">Kelola semua pembayaran</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                    Manajemen Transaksi
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Kelola semua transaksi anda
+                </p>
             </div>
 
-            @can('create transactions')
-                <div x-data class="flex gap-3">
+            <div class="flex gap-2">
+                @can('create transactions')
                     <a href="/admin/transactions/create"
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-medium text-sm rounded-xl">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Transaksi Baru
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-green-500 hover:bg-green-600">
+                        + Transaksi Baru
                     </a>
-                </div>
-            @endcan
+                @endcan
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -102,97 +102,99 @@
                 </div>
             </form>
 
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
-                    <tr>
-                        <th class="px-6 py-3">Invoice</th>
-                        <th class="px-6 py-3">Toko</th>
-                        <th class="px-6 py-3">Tanggal</th>
-                        <th class="px-6 py-3">Customer</th>
-                        <th class="px-6 py-3">Produk</th>
-                        <th class="px-6 py-3">Status</th>
-                        <th class="px-6 py-3">Total</th>
-                        <th class="px-6 py-3 text-right">Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody class="divide-y">
-                    @forelse ($transactions as $trx)
-                        <tr class="hover:bg-gray-50 transition">
-
-                            <td class="px-6 py-4 font-semibold text-gray-900">
-                                {{ $trx->invoice_code }}
-                                <p class="text-xs text-gray-400">
-                                    {{ $trx->type == 'in' ? 'MASUK' : 'KELUAR' }}
-                                </p>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                {{ $trx->store->name }}
-                            </td>
-
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ $trx->created_at->format('d M Y H:i') }}
-                            </td>
-
-                            <td class="px-6 py-4">
-                                {{ $trx->customer->user->name ?? 'Customer Umum' }}
-                            </td>
-
-                            <td class="px-6 py-4 text-gray-500 text-xs">
-                                {{ $trx->items->pluck('product.name')->take(2)->implode(', ') }}
-                                @if ($trx->items->count() > 2)
-                                    +{{ $trx->items->count() - 2 }} lainnya
-                                @endif
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <span
-                                    class="px-2 py-1 text-xs rounded-full
-                            {{ $trx->status == 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                                    {{ strtoupper($trx->status) }}
-                                </span>
-                            </td>
-
-                            <td class="px-6 py-4 whitespace-nowrap   font-semibold text-gray-800">
-                                Rp {{ number_format($trx->total, 0, ',', '.') }}
-                            </td>
-
-                            <td class="px-6 py-4 text-right">
-                                <div x-data class="flex justify-end gap-2">
-
-                                    @if ($trx->status != 'paid')
-                                        <button onclick="confirmPayment({{ $trx->id }})"
-                                            class="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-lg hover:bg-green-200">
-                                            Bayar
-                                        </button>
-                                    @endif
-
-                                    <a href="/admin/transactions/{{ $trx->id }}"
-                                        class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                                        Detail
-                                    </a>
-
-                                    @can('delete transactions')
-                                        <button
-                                            @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
-                                            class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
-                                            Hapus
-                                        </button>
-                                    @endcan
-                                </div>
-                            </td>
-
-                        </tr>
-                    @empty
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <td colspan="7" class="text-center py-12 text-gray-400">
-                                Belum ada transaksi
-                            </td>
+                            <th class="px-6 py-3">Invoice</th>
+                            <th class="px-6 py-3">Toko</th>
+                            <th class="px-6 py-3">Tanggal</th>
+                            <th class="px-6 py-3">Customer</th>
+                            <th class="px-6 py-3">Produk</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Total</th>
+                            <th class="px-6 py-3 text-right">Aksi</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody class="divide-y">
+                        @forelse ($transactions as $trx)
+                            <tr class="hover:bg-gray-50 transition">
+
+                                <td class="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">
+                                    {{ $trx->invoice_code }}
+                                    <p class="text-xs text-gray-400">
+                                        {{ $trx->type == 'in' ? 'MASUK' : 'KELUAR' }}
+                                    </p>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $trx->store->name }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                    {{ $trx->created_at->format('d M Y H:i') }}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $trx->customer->user->name ?? 'Customer Umum' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-500 text-xs whitespace-nowrap">
+                                    {{ $trx->items->pluck('product.name')->take(2)->implode(', ') }}
+                                    @if ($trx->items->count() > 2)
+                                        +{{ $trx->items->count() - 2 }} lainnya
+                                    @endif
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-2 py-1 text-xs rounded-full
+                            {{ $trx->status == 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                                        {{ strtoupper($trx->status) }}
+                                    </span>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap   font-semibold text-gray-800 whitespace-nowrap">
+                                    Rp {{ number_format($trx->total, 0, ',', '.') }}
+                                </td>
+
+                                <td class="px-6 py-4 text-right">
+                                    <div x-data class="flex justify-end gap-2">
+
+                                        @if ($trx->status != 'paid')
+                                            <button onclick="confirmPayment({{ $trx->id }})"
+                                                class="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-lg hover:bg-green-200">
+                                                Bayar
+                                            </button>
+                                        @endif
+
+                                        <a href="/admin/transactions/{{ $trx->id }}"
+                                            class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                                            Detail
+                                        </a>
+
+                                        @can('delete transactions')
+                                            <button
+                                                @click="$dispatch('open-modal', { name: 'delete-transaksi', id: {{ $trx->id }} })"
+                                                class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                                                Hapus
+                                            </button>
+                                        @endcan
+                                    </div>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-12 text-gray-400">
+                                    Belum ada transaksi
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="px-6 py-4 bg-gray-50 border-t">
             {{ $transactions->appends(request()->query())->links() }}
