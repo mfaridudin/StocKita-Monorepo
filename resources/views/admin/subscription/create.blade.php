@@ -1,11 +1,8 @@
 <x-app-layout title="Buat Langganan">
     <section class="max-w-7xl mx-auto text-center">
-        <div class="mb-12 flex flex-col md:flex-row items-end justify-between gap-4">
+        <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-            <div class="w-full md:w-1/3 text-left">
-                <label class="text-sm font-medium text-gray-600 mb-1 block">
-                    Pilih Owner
-                </label>
+            <div class="w-full md:w-1/3">
                 <select id="user_id"
                     class="w-full border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-emerald-500">
                     <option value="">Pilih Owner</option>
@@ -15,23 +12,29 @@
                 </select>
             </div>
 
-            <div class="bg-gray-100 p-1 rounded-full flex items-center gap-2">
-                <button id="monthlyBtn" class="px-5 py-2 rounded-full text-sm font-semibold bg-white shadow transition">
-                    Monthly
-                </button>
-                <button id="yearlyBtn" class="px-5 py-2 rounded-full text-sm font-semibold text-gray-500 transition">
-                    Yearly
-                </button>
+            <div class="w-full md:w-auto flex justify-start md:justify-end">
+                <div class="bg-gray-100 p-1 rounded-full flex w-full sm:w-auto">
+
+                    <button id="monthlyBtn"
+                        class="flex-1 sm:flex-none px-5 py-2 rounded-full text-sm font-semibold bg-white shadow transition">
+                        Monthly
+                    </button>
+
+                    <button id="yearlyBtn"
+                        class="flex-1 sm:flex-none px-5 py-2 rounded-full text-sm font-semibold text-gray-500 transition">
+                        Yearly
+                    </button>
+
+                </div>
             </div>
+
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
             @foreach ($plans as $plan)
                 <div
-                    class="offer-card transform hover:-translate-y-1 hover:shadow-xl transition duration-300
-                        {{ $plan->name == 'Pro'
-                            ? 'bg-emerald-500 text-white p-10 shadow-2xl scale-105'
-                            : 'bg-white p-8 border shadow-sm' }}
+                    class="offer-card transform hover:-translate-y-1 hover:shadow-xl transition duration-300 p-8  shadow-sm
+                        {{ $plan->name == 'Pro' ? 'bg-emerald-500 text-white' : 'bg-white border' }}
                         rounded-3xl relative">
                     @if ($plan->name == 'Pro')
                         <span

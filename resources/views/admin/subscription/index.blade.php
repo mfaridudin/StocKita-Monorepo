@@ -17,15 +17,20 @@
         </script>
     @endif
     <div class="space-y-6">
+
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Manajemen Langganan</h1>
-                <p class="text-gray-600 mt-1">Kelola semua langganan</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                    Manajemen Langganan
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Kelola semua langganan
+                </p>
             </div>
 
-            <div class="flex gap-3">
+            <div x-data class="flex gap-3">
                 <a href="{{ route('admin.subscriptions.create') }}"
-                    class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-medium text-sm rounded-xl">
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -173,7 +178,7 @@
                                     {{ ucfirst($subscription->interval) }}
                                 </td>
 
-                                <td class="px-6 py-4 text-sm text-gray-700">
+                                <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                                     {{ \Carbon\Carbon::parse($subscription->created_at)->format('d M Y') }}
                                     -
                                     {{ \Carbon\Carbon::parse($subscription->current_period_end)->format('d M Y') }}
@@ -203,15 +208,15 @@
 
                                                 {!! $subscription->status === 'active'
                                                     ? '
-                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 text-yellow-600">
-                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
-                                                                                                    </svg>
-                                                                                                    '
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 text-yellow-600">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </svg>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    '
                                                     : '
-                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 text-green-600">
-                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                                                                                                    </svg>
-                                                                                                    ' !!}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 text-green-600">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </svg>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ' !!}
                                             </button>
                                         </form>
 
