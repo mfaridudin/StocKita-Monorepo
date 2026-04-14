@@ -17,7 +17,7 @@
         </script>
     @endif
 
-    <div class="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-6 max-w-7xl mx-auto">
 
         <div x-data class="flex justify-between items-center pt-4 pb-8 border-b border-gray-200">
             <div>

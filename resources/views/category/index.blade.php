@@ -25,8 +25,6 @@
     <div class="space-y-4">
 
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-            <!-- Title -->
             <div>
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
                     Manajemen Kategori
@@ -36,7 +34,6 @@
                 </p>
             </div>
 
-            <!-- Action -->
             <div class="flex w-full sm:w-auto">
                 @can('create categories')
                     <button x-data

@@ -20,8 +20,12 @@
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Manajemen Produk</h1>
-                <p class="text-gray-600 mt-1">Kelola semua produk toko Anda</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                    Manajemen Produk
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Kelola semua produk toko Anda
+                </p>
             </div>
 
             <div x-data class="flex gap-3">
@@ -39,7 +43,7 @@
                     } else {
                         $dispatch('open-modal', { name: 'add-produk'})
                     }"
-                        class="inline-flex items-center gap-2 px-6 py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
                             ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
                             : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +56,8 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+
             <form method="GET" action="{{ route('admin.products.index') }}" class="p-4">
                 <div class="flex flex-col sm:flex-row gap-3">
 
@@ -88,65 +93,66 @@
                 </div>
             </form>
 
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
-                    <tr>
-                        <th class="px-6 py-3">Produk</th>
-                        <th class="px-6 py-3">Harga</th>
-                        <th class="px-6 py-3">Kategori</th>
-                        <th class="px-6 py-3">Toko</th>
-                        <th class="px-6 py-3">Pemilik</th>
-                        <th class="px-6 py-3 text-right">Aksi</th>
-                    </tr>
-                </thead>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-6 py-3">Produk</th>
+                            <th class="px-6 py-3">Harga</th>
+                            <th class="px-6 py-3">Kategori</th>
+                            <th class="px-6 py-3">Toko</th>
+                            <th class="px-6 py-3">Pemilik</th>
+                            <th class="px-6 py-3 text-right">Aksi</th>
+                        </tr>
+                    </thead>
 
-                <tbody class="divide-y">
-                    @forelse ($products as $product)
-                        <tr class="hover:bg-gray-50 transition">
+                    <tbody class="divide-y">
+                        @forelse ($products as $product)
+                            <tr class="hover:bg-gray-50 transition">
 
-                            <td class="px-6 py-4 flex items-center gap-4">
-                                <img src="{{ asset('storage/' . $product->image) }}"
-                                    class="w-12 h-12 object-cover rounded-lg border"
-                                    onerror="this.src='https://via.placeholder.com/100'">
+                                <td class="pl-6 pr-12 py-4 flex items-center gap-4 whitespace-nowrap">
+                                    <img src="{{ asset('storage/' . $product->image) }}"
+                                        class="w-12 h-12 object-cover rounded-lg border"
+                                        onerror="this.src='https://via.placeholder.com/100'">
 
-                                <div>
-                                    <p class="font-semibold text-gray-800">
-                                        {{ $product->name }}
-                                    </p>
-                                    <p class="text-xs text-gray-500">
-                                        SKU: {{ $product->sku }}
-                                    </p>
-                                </div>
-                            </td>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">
+                                            {{ $product->name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500">
+                                            SKU: {{ $product->sku }}
+                                        </p>
+                                    </div>
+                                </td>
 
-                            <td class="px-6 py-4 font-medium text-gray-700">
-                                Rp {{ number_format($product->price, 0, ',', '.') }}
-                            </td>
+                                <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                </td>
 
-                            <td class="px-6 py-4 text-gray-600">
-                                {{ $product->category->name ?? '-' }}
-                            </td>
+                                <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                    {{ $product->category->name ?? '-' }}
+                                </td>
 
-                            <td class="px-6 py-4 text-gray-600">
-                                {{ $product->store->name ?? '-' }}
-                            </td>
+                                <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                    {{ $product->store->name ?? '-' }}
+                                </td>
 
-                            <td class="px-6 py-4 text-gray-600">
-                                {{ $product->store->owner->name ?? '-' }}
-                            </td>
+                                <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                    {{ $product->store->owner->name ?? '-' }}
+                                </td>
 
-                            <td x-data class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
+                                <td x-data class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
 
-                                    <a href="/admin/products/{{ $product->id }}"
-                                        class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                                        Detail
-                                    </a>
+                                        <a href="/admin/products/{{ $product->id }}"
+                                            class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                                            Detail
+                                        </a>
 
-                                    @can('delete products')
-                                        <button
-                                            class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
-                                            @click="if (!canDeleteProducts) {
+                                        @can('delete products')
+                                            <button
+                                                class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
+                                                @click="if (!canDeleteProducts) {
                                             Swal.fire({
                                                 toast: true,
                                                 icon: 'error',
@@ -158,22 +164,23 @@
                                         } else {
                                             $dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })
                                         }">
-                                            Hapus
-                                        </button>
-                                    @endcan
-                                </div>
-                            </td>
+                                                Hapus
+                                            </button>
+                                        @endcan
+                                    </div>
+                                </td>
 
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-400">
-                                Belum ada produk
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-10 text-gray-400">
+                                    Belum ada produk
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
