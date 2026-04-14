@@ -1,14 +1,29 @@
 <aside id="sidebar"
-    class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-green-100 z-50 flex flex-col will-change-[width]">
-    <img src="/image/icon/icon.png" alt="icon" class="w-10 absolute top-3 left-5">
-    <div class="p-6 border-b h-16 border-green-50 flex items-center justify-center">
-        <span
-            class="items-center sidebar-text text-2xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
-            StocKita
-        </span>
+    class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-green-100 z-50 flex flex-col
+    transform transition-transform duration-300
+     will-change-[width]">
+
+    <div class="flex items-center justify-between px-4 py-6 border-b h-16 border-green-50">
+
+        <div class="flex items-center gap-3">
+            <img src="/image/icon/icon.png" alt="icon" class="w-10 md:absolute top-3 left-5">
+
+            <span
+                class="text-2xl sidebar-text font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent md:absolute left-20">
+                StocKita
+            </span>
+        </div>
+
+        <button id="closeSidebar" class="lg:hidden p-2 text-gray-600 hover:bg-green-50 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="size-6 text-gray-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+        </button>
+
     </div>
 
-    <nav class="flex-1 px-4 py-6 space-y-1  shadow-lg">
+    <nav class="flex-1 px-4 py-6 space-y-1  shadow-">
         @php $currentPath = request()->path(); @endphp
 
         @role('admin')

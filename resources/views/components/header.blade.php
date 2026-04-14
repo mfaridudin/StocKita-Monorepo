@@ -1,14 +1,26 @@
-<header class="h-16 sticky top-0 z-10 bg-white border-b border-green-100 flex items-center justify-between px-6">
+<header class="h-16 sticky top-0 z-10 bg-white border-b border-green-100 flex items-center justify-between px-3 md:px-6">
     <div class="flex items-center gap-4">
-        <button id="toggleCollapse" class="p-2 relative  rounded-lg hover:bg-green-50">
-            <svg id="iconMenu" class="w-6 h-6 text-gray-600 absolute inset-0 m-auto" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
+        <button id="toggleCollapse"
+            class="hidden md:flex w-10 h-10 items-center justify-center relative z-50 rounded-lg hover:bg-green-50">
+
+            <svg id="iconMenu" class="w-6 h-6 text-gray-600 absolute pointer-events-none" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
 
-            <svg id="iconArrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="w-6 h-6 text-gray-600 absolute inset-0 m-auto opacity-0">
+            <svg id="iconArrow" class="w-6 h-6 text-gray-600 absolute opacity-0 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+
+        </button>
+
+        <button id="toggleSidebar" class="md:hidden p-2 relative  rounded-lg hover:bg-green-50">
+            <svg class="w-6 h-6 text-gray-600 absolute inset-0 m-auto" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
             </svg>
         </button>
 
