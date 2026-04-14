@@ -20,86 +20,94 @@
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Manajemen Toko</h1>
-                <p class="text-gray-600 mt-1">Kelola Toko produk dengan mudah</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                    Manajemen Toko
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Kelola Toko produk dengan mudah
+                </p>
             </div>
 
-            <div class="flex gap-3">
-                <button x-data @click="$dispatch('open-modal', { name: 'create-store' })"
-                    class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-medium text-sm rounded-xl shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 transform hover:-translate-y-0.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Tambah Toko
-                </button>
-            </div>
+            @can('create customers')
+                <div x-data class="flex gap-3">
+                    <button x-data @click="$dispatch('open-modal', { name: 'create-store' })"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Toko
+                    </button>
+                </div>
+            @endcan
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                        <th class="px-6 py-4 text-left font-semibold">Pemilik</th>
-                        <th class="px-6 py-4 text-left font-semibold">Slug</th>
-                        <th class="px-6 py-4 text-left font-semibold">Email</th>
-                        <th class="px-6 py-4 text-left font-semibold">Alamat</th>
-                        <th class="px-6 py-4 text-right font-semibold">Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody class="divide-y divide-gray-100">
-                    @forelse ($stores as $store)
-                        <tr class="hover:bg-gray-50 transition">
-
-                            <td class="px-6 py-4 font-medium text-gray-900">
-                                {{ $store->name ?? '-' }}
-                            </td>
-
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ $store->owner->name ?? '-' }}
-                            </td>
-
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ $store->slug ?? '-' }}
-                            </td>
-
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ $store->email ?? '-' }}
-                            </td>
-
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ $store->address ?? '-' }}
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <div x-data class="flex justify-end gap-2">
-
-                                    <a href="/admin/store/{{ $store->id }}"
-                                        class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
-                                        Detail
-                                    </a>
-
-                                    <button
-                                        @click="$dispatch('open-modal', { name: 'delete-store', id: {{ $store->id }} })"
-                                        class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition">
-                                        Hapus
-                                    </button>
-
-                                </div>
-                            </td>
-
-                        </tr>
-                    @empty
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                         <tr>
-                            <td colspan="4" class="text-center py-12 text-gray-400">
-                                Belum ada Toko
-                            </td>
+                            <th class="px-6 py-4 text-left font-semibold">Nama</th>
+                            <th class="px-6 py-4 text-left font-semibold">Pemilik</th>
+                            <th class="px-6 py-4 text-left font-semibold">Slug</th>
+                            <th class="px-6 py-4 text-left font-semibold">Email</th>
+                            <th class="px-6 py-4 text-left font-semibold">Alamat</th>
+                            <th class="px-6 py-4 text-right font-semibold">Aksi</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse ($stores as $store)
+                            <tr class="hover:bg-gray-50 transition">
+
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ $store->name ?? '-' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                    {{ $store->owner->name ?? '-' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                    {{ $store->slug ?? '-' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                    {{ $store->email ?? '-' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap sm:whitespace-normal">
+                                    {{ $store->address ?? '-' }}
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div x-data class="flex justify-end gap-2">
+
+                                        <a href="/admin/store/{{ $store->id }}"
+                                            class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
+                                            Detail
+                                        </a>
+
+                                        <button
+                                            @click="$dispatch('open-modal', { name: 'delete-store', id: {{ $store->id }} })"
+                                            class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition">
+                                            Hapus
+                                        </button>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-12 text-gray-400">
+                                    Belum ada Toko
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -112,7 +120,8 @@
                 <div class="flex justify-between items-center mb-6 pb-4 border-b">
                     <h3 class="text-lg font-semibold">Tambah Toko</h3>
 
-                    <button type="button" @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-store')">
+                    <button type="button"
+                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-store')">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12">
@@ -170,7 +179,8 @@
 
                     {{-- ACTION --}}
                     <div class="flex justify-end gap-2 pt-4">
-                        <button type="button" @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-store')"
+                        <button type="button"
+                            @click="$el.closest('form').reset(); $dispatch('close-modal', 'create-store')"
                             class="px-4 py-2 bg-gray-200 rounded-lg">
                             Batal
                         </button>
