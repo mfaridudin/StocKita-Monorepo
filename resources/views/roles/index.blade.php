@@ -1,5 +1,5 @@
 <x-app-layout title="Roles">
-    <div class="px-6 py-8">
+    <div class="py-8">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Kelola Roles</h1>
@@ -62,7 +62,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-5">
+                                    <td class="px-6 py-5 whitespace-nowrap">
                                         @if ($role->permissions->count() > 0)
                                             <div class="flex flex-wrap gap-1">
                                                 @foreach ($role->permissions->take(3) as $permission)

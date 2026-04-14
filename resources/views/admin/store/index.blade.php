@@ -74,7 +74,7 @@
                                     {{ $store->email ?? '-' }}
                                 </td>
 
-                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap sm:whitespace-normal">
+                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap lg:whitespace-normal">
                                     {{ $store->address ?? '-' }}
                                 </td>
 

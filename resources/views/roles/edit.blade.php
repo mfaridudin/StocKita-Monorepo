@@ -1,7 +1,7 @@
 <x-app-layout title="Edit Role - {{ $role->name }}">
     <div class="py-8 mx-auto">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-8 gap-4">
+        <div class="flex flex-col-reverse sm:flex-row sm:items-start sm:justify-between mb-8 gap-4">
             <div>
                 <div class="flex items-center gap-4 mb-2">
                     <div
