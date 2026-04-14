@@ -66,73 +66,80 @@
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mt-6">
 
             <form method="GET" action="">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div x-data class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
-                    <div class="flex flex-wrap gap-3">
-                        <div class="relative w-full sm:w-48">
-                            <select name="status"
-                                class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-xl bg-white">
-                                <option value="">Semua Status</option>
-                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif
-                                </option>
-                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Tidak
-                                    Aktif</option>
-                            </select>
+                    <div class="flex flex-col w-full lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div class="flex flex-wrap gap-3">
+                            <div class="relative w-full sm:w-48">
+                                <select name="status"
+                                    class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-xl bg-white">
+                                    <option value="">Semua Status</option>
+                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif
+                                    </option>
+                                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                                        Tidak
+                                        Aktif</option>
+                                </select>
 
-                            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                </svg>
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="relative w-full sm:w-48">
+                                <select name="type"
+                                    class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white">
+                                    <option value="">Semua Tipe</option>
+                                    <option value="regular" {{ request('type') == 'regular' ? 'selected' : '' }}>
+                                        Regular
+                                    </option>
+                                    <option value="exclusive" {{ request('type') == 'exclusive' ? 'selected' : '' }}>
+                                        Exclusive</option>
+                                </select>
+
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="relative w-full sm:w-48">
-                            <select name="type"
-                                class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white">
-                                <option value="">Semua Tipe</option>
-                                <option value="regular" {{ request('type') == 'regular' ? 'selected' : '' }}>Regular
-                                </option>
-                                <option value="exclusive" {{ request('type') == 'exclusive' ? 'selected' : '' }}>
-                                    Exclusive</option>
-                            </select>
+                        <div class="flex items-center gap-3 justify-between flex-1 lg:w-auto">
+                            <div class="relative w-full max-w-[600px]">
 
-                            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                </svg>
+                                <input type="text" name="search" value="{{ request('search') }}"
+                                    placeholder="Cari nama, email, atau nomor telepon..."
+                                    class="w-full pl-10 py-3 border border-gray-200 rounded-xl text-sm">
+
+                                <div class="absolute left-2 top-3 text-gray-400 pointer-events-none">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+                                        </path>
+                                    </svg>
+                                </div>
+
                             </div>
+
+                            <button type="submit"
+                                class="px-6 py-3 bg-blue-500 text-white rounded-xl text-sm font-semibold">
+                                Filter
+                            </button>
                         </div>
                     </div>
 
-                    <div x-data class="flex items-center gap-3 justify-between flex-1 lg:w-auto">
-                        <div class="relative w-full max-w-[600px]">
-
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="Cari nama, email, atau nomor telepon..."
-                                class="w-full pl-10 py-3 border border-gray-200 rounded-xl text-sm">
-
-                            <div class="absolute left-2 top-3 text-gray-400 pointer-events-none">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                                    </path>
-                                </svg>
-                            </div>
-
-                        </div>
-
-                        <button type="submit"
-                            class="px-6 py-3 bg-blue-500 text-white rounded-xl text-sm font-semibold">
-                            Filter
-                        </button>
-
-                        @can('create customers')
-                            <button type="button"
-                                @click="if (!canCreateCustomers) {
+                    @can('create customers')
+                        <button type="button"
+                            @click="if (!canCreateCustomers) {
                                 Swal.fire({
                                     toast: true,
                                     icon: 'error',
@@ -144,16 +151,15 @@
                             } else {
                                 $dispatch('open-modal', { name: 'create-customer' })
                             }"
-                                class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                Pelanggan Baru
-                            </button>
-                        @endcan
+                            class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Pelanggan Baru
+                        </button>
+                    @endcan
 
-                    </div>
                 </div>
             </form>
         </div>
@@ -188,7 +194,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm">
                                         <a href="https://wa.me/{{ $customer->phone }}"
                                             class="text-green-600 hover:text-green-700 font-medium flex items-center gap-1">

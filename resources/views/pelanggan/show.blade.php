@@ -23,48 +23,57 @@
     <div class="max-w-7xl mx-auto space-y-6">
 
         <div
-            class="bg-white p-6 rounded-2xl shadow-sm border flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 min-w-0">
+
                 <div
-                    class="w-14 h-14 bg-green-500 text-white flex items-center justify-center rounded-xl text-lg font-bold shadow">
+                    class="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 bg-green-500 text-white flex items-center justify-center rounded-xl text-lg font-bold shadow">
                     {{ strtoupper(substr($customer->user->name, 0, 1)) }}
                 </div>
 
-                <div>
-                    <h2 class="text-xl font-bold text-gray-800">
+                <div class="min-w-0">
+                    <h2 class="text-base sm:text-lg font-semibold text-gray-800 truncate">
                         {{ $customer->user->name }}
                     </h2>
-                    <p class="text-sm text-gray-500">{{ $customer->user->email ?? '-' }}</p>
-                    <p class="text-sm text-gray-500">{{ $customer->phone ?? '-' }}</p>
+
+                    <p class="text-xs sm:text-sm text-gray-500 truncate">
+                        {{ $customer->user->email ?? '-' }}
+                    </p>
+
+                    <p class="text-xs sm:text-sm text-gray-500">
+                        {{ $customer->phone ?? '-' }}
+                    </p>
                 </div>
             </div>
 
-            <div x-data class="flex gap-2">
+            <div x-data class="flex gap-2 w-full sm:w-auto">
+
                 @can('edit customers')
                     <button
                         @click="if (!canEditCustomers) {
-                        Swal.fire({
-                            toast: true,
-                            icon: 'error',
-                            position: 'top-end',
-                            title: 'Kamu tidak punya izin edit pelanggan!',
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
-                    } else {
-                        $dispatch('open-modal', { name: 'edit-customer' })
-                    }"
-                        class="px-4 py-2 text-blue-600 rounded-lg text-sm bg-blue-100 {{ auth()->user()->can('edit customers') ? 'hover:bg-blue-200' : 'opacity-50 cursor-not-allowed' }}">
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        position: 'top-end',
+                        title: 'Tidak punya izin edit!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                } else {
+                    $dispatch('open-modal', { name: 'edit-customer' })
+                }"
+                        class="w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg
+                flex items-center justify-center gap-2
+                bg-blue-100 text-blue-600
+                {{ auth()->user()->can('edit customers')
+                    ? 'hover:bg-blue-200 active:scale-95 transition'
+                    : 'opacity-50 cursor-not-allowed' }}">
+
                         Edit
                     </button>
                 @endcan
-                {{-- <form action="/customers/{{ $customer->id }}/email" method="POST">
-                    @csrf
-                    <button class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">
-                        Kirim Email
-                    </button>
-                </form> --}}
+
             </div>
         </div>
 

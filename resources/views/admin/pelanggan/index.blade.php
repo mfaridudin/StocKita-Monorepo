@@ -24,8 +24,12 @@
     <div class="space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Manajemen Pelanggan</h1>
-                <p class="text-gray-600 mt-1">Kelola semua pelanggan</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                    Manajemen Pelanggan
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Kelola semua pelanggan
+                </p>
             </div>
 
             @can('create customers')
@@ -43,7 +47,7 @@
                     } else {
                         $dispatch('open-modal', { name: 'create-customer' })
                     }"
-                        class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -208,7 +212,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm">
                                         <a href="https://wa.me/{{ $customer->phone }}"
                                             class="text-green-600 hover:text-green-700 font-medium flex items-center gap-1">
