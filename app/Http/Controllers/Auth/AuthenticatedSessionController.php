@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Subscription;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,22 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
-         if ($user->hasRole('admin')) {
+        if ($user->hasRole('owner')) {
+            $expired = Subscription::where('user_id', $user->id)
+                ->where('status', 'active')
+                ->where('current_period_end', '<', now())
+                ->first();
+
+            if ($expired) {
+                $expired->update([
+                    'status' => 'expired',
+                ]);
+
+                $user->deactivateAllData();
+            }
+        }
+
+        if ($user->hasRole('admin')) {
             return redirect()->intended('/admin/dashboard');
         }
 
