@@ -90,6 +90,11 @@ class User extends Authenticatable
     }
 
     // batas subsribe
+    private function isUnlimited($limit)
+    {
+        return is_null($limit);
+    }
+
     public function canCreateProduct()
     {
         $subscription = $this->subscription;
@@ -98,71 +103,93 @@ class User extends Authenticatable
             return false;
         }
 
-        return $this->products()->where('is_active', true)->count() < $subscription->plan->max_products;
+        $limit = $subscription->plan->max_products;
+
+        if ($this->isUnlimited($limit)) {
+            return true;
+        }
+
+        return $this->products()->where('is_active', true)->count() < $limit;
     }
 
     public function canCreateTransaction()
     {
         $subscription = $this->subscription;
 
-        // Cek ada subscription aktif
+        // cek subcribtion aktif
         if (! $subscription || $subscription->status !== 'active') {
             return false;
         }
 
-        // Hitung transaksi yang sudah dibuat
+        $limit = $subscription->plan->max_orders;
+
+        if ($this->isUnlimited($limit)) {
+            return true;
+        }
+
+        // 
         $transactionCount = $this->transactions()->where('is_active', true)->count();
 
-        // Bandingkan dengan limit plan
-        return $transactionCount < $subscription->plan->max_orders;
+        return $transactionCount < $limit;
     }
 
     public function canCreateWarehouse()
     {
         $subscription = $this->subscription;
 
-        // Cek ada subscription aktif
         if (! $subscription || $subscription->status !== 'active') {
             return false;
         }
 
-        // Hitung warehouse yang sudah dibuat
+        $limit = $subscription->plan->max_warehouses;
+
+        if ($this->isUnlimited($limit)) {
+            return true;
+        }
+
+        // hitung gudang
         $warehouseCount = $this->store->warehouse()->where('is_active', true)->count();
 
-        // Bandingkan dengan limit plan
-        return $warehouseCount < $subscription->plan->max_warehouses;
+        return $warehouseCount < $limit;
     }
 
     public function canCreateCategories()
     {
         $subscription = $this->subscription;
 
-        // Cek ada subscription aktif
         if (! $subscription || $subscription->status !== 'active') {
             return false;
         }
 
-        // Hitung kategori yang sudah dibuat
+        $limit = $subscription->plan->max_categories;
+
+        if ($this->isUnlimited($limit)) {
+            return true;
+        }
+
         $categoriesCount = $this->store->categories()->where('is_active', true)->count();
 
         // Bandingkan dengan limit plan
-        return $categoriesCount < $subscription->plan->max_categories;
+        return $categoriesCount < $limit;
     }
 
     public function canCreateCustomers()
     {
         $subscription = $this->subscription;
 
-        // Cek ada subscription aktif
         if (! $subscription || $subscription->status !== 'active') {
             return false;
         }
 
-        // Hitung kategori yang sudah dibuat
+        $limit = $subscription->plan->max_customers;
+
+        if ($this->isUnlimited($limit)) {
+            return true;
+        }
+
         $customersCount = $this->store->customers()->where('is_active', true)->count();
 
-        // Bandingkan dengan limit plan
-        return $customersCount < $subscription->plan->max_customers;
+        return $customersCount < $limit;
     }
 
     // sync syncProductsLimit
@@ -171,7 +198,11 @@ class User extends Authenticatable
         $items = $query->orderBy('created_at', 'asc')->get();
 
         foreach ($items as $index => $item) {
-            $item->is_active = $index < $limit;
+            if ($this->isUnlimited($limit)) {
+                $item->is_active = true;
+            } else {
+                $item->is_active = $index < $limit;
+            }
             $item->save();
         }
     }
