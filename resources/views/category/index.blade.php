@@ -24,77 +24,88 @@
     @endif
     <div class="space-y-4">
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <!-- Title -->
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Manajemen Kategori</h1>
-                <p class="text-gray-600 mt-1">Kelola kategori produk dengan mudah</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                    Manajemen Kategori
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Kelola kategori produk dengan mudah
+                </p>
             </div>
 
-            <div class="flex gap-3">
+            <!-- Action -->
+            <div class="flex w-full sm:w-auto">
                 @can('create categories')
                     <button x-data
                         @click="
-                        if (!canCreateCategories) {
-                            Swal.fire({
-                                toast: true,
-                                icon: 'error',
-                                position: 'top-end',
-                                title: 'Kamu tidak punya izin menambah kategori!',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-                        } else {
-                            $dispatch('open-modal', { name: 'create-category' })
-                        }"
-                        class="inline-flex items-center gap-2 px-6 py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create categories')
-                            ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
-                            : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
+                if (!canCreateCategories) {
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        position: 'top-end',
+                        title: 'Kamu tidak punya izin menambah kategori!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                } else {
+                    $dispatch('open-modal', { name: 'create-category' })
+                }"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl
+                {{ auth()->user()->can('create categories')
+                    ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
+                    : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
+
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
-                        Tambah Kategori
+
+                        <span class="whitespace-nowrap">Tambah Kategori</span>
                     </button>
                 @endcan
-
             </div>
+
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                        <th class="px-6 py-4 text-left font-semibold">Slug</th>
-                        <th class="px-6 py-4 text-left font-semibold">Total Produk</th>
-                        <th class="px-6 py-4 text-right font-semibold">Aksi</th>
-                    </tr>
-                </thead>
+        <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-semibold">Nama</th>
+                            <th class="px-6 py-4 text-left font-semibold">Slug</th>
+                            <th class="px-6 py-4 text-left font-semibold whitespace-nowrap">Total Produk</th>
+                            <th class="px-6 py-4 text-right font-semibold">Aksi</th>
+                        </tr>
+                    </thead>
 
-                <tbody class="divide-y divide-gray-100">
-                    @forelse ($categories as $cat)
-                        <tr class="hover:bg-gray-50 transition">
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse ($categories as $cat)
+                            <tr class="hover:bg-gray-50 transition">
 
-                            <td class="px-6 py-4 font-medium text-gray-900">
-                                {{ $cat->name }}
-                            </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ $cat->name }}
+                                </td>
 
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ $cat->slug }}
-                            </td>
+                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                    {{ $cat->slug }}
+                                </td>
 
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg">
-                                    {{ $cat->products_count ?? $cat->products->count() }} produk
-                                </span>
-                            </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg">
+                                        {{ $cat->products_count ?? $cat->products->count() }} produk
+                                    </span>
+                                </td>
 
-                            <td class="px-6 py-4">
-                                <div x-data class="flex justify-end gap-2">
+                                <td class="px-6 py-4">
+                                    <div x-data class="flex justify-end gap-2">
 
-                                    @can('edit categories')
-                                        <button
-                                            @click="if (!canEditCategories) {
+                                        @can('edit categories')
+                                            <button
+                                                @click="if (!canEditCategories) {
                                                 Swal.fire({
                                                     toast: true,
                                                     icon: 'error',
@@ -106,14 +117,14 @@
                                             } else {
                                                 $dispatch('open-modal', { name: 'edit-category', id: {{ $cat->id }}, categoryName: '{{ $cat->name }}' })
                                             }"
-                                            class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-50 text-blue-600 {{ auth()->user()->can('edit categories') ? 'hover:bg-blue-100 transition' : 'cursor-not-allowed' }}">
-                                            Edit
-                                        </button>
-                                    @endcan
+                                                class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-50 text-blue-600 {{ auth()->user()->can('edit categories') ? 'hover:bg-blue-100 transition' : 'cursor-not-allowed' }}">
+                                                Edit
+                                            </button>
+                                        @endcan
 
-                                    @can('delete categories')
-                                        <button
-                                            @click="if (!canDeleteCategories) {
+                                        @can('delete categories')
+                                            <button
+                                                @click="if (!canDeleteCategories) {
                                             Swal.fire({
                                                 toast: true,
                                                 icon: 'error',
@@ -125,23 +136,24 @@
                                         } else {
                                             $dispatch('open-modal', { name: 'delete-category', id: {{ $cat->id }} })
                                         }"
-                                            class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete categories') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}">
-                                            Hapus
-                                        </button>
-                                    @endcan
-                                </div>
-                            </td>
+                                                class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete categories') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}">
+                                                Hapus
+                                            </button>
+                                        @endcan
+                                    </div>
+                                </td>
 
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center py-12 text-gray-400">
-                                Belum ada kategori
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-12 text-gray-400">
+                                    Belum ada kategori
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
