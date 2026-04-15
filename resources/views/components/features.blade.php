@@ -1,5 +1,5 @@
-<section id="features" class="py-24 bg-gray-50">
-    <div class="max-w-7xl mx-auto">
+<section id="blog" class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-3 md:px-6">
 
         <div class="text-center mb-16">
             <h2 class="text-4xl font-bold text-slate-800 mb-4">
@@ -10,7 +10,7 @@
             </p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <a href="/features/transaksi-kasir"
                 class="feature-item group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition duration-200">
                 <div class="overflow-hidden">
