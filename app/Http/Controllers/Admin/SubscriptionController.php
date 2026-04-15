@@ -89,6 +89,41 @@ class SubscriptionController extends Controller
             ->with('success', 'Langganan berhasil dibuat!');
     }
 
+    public function update(Request $request, $id)
+    {
+        $subscription = Subscription::findOrFail($id);
+        $user = $subscription->user->id;
+
+        $oldPlan = $subscription->plan;
+        $newPlan = Plan::find($request->plan_id);
+
+        $isUpgrade = $newPlan->price > $oldPlan->price;
+        $isDowngrade = $newPlan->price < $oldPlan->price;
+
+        $subscription->update([
+            'plan_id' => $request->plan_id,
+            'interval' => $request->interval,
+            'started_at' => now(),
+            'current_period_end' => $request->interval === 'yearly'
+                ? now()->addYear()
+                : now()->addMonth(),
+
+        ]);
+
+        $user = User::find($user);
+        $user->syncAllLimits();
+
+        if ($isUpgrade) {
+            $message = 'Berhasil upgrade paket!';
+        } elseif ($isDowngrade) {
+            $message = 'Berhasil downgrade paket!';
+        } else {
+            $message = 'Langganan berhasil diperbarui!';
+        }
+
+        return back()->with('success', $message);
+    }
+
     public function toggle($id)
     {
         $subscription = Subscription::findOrFail($id);
