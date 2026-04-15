@@ -1,17 +1,22 @@
 <x-app-layout>
     <div class="min-h-screen">
 
-        {{-- hesder --}}
-        <div class="bg-white max-w-7xl shadow-sm border-b rounded-2xl border-green-200">
-            <div class=" mx-auto px-6 py-6">
-                <h1 class="text-3xl font-bold text-green-600">
-                    Dashboard Admin
-                </h1>
-                <p class="text-green-900">Monitoring seluruh platform</p>
+        {{-- header --}}
+        <div
+            class="bg-white/80 backdrop-blur-md shadow-sm border-b border-green-200 rounded-2xl border border-green-200">
+            <div class="max-w-7xl">
+                <div class="flex items-center justify-between">
+                    <div class="px-6 py-6">
+                        <h1 class="text-3xl font-bold text-green-600">
+                            Dashboard Admin
+                        </h1>
+                        <p class="text-green-900">Monitoring seluruh platform</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto py-6">
+        <div class="mx-auto py-6">
 
             {{-- cards --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">

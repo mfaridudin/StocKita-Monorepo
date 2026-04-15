@@ -31,7 +31,7 @@
             <x-header :title="$title" />
 
             {{-- content --}}
-            <main class="flex-1 px-3 p-6 lg:p-8 overflow-y-auto w-full">
+            <main class="flex-1 px-3 p-6 pt-20 lg:p-8 overflow-y-auto w-full lg:pt-20">
                 <div class=mx-auto">
                     {{ $slot }}
                 </div>

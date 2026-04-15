@@ -1,5 +1,5 @@
-<header
-    class="h-16 sticky top-0 md:z-50 bg-white border-b border-green-100 flex items-center justify-between px-3 md:px-6">
+<header id="headerDashboard"
+    class="h-16 fixed top-0 left-0 md:left-64 right-0 z-50 bg-white border-b border-green-100 flex items-center justify-between px-3 md:px-6">
     <div class="flex items-center gap-4">
         <button id="toggleCollapse"
             class="hidden md:flex w-10 h-10 items-center justify-center relative z-[999] pointer-events-auto rounded-lg hover:bg-green-50">

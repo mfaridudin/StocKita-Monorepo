@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
     const main = document.getElementById("mainContent");
+    const header = document.getElementById("headerDashboard");
 
     const toggleSidebar = document.getElementById("toggleSidebar");
     const closeSidebar = document.getElementById("closeSidebar");
@@ -106,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         gsap.set(sidebar, { x: 0 });
         gsap.set(main, { paddingLeft: 256 });
+        gsap.set(header, { left: 256 });
         gsap.to(iconMenu, { opacity: 1, scale: 1, duration: 0.2 });
 
         collapsed = false;
@@ -146,6 +148,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 ease: "power3.inOut"
             });
 
+            gsap.to(header, {
+                left: 80,
+                duration: 0.2
+            });
+
             gsap.to(groups, {
                 marginTop: 0,
                 duration: 0.2,
@@ -172,6 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 paddingLeft: 256,
                 duration: 0.2,
                 ease: "power3.inOut"
+            });
+
+            gsap.to(header, {
+                left: 256,
+                duration: 0.2
             });
 
             gsap.fromTo(texts,
@@ -243,6 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         gsap.set(sidebar, { width: 80 });
         gsap.set(main, { paddingLeft: 80 });
+        gsap.set(header, { left: 80 });
 
         gsap.set(texts, { opacity: 0, x: -10 });
         gsap.set(titles, { opacity: 0, height: 0, marginTop: 0 });
