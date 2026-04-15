@@ -126,10 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         toggleCollapse?.addEventListener("click", collapseHandler);
 
-        return () => {
-            toggleCollapse?.removeEventListener("click", collapseHandler);
-        };
-
         function collapseSidebar() {
             gsap.to(texts, {
                 opacity: 0,
@@ -207,33 +203,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // hover
-        // sidebar.addEventListener("mouseenter", () => {
-        //     if (!collapsed) return;
+        const handleMouseEnter = () => {
+            if (!collapsed) return;
 
+            clearTimeout(hoverTimeout);
 
-        //     gsap.to(iconArrow, { opacity: 0, scale: 0.6, duration: 0.2, zIndex: 100 });
-        //     gsap.to(iconMenu, { opacity: 1, scale: 1, duration: 0.2 });
+            gsap.to(iconArrow, { opacity: 0, scale: 0.6, duration: 0.2 });
+            gsap.to(iconMenu, { opacity: 1, scale: 1, duration: 0.2 });
 
+            hoverTimeout = setTimeout(() => {
+                expandSidebar();
+            }, 100);
+        };
 
-        //     clearTimeout(hoverTimeout);
+        const handleMouseLeave = () => {
+            if (!collapsed) return;
 
-        //     hoverTimeout = setTimeout(() => {
-        //         expandSidebar();
-        //     }, 100);
-        // });
+            gsap.to(iconMenu, { opacity: 0, scale: 0.6, duration: 0.2 });
+            gsap.to(iconArrow, { opacity: 1, scale: 1, duration: 0.2 });
 
-        // sidebar.addEventListener("mouseleave", () => {
-        //     if (!collapsed) return;
+            hoverTimeout = setTimeout(() => {
+                collapseSidebar();
+            }, 150);
+        };
 
-        //     gsap.to(iconMenu, { opacity: 0, scale: 0.6, duration: 0.2 });
-        //     gsap.to(iconArrow, { opacity: 1, scale: 1, duration: 0.2, zIndex: 100 });
+        sidebar.addEventListener("mouseenter", handleMouseEnter);
+        sidebar.addEventListener("mouseleave", handleMouseLeave);
 
-        //     hoverTimeout = setTimeout(() => {
-        //         collapseSidebar();
-        //     }, 150);
-        // });
-
-        // return () => { };
+        return () => {
+            toggleCollapse?.removeEventListener("click", collapseHandler);
+            sidebar.removeEventListener("mouseenter", handleMouseEnter);
+            sidebar.removeEventListener("mouseleave", handleMouseLeave);
+        };
     });
 
     // tablet
@@ -336,8 +337,31 @@ document.addEventListener("DOMContentLoaded", () => {
             collapsed = true;
         }
 
+        // hover
+        const handleMouseEnter = () => {
+            if (!collapsed) return;
+
+            clearTimeout(hoverTimeout);
+
+            hoverTimeout = setTimeout(() => {
+                expandSidebar();
+            }, 100);
+        };
+
+        const handleMouseLeave = () => {
+            if (!collapsed) return;
+
+            hoverTimeout = setTimeout(() => {
+                collapseSidebar();
+            }, 150);
+        };
+
+        sidebar.addEventListener("mouseenter", handleMouseEnter);
+        sidebar.addEventListener("mouseleave", handleMouseLeave);
+
         // toggle
         closeSidebar?.addEventListener("click", () => collapseSidebar());
+        overlay?.addEventListener("click", collapseSidebar);
         toggleCollapse?.addEventListener("click", () => {
             collapsed = !collapsed;
 
@@ -347,6 +371,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 expandSidebar();
             }
         });
-        return () => { };
+
+        return () => {
+            sidebar.removeEventListener("mouseenter", handleMouseEnter);
+            sidebar.removeEventListener("mouseleave", handleMouseLeave);
+        };
     });
 });
