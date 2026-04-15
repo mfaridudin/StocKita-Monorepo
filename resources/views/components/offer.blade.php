@@ -6,7 +6,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <section id="offer" class="py-24 bg-gray-50 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-7xl mx-auto px-3 md:px-6">
 
         <div class="text-center mb-10">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
 
             @foreach ($plans as $plan)
                 <div

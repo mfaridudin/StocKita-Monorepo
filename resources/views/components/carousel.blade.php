@@ -1,4 +1,4 @@
-<div id="home" class="container mx-auto pt-[5rem]">
+<div id="home" class="w-full pt-[5rem]">
     <div
         class="carousel-container relative h-[calc(100dvh-80px)] min-h-[500px] overflow-hidden shadow-2xl border border-white/10 bg-gradient-to-br from-green-900/90 via-green-800/50 to-emerald-900/90">
         <div id="carouselTrack" class="carousel-track flex h-full">
@@ -23,42 +23,66 @@
                     </div>
 
 
-                    <div class="relative z-20 h-full max-w-7xl mx-auto flex items-center px-6 lg:px-12">
-                        <div class="w-full lg:w-1/2 space-y-8 lg:pr-12">
-
+                    <div class="relative z-20 h-full mx-auto flex items-center px-4 sm:px-6 lg:ml-32 lg:px-12">
+                        <div class="w-full lg:w-1/2 space-y-6 sm:space-y-8 lg:pr-12">
 
                             <div>
                                 <h1
-                                    class="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-white to-green-100/50 bg-clip-text text-transparent leading-[0.9] mb-6 drop-shadow-2xl">
-                                    Kondisi Tak Menentu,<br class="hidden md:block">
+                                    class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black bg-gradient-to-r from-white via-white to-green-100/50 bg-clip-text text-transparent leading-tight lg:leading-[0.9] mb-4 sm:mb-6 drop-shadow-2xl">
+                                    Kondisi Tak Menentu,
+                                    <br class="hidden sm:block">
+
                                     <span
-                                        class="block bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 bg-clip-text text-transparent drop-shadow-2xl">Usaha
-                                        Tetap Maju</span>
+                                        class="block mt-2 sm:mt-0 bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 bg-clip-text text-transparent drop-shadow-2xl">
+                                        Usaha Tetap Maju
+                                    </span>
                                 </h1>
-                                <p class="text-xl text-white/95 max-w-lg leading-relaxed font-medium drop-shadow-lg">
-                                    Dipercaya oleh <span class="font-black text-green-100 text-2xl">2 juta++</span>
-                                    pengguna, <strong class="text-green-100">Kasir Pintar</strong> hadir untuk membantu
+
+                                <p
+                                    class="text-base sm:text-lg md:text-xl text-white/95 max-w-md sm:max-w-lg leading-relaxed font-medium drop-shadow-lg">
+                                    Dipercaya oleh
+                                    <span class="font-black text-green-100 text-lg sm:text-xl">
+                                        2 juta++
+                                    </span>
+                                    pengguna,
+                                    <strong class="text-green-100">Kasir Pintar</strong> hadir untuk membantu
                                     bisnismu tumbuh lebih besar.
                                 </p>
                             </div>
 
-                            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
                                 <a href="/register"
-                                    class="group relative bg-white text-green-700 hover:bg-green-100 px-10 py-6 rounded-3xl font-black text-xl shadow-2xltransform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20 hover:border-green-200/50">
+                                    class="group relative 
+                                    bg-white text-green-700 hover:bg-green-100 
+                                    px-6 sm:px-8 lg:px-10 
+                                    py-4 sm:py-5 lg:py-6 
+                                    rounded-2xl sm:rounded-3xl 
+                                    font-bold sm:font-black 
+                                    text-base sm:text-lg lg:text-xl 
+                                    shadow-xl sm:shadow-2xl 
+                                    transform hover:-translate-y-1 sm:hover:-translate-y-2 
+                                    transition-all duration-500 
+                                    flex items-center justify-center gap-3 sm:gap-4 
+                                    w-full sm:w-auto 
+                                    min-w-0 sm:min-w-[220px] 
+                                    border-2 border-white/20 hover:border-green-200/50">
+
                                     <span class="relative z-10">Daftar Gratis</span>
-                                    <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
+
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
 
-
+            {{-- slide 2 --}}
             <div class="carousel-slide w-full h-full flex-shrink-0 relative">
                 <div
                     class="w-full h-full bg-gradient-to-br from-green-900 via-emerald-800/80 to-green-900/90 relative overflow-hidden">
@@ -78,39 +102,75 @@
                             class="w-full h-full object-cover object-right-top brightness-90 contrast-110">
                     </div>
 
+                    <div class="relative z-20 h-full mx-auto flex items-center px-4 sm:px-6 lg:ml-32 lg:px-12">
+                        <div class="w-full lg:w-1/2 space-y-6 sm:space-y-8 lg:pr-12">
 
-                    <div class="relative z-20 h-full max-w-7xl mx-auto flex items-center px-6 lg:px-12">
-                        <div class="w-full lg:w-1/2 space-y-8 lg:pr-12">
                             <div>
                                 <h1
-                                    class="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-white to-green-100/50 bg-clip-text text-transparent leading-[0.9] mb-6 drop-shadow-2xl">
-                                    Aplikasi Kasir <span
-                                        class="block bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 bg-clip-text text-transparent drop-shadow-2xl">Terbaik</span>
+                                    class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl 
+                                    font-black 
+                                    bg-gradient-to-r from-white via-white to-green-100/50 
+                                    bg-clip-text text-transparent 
+                                    leading-tight lg:leading-[0.9] 
+                                    mb-4 sm:mb-6 drop-shadow-2xl">
+
+                                    Aplikasi Kasir
+
+                                    <span
+                                        class="block mt-2 sm:mt-0 
+                                        bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 
+                                        bg-clip-text text-transparent drop-shadow-2xl">
+                                        Terbaik
+                                    </span>
+
                                     Dan Terlengkap
                                 </h1>
-                                <p class="text-xl text-white/95 max-w-lg leading-relaxed font-medium drop-shadow-lg">
-                                    Tingkatkan kinerja usaha Anda dengan fitur lengkap dan <strong
-                                        class="text-green-100 font-black">user-friendly</strong> dari Kasir Pintar.
+
+                                <p
+                                    class="text-base sm:text-lg md:text-xl 
+                                    text-white/95 max-w-md sm:max-w-lg 
+                                    leading-relaxed font-medium drop-shadow-lg">
+
+                                    Tingkatkan kinerja usaha Anda dengan fitur lengkap dan
+                                    <strong class="text-green-100 font-bold sm:font-black">
+                                        user-friendly
+                                    </strong> dari Kasir Pintar.
                                 </p>
                             </div>
 
-                            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
                                 <a href="/register"
-                                    class="group bg-white text-green-700 hover:bg-green-100 px-10 py-6 rounded-3xl font-black text-xl shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20">
+                                    class="group 
+                                    bg-white text-green-700 hover:bg-green-100 
+                                    px-6 sm:px-8 lg:px-10 
+                                    py-4 sm:py-5 lg:py-6 
+                                    rounded-2xl sm:rounded-3xl 
+                                    font-bold sm:font-black 
+                                    text-base sm:text-lg lg:text-xl 
+                                    shadow-xl sm:shadow-2xl 
+                                    transform hover:-translate-y-1 sm:hover:-translate-y-2 
+                                    transition-all duration-500 
+                                    flex items-center justify-center gap-3 sm:gap-4 
+                                    w-full sm:w-auto 
+                                    min-w-0 sm:min-w-[220px] 
+                                    border-2 border-white/20">
+
                                     <span class="relative z-10">Mulai Gratis</span>
-                                    <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
+
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
 
-
+            {{-- slide 3 --}}
             <div class="carousel-slide w-full h-full flex-shrink-0 relative">
                 <div
                     class="w-full h-full bg-gradient-to-br from-emerald-900 via-green-800/80 to-green-900/90 relative overflow-hidden">
@@ -131,39 +191,69 @@
                     </div>
 
 
-                    <div class="relative z-20 h-full max-w-7xl mx-auto flex items-center px-6 lg:px-12">
-                        <div class="w-full lg:w-1/2 space-y-8 lg:pr-12">
-                            {{-- <div
-                                class="inline-flex items-center gap-3 px-6 py-3 bg-white/20 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
-                                <div class="w-3 h-3 bg-emerald-300 rounded-full shadow-lg"></div>
-                                <span class="text-sm font-bold text-white">1,5 Juta+ UMKM</span>
-                            </div> --}}
+                    <div class="relative z-20 h-full mx-auto flex items-center px-4 sm:px-6 lg:ml-32 lg:px-12">
+                        <div class="w-full lg:w-1/2 space-y-6 sm:space-y-8 lg:pr-12">
 
                             <div>
                                 <h1
-                                    class="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-white to-green-100/50 bg-clip-text text-transparent leading-[0.9] mb-6 drop-shadow-2xl">
-                                    Dukung Usaha Anda<br class="hidden md:block">
+                                    class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl 
+                                    font-black 
+                                    bg-gradient-to-r from-white via-white to-green-100/50 
+                                    bg-clip-text text-transparent 
+                                    leading-tight lg:leading-[0.9] 
+                                    mb-4 sm:mb-6 drop-shadow-2xl">
+
+                                    Dukung Usaha Anda
+
+                                    <br class="hidden sm:block">
+
                                     <span
-                                        class="block bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 bg-clip-text text-transparent drop-shadow-2xl">Dengan
-                                        Kasir Pintar</span>
+                                        class="block mt-2 sm:mt-0 
+                                        bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 
+                                        bg-clip-text text-transparent drop-shadow-2xl">
+                                        Dengan Kasir Pintar
+                                    </span>
                                 </h1>
-                                <p class="text-xl text-white/95 max-w-lg leading-relaxed font-medium drop-shadow-lg">
-                                    <span class="font-black text-green-100 text-2xl">1,5 juta UMKM</span> telah
-                                    mempercayakan Kasir Pintar untuk mengembangkan usaha mereka secara digital.
+
+                                <p
+                                    class="text-base sm:text-lg md:text-xl 
+                                    text-white/95 max-w-md sm:max-w-lg 
+                                    leading-relaxed font-medium drop-shadow-lg">
+
+                                    <span class="font-black text-green-100 text-lg sm:text-xl">
+                                        1,5 juta UMKM
+                                    </span>
+                                    telah mempercayakan Kasir Pintar untuk mengembangkan usaha mereka secara digital.
                                 </p>
                             </div>
 
-                            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
                                 <a href="/register"
-                                    class="group relative bg-white text-green-700 hover:bg-green-0 px-10 py-6 rounded-3xl font-black text-xl shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-4 text-lg min-w-[220px] border-2 border-white/20">
+                                    class="group relative 
+                                    bg-white text-green-700 hover:bg-green-100 
+                                    px-6 sm:px-8 lg:px-10 
+                                    py-4 sm:py-5 lg:py-6 
+                                    rounded-2xl sm:rounded-3xl 
+                                    font-bold sm:font-black 
+                                    text-base sm:text-lg lg:text-xl 
+                                    shadow-xl sm:shadow-2xl 
+                                    transform hover:-translate-y-1 sm:hover:-translate-y-2 
+                                    transition-all duration-500 
+                                    flex items-center justify-center gap-3 sm:gap-4 
+                                    w-full sm:w-auto 
+                                    min-w-0 sm:min-w-[220px] 
+                                    border-2 border-white/20 hover:border-green-200/50">
+
                                     <span class="relative z-10">Bergabung Sekarang</span>
-                                    <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
+
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -182,14 +272,29 @@
 
 
         <button
-            class="carousel-prev absolute left-8 top-1/2 -translate-y-1/2 w-16 h-16 bg-white/30 hover:bg-white/60 backdrop-blur-2xl rounded-3xl flex items-center justify-center text-white font-bold text-lg transition-all duration-400 hover:scale-110 shadow-2xl hover:shadow-white/40 border border-white/30 hover:border-white/50">
+            class="carousel-prev z-30
+                absolute bottom-4 left-4 
+                lg:top-1/2 lg:left-8 lg:bottom-auto lg:-translate-y-1/2
+                w-12 h-12 lg:w-16 lg:h-16
+                bg-white/30 hover:bg-white/60 backdrop-blur-2xl 
+                rounded-2xl lg:rounded-3xl 
+                flex items-center justify-center text-white 
+                transition-all duration-300 hover:scale-110 
+                shadow-2xl border border-white/30">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
             </svg>
         </button>
-
         <button
-            class="carousel-next absolute right-8 top-1/2 -translate-y-1/2 w-16 h-16 bg-white/30 hover:bg-white/60 backdrop-blur-2xl rounded-3xl flex items-center justify-center text-white font-bold text-lg transition-all duration-400 hover:scale-110 shadow-2xl hover:shadow-white/40 border border-white/30 hover:border-white/50">
+            class="carousel-next z-30
+                absolute bottom-4 right-4 
+                lg:top-1/2 lg:right-8 lg:bottom-auto lg:-translate-y-1/2
+                w-12 h-12 lg:w-16 lg:h-16
+                bg-white/30 hover:bg-white/60 backdrop-blur-2xl 
+                rounded-2xl lg:rounded-3xl 
+                flex items-center justify-center text-white 
+                transition-all duration-300 hover:scale-110 
+                shadow-2xl border border-white/30">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
             </svg>
@@ -388,12 +493,20 @@
 
     @media (max-width: 768px) {
 
+        .carousel-prev {
+            left: 4vw;
+            right: auto;
+        }
+
+        .carousel-next {
+            right: 4vw;
+            left: auto;
+        }
+
         .carousel-prev,
         .carousel-next {
             width: 12vw;
             height: 12vw;
-            left: 4vw;
-            right: 4vw;
         }
 
         .carousel-dot {

@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div class="mx-auto">
     <div
         class="marquee-wrappe md w-full bg-green-500 shadow-2xl border border-white/10 backdrop-blur-3xl overflow-hidden">
         <div class="marquee-track flex items-center h-15 whitespace-nowrap" id="marqueeTrack">
