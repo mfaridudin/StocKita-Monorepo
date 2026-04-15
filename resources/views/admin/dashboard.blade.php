@@ -64,7 +64,8 @@
                 </div>
 
                 {{-- total transaksi --}}
-                <div class="bg-white p-6 rounded-2xl border border-green-200 hover:border-green-500">
+                <div
+                    class="md:col-span-2 lg:col-span-1 bg-white p-6 rounded-2xl border border-green-200 hover:border-green-500">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col gap-2">
                             <p class="text-sm font-medium text-green-700 uppercase tracking-wide">Total Transactions</p>
