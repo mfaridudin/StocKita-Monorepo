@@ -11,7 +11,7 @@
         </div>
     </section>
 
-    <main class="max-w-4xl mx-auto px-6 py-16">
+    <main class="px-4 sm:px-6 max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
         <div class="space-y-10 leading-relaxed">
 
@@ -20,7 +20,6 @@
                 bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan layanan kami.
             </p>
 
-            <!-- SECTION -->
             <div>
                 <h3 class="text-xl font-semibold mb-2 text-gray-900">1. Informasi yang Dikumpulkan</h3>
                 <p class="text-gray-600">

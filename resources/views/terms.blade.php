@@ -10,7 +10,7 @@
         </div>
     </section>
 
-    <main class="max-w-4xl mx-auto px-6 py-16">
+    <main class="px-4 sm:px-6 max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
         <div class="space-y-10 leading-relaxed">
 
