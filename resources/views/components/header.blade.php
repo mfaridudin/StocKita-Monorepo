@@ -15,7 +15,8 @@
             </svg>
         </button>
 
-        <button id="toggleSidebar" class="md:hidden p-2 relative rounded-lg hover:bg-green-50">
+        <button id="toggleSidebar"
+            class="md:hidden w-10 h-10 items-center justify-center relative pointer-events-auto rounded-lg hover:bg-green-50">
             <svg class="w-6 h-6 text-gray-600 absolute inset-0 m-auto" fill="none" stroke="currentColor"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
