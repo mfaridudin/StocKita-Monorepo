@@ -1,5 +1,5 @@
 <aside id="sidebar"
-    class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-green-100 z-50 flex flex-col
+    class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-green-100 z-50 md:z-20 flex flex-col
     transform transition-transform duration-300
      will-change-[width]">
 
@@ -23,7 +23,7 @@
 
     </div>
 
-    <nav class="flex-1 px-4 py-6 space-y-1  shadow-">
+    <nav class="flex-1 px-4 py-6 space-y-1">
         @php $currentPath = request()->path(); @endphp
 
         @role('admin')
@@ -257,4 +257,4 @@
         @endif
     </nav>
 </aside>
-<div id="overlay" class="fixed inset-0 bg-black/30 z-40 hidden lg:hidden"></div>
+<div id="overlay" class="fixed inset-0 bg-black/30 z-40 md:z-[100] hidden lg:hidden"></div>

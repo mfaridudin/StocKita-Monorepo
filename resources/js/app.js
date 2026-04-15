@@ -85,34 +85,50 @@ document.addEventListener("DOMContentLoaded", () => {
         body.classList.remove("overflow-hidden");
     }
 
-    toggleSidebar?.addEventListener("click", openSidebar);
-    closeSidebar?.addEventListener("click", closeSidebarFn);
-    overlay?.addEventListener("click", closeSidebarFn);
+    let mm = gsap.matchMedia();
+
+    mm.add("(max-width: 767px)", () => {
+        toggleSidebar?.addEventListener("click", openSidebar);
+        closeSidebar?.addEventListener("click", closeSidebarFn);
+        overlay?.addEventListener("click", closeSidebarFn);
+
+        return () => {
+            toggleSidebar?.removeEventListener("click", openSidebar);
+            closeSidebar?.removeEventListener("click", closeSidebarFn);
+            overlay?.removeEventListener("click", closeSidebarFn);
+        };
+    });
 
     // dekstop
-    let mm = gsap.matchMedia();
+    let collapseHandler;
 
     mm.add("(min-width: 1024px)", () => {
 
         gsap.set(sidebar, { x: 0 });
         gsap.set(main, { paddingLeft: 256 });
+        gsap.to(iconMenu, { opacity: 1, scale: 1, duration: 0.2 });
 
-        toggleCollapse?.addEventListener("click", () => {
+        collapsed = false;
+
+        collapseHandler = () => {
             collapsed = !collapsed;
-
+            console.log('diklik')
             if (collapsed) {
                 collapseSidebar();
-
                 gsap.to(iconMenu, { opacity: 0, scale: 0.6, duration: 0.2 });
-                gsap.to(iconArrow, { opacity: 1, scale: 1, duration: 0.2 });
-
+                gsap.to(iconArrow, { opacity: 1, scale: 1, duration: 0.2, zIndex: 100 });
             } else {
                 expandSidebar();
-
-                gsap.to(iconArrow, { opacity: 0, scale: 0.6, duration: 0.2 });
+                gsap.to(iconArrow, { opacity: 0, scale: 0.6, duration: 0.2, zIndex: 100 });
                 gsap.to(iconMenu, { opacity: 1, scale: 1, duration: 0.2 });
             }
-        });
+        };
+
+        toggleCollapse?.addEventListener("click", collapseHandler);
+
+        return () => {
+            toggleCollapse?.removeEventListener("click", collapseHandler);
+        };
 
         function collapseSidebar() {
             gsap.to(texts, {
@@ -191,33 +207,146 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // hover
-        sidebar.addEventListener("mouseenter", () => {
-            if (!collapsed) return;
+        // sidebar.addEventListener("mouseenter", () => {
+        //     if (!collapsed) return;
 
 
-            gsap.to(iconArrow, { opacity: 0, scale: 0.6, duration: 0.2 });
-            gsap.to(iconMenu, { opacity: 1, scale: 1, duration: 0.2 });
+        //     gsap.to(iconArrow, { opacity: 0, scale: 0.6, duration: 0.2, zIndex: 100 });
+        //     gsap.to(iconMenu, { opacity: 1, scale: 1, duration: 0.2 });
 
 
-            clearTimeout(hoverTimeout);
+        //     clearTimeout(hoverTimeout);
 
-            hoverTimeout = setTimeout(() => {
-                expandSidebar();
-            }, 100);
-        });
+        //     hoverTimeout = setTimeout(() => {
+        //         expandSidebar();
+        //     }, 100);
+        // });
 
-        sidebar.addEventListener("mouseleave", () => {
-            if (!collapsed) return;
+        // sidebar.addEventListener("mouseleave", () => {
+        //     if (!collapsed) return;
 
-            gsap.to(iconMenu, { opacity: 0, scale: 0.6, duration: 0.2 });
-            gsap.to(iconArrow, { opacity: 1, scale: 1, duration: 0.2 });
+        //     gsap.to(iconMenu, { opacity: 0, scale: 0.6, duration: 0.2 });
+        //     gsap.to(iconArrow, { opacity: 1, scale: 1, duration: 0.2, zIndex: 100 });
 
-            hoverTimeout = setTimeout(() => {
-                collapseSidebar();
-            }, 150);
-        });
+        //     hoverTimeout = setTimeout(() => {
+        //         collapseSidebar();
+        //     }, 150);
+        // });
 
-        return () => { };
+        // return () => { };
     });
 
+    // tablet
+    mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
+        gsap.set(sidebar, { x: 0 });
+
+        gsap.set(sidebar, { width: 80 });
+        gsap.set(main, { paddingLeft: 80 });
+
+        gsap.set(texts, { opacity: 0, x: -10 });
+        gsap.set(titles, { opacity: 0, height: 0, marginTop: 0 });
+        gsap.set(groups, { marginTop: 0 });
+        gsap.to(iconArrow, { opacity: 1, scale: 1, duration: 0.2, zIndex: 100 });
+
+        collapsed = true;
+
+        function expandSidebar() {
+            gsap.to(sidebar, {
+                x: 0,
+                width: 256,
+                duration: 0.3,
+                ease: "power3.out"
+            });
+
+            gsap.to(main, {
+                duration: 0.2,
+                ease: "power3.inOut"
+            });
+
+            gsap.to(texts, {
+                opacity: 1,
+                x: 0,
+                duration: 0.2,
+                stagger: 0.03
+            });
+
+            gsap.to(overlay, {
+                opacity: 1,
+                display: "block",
+                duration: 0.2
+            });
+
+            gsap.to(titles, {
+                opacity: 1,
+                height: "auto",
+                duration: 0.2,
+                stagger: 0.03
+            });
+
+            gsap.to(groups, {
+                marginTop: 12,
+                duration: 0.2
+            });
+
+            sidebar.style.zIndex = 200;
+
+            collapsed = false;
+        }
+
+        function collapseSidebar() {
+            gsap.to(texts, {
+                opacity: 0,
+                x: -10,
+                duration: 0.1
+            });
+
+            gsap.to(sidebar, {
+                width: 80,
+                duration: 0.2,
+                ease: "power3.inOut"
+            });
+
+            gsap.to(main, {
+                duration: 0.2,
+                ease: "power3.inOut"
+            });
+
+            gsap.to(overlay, {
+                opacity: 0,
+                duration: 0.2,
+                onComplete: () => {
+                    overlay.style.display = "none";
+                }
+            });
+
+            gsap.to(titles, {
+                opacity: 0,
+                height: 0,
+                marginTop: 0,
+                duration: 0.15
+            });
+
+            gsap.to(groups, {
+                marginTop: 0,
+                duration: 0.2
+            });
+
+            sidebar.style.zIndex = 50;
+
+            collapsed = true;
+        }
+
+        // toggle
+        closeSidebar?.addEventListener("click", () => collapseSidebar());
+        toggleCollapse?.addEventListener("click", () => {
+            collapsed = !collapsed;
+
+            if (collapsed) {
+                collapseSidebar();
+            } else {
+                expandSidebar();
+            }
+        });
+        return () => { };
+    });
 });
