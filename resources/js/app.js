@@ -377,4 +377,294 @@ document.addEventListener("DOMContentLoaded", () => {
             sidebar.removeEventListener("mouseleave", handleMouseLeave);
         };
     });
+
+    // landingpage
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('mobileMenu');
+    const menuLinks = document.querySelectorAll('#mobileMenu a');
+    const menuIcon = document.getElementById("menuIcon");
+    const closeIcon = document.getElementById("closeIcon");
+
+    let isOpen = false;
+
+    function closeMobileMenu() {
+        if (!isOpen) return;
+
+        gsap.to(menu, {
+            height: 0,
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.in",
+            onComplete: () => {
+                menu.classList.add('hidden');
+            }
+        });
+
+        gsap.to(menuIcon, { opacity: 1, scale: 1, duration: 0.2 });
+        gsap.to(closeIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
+
+        isOpen = false;
+    }
+
+    menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+    });
+
+    toggle.addEventListener('click', () => {
+        if (!isOpen) {
+            menu.classList.remove('hidden');
+
+            gsap.fromTo(menu, {
+                height: 0,
+                opacity: 0
+            }, {
+                height: "auto",
+                opacity: 1,
+                duration: 0.4,
+                ease: "power2.out"
+            });
+
+            gsap.to(menuIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
+            gsap.to(closeIcon, { opacity: 1, scale: 1, duration: 0.2 });
+
+        } else {
+            gsap.to(menu, {
+                height: 0,
+                opacity: 0,
+                duration: 0.3,
+                ease: "power2.in",
+                onComplete: () => {
+                    menu.classList.add('hidden');
+                }
+            });
+
+            gsap.to(menuIcon, { opacity: 1, scale: 1, duration: 0.2 });
+            gsap.to(closeIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
+        }
+
+        isOpen = !isOpen;
+    });
+});
+
+// search
+window.closeMobileMenu = function () {
+    const menu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById("menuIcon");
+    const closeIcon = document.getElementById("closeIcon");
+
+    if (!menu || menu.classList.contains('hidden')) return;
+
+    gsap.to(menu, {
+        height: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.in",
+        onComplete: () => {
+            menu.classList.add('hidden');
+        }
+    });
+
+    gsap.to(menuIcon, { opacity: 1, scale: 1, duration: 0.2 });
+    gsap.to(closeIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
+};
+
+const inputs = document.querySelectorAll('#searchInput');
+const clearBtns = document.querySelectorAll('#clearSearch');
+const resultsBoxes = document.querySelectorAll('#searchResults');
+
+inputs.forEach((input, i) => {
+    const clearBtn = clearBtns[i];
+    const resultsBox = resultsBoxes[i];
+
+    let currentResults = [];
+    let activeIndex = -1;
+    let debounceTimer;
+
+    input.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(() => {
+            handleSearch(this.value);
+        }, 200);
+    });
+
+    function handleSearch(keyword) {
+        keyword = keyword.toLowerCase();
+
+        resultsBox.innerHTML = '';
+        resultsBox.classList.add('hidden');
+        removeHighlights();
+
+        activeIndex = -1;
+        currentResults = [];
+
+        if (keyword.length > 0) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+
+        if (keyword.length < 2) return;
+
+        const elements = document.querySelectorAll('h1, h2, h3, p, span, a, li');
+
+        elements.forEach(el => {
+            const text = el.innerText.toLowerCase();
+
+            if (text.includes(keyword)) {
+                currentResults.push({
+                    element: el,
+                    text: el.innerText
+                });
+
+                highlightWord(el, keyword);
+            }
+        });
+
+        renderResults(keyword);
+    }
+
+    function renderResults(keyword) {
+        if (currentResults.length === 0) {
+            resultsBox.innerHTML = `<div class="p-3 text-sm text-gray-500">Tidak ditemukan</div>`;
+        } else {
+            currentResults.slice(0, 5).forEach((res, index) => {
+                const item = document.createElement('div');
+                item.className = 'p-3 text-sm cursor-pointer rounded-lg';
+
+                item.innerHTML = createSnippet(res.text, keyword)
+                    .replace(new RegExp(`(${keyword})`, 'gi'),
+                        '<span class="bg-yellow-200 rounded">$1</span>');
+
+                item.addEventListener('click', () => {
+                    scrollToElement(res.element);
+                });
+
+                resultsBox.appendChild(item);
+            });
+        }
+
+        resultsBox.classList.remove('hidden');
+    }
+
+    input.addEventListener('keydown', function (e) {
+        const items = resultsBox.querySelectorAll('div');
+
+        if (items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % items.length;
+            updateActive(items);
+        }
+
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + items.length) % items.length;
+            updateActive(items);
+        }
+
+        if (e.key === 'Enter') {
+            e.preventDefault();
+
+            if (activeIndex >= 0) {
+                items[activeIndex].click();
+            } else {
+                items[0].click();
+            }
+        }
+    });
+
+    function updateActive(items) {
+        items.forEach((item, index) => {
+            item.classList.remove('bg-emerald-100');
+
+            if (index === activeIndex) {
+                item.classList.add('bg-emerald-100');
+            }
+        });
+    }
+
+    function scrollToElement(el) {
+        const yOffset = -100;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({
+            top: y,
+            behavior: 'instant'
+        });
+
+        resultsBox.classList.add('hidden');
+
+        if (window.closeMobileMenu) {
+            window.closeMobileMenu();
+        }
+    }
+
+    function highlightWord(element, keyword) {
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        const nodes = [];
+
+        while (walker.nextNode()) {
+            nodes.push(walker.currentNode);
+        }
+
+        nodes.forEach(node => {
+            const text = node.nodeValue;
+            const lower = text.toLowerCase();
+
+            if (lower.includes(keyword)) {
+                const span = document.createElement('span');
+                const regex = new RegExp(`(${keyword})`, 'gi');
+
+                span.innerHTML = text.replace(regex,
+                    `<mark class="bg-yellow-200/50 rounded">$1</mark>`);
+
+                node.replaceWith(span);
+            }
+        });
+    }
+
+    function removeHighlights() {
+        document.querySelectorAll('mark').forEach(mark => {
+            const parent = mark.parentNode;
+            parent.replaceWith(document.createTextNode(parent.innerText));
+        });
+    }
+
+    function createSnippet(text, keyword) {
+        const lower = text.toLowerCase();
+        const index = lower.indexOf(keyword);
+
+        if (index === -1) return text.substring(0, 50) + '...';
+
+        const start = Math.max(index - 20, 0);
+        const end = Math.min(index + keyword.length + 20, text.length);
+
+        let snippet = text.substring(start, end);
+
+        if (start > 0) snippet = '...' + snippet;
+        if (end < text.length) snippet = snippet + '...';
+
+        return snippet;
+    }
+
+    clearBtn.addEventListener('click', function () {
+        input.value = '';
+        resultsBox.innerHTML = '';
+        resultsBox.classList.add('hidden');
+
+        removeHighlights();
+
+        clearBtn.classList.add('hidden');
+        input.focus();
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!resultsBox.contains(e.target) && e.target !== input) {
+            resultsBox.classList.add('hidden');
+        }
+    });
 });

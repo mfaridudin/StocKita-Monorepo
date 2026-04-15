@@ -59,7 +59,7 @@
     {{-- header --}}
     <header id="header"
         class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-slate-200/50">
-        <nav class="max-w-7xl mx-auto py-4 flex items-center justify-between">
+        <nav class="max-w-7xl px-3 md:px-6 mx-auto py-4 flex items-center justify-between">
             {{-- logo --}}
             <a href="/" class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg">
@@ -74,7 +74,7 @@
             </a>
 
             {{-- nav --}}
-            <ul class="hidden md:flex items-center gap-8 mx-auto">
+            <ul class="hidden lg:flex items-center gap-8 mx-auto">
                 <li>
                     <a href="#home"
                         class="text-slate-700 hover:text-emerald-600 font-medium px-3 py-2 rounded-lg transition-all group hover:bg-emerald-50">Home
@@ -97,7 +97,6 @@
                     </a>
                 </li>
             </ul>
-
             <div class="flex items-center gap-4">
                 <div class="relative hidden lg:block group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -131,12 +130,64 @@
                         Masuk
                     </a>
                 </div>
-                <button
-                    class="p-3 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all lg:hidden">
-                    <i class="fas fa-bars text-xl"></i>
+
+                <button id="menuToggle"
+                    class="flex w-10 h-10 items-center justify-center relative z-[999] pointer-events-auto rounded-lg hover:bg-green-50 lg:hidden">
+                    <svg id="menuIcon" class="w-6 h-6 text-gray-600 absolute opacity-1 pointer-events-none"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+
+                    <svg id="closeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-600 absolute opacity-0 pointer-events-none">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
                 </button>
             </div>
         </nav>
+
+        {{-- mobile menu --}}
+        <div id="mobileMenu" class="lg:hidden hidden px-4 pb-4 bg-white border-t border-slate-200 shadow-md">
+
+            <ul class="flex flex-col gap-2 mt-3">
+                <li><a href="#home" class="block py-2 text-slate-700 hover:text-emerald-600">Home</a></li>
+                <li><a href="#features" class="block py-2 text-slate-700 hover:text-emerald-600">Fitur</a></li>
+                <li><a href="#blog" class="block py-2 text-slate-700 hover:text-emerald-600">Panduan</a></li>
+                <li><a href="#offer" class="block py-2 text-slate-700 hover:text-emerald-600">Harga</a></li>
+            </ul>
+
+            {{-- Search mobile --}}
+            <div class="relative w-full lg:hidden group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6 absolute left-4 top-1/2 -translate-y-1/2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+
+                <input id="searchInput" type="text" placeholder="Cari..."
+                    class="pl-12 pr-4 py-3 bg-slate-100 w-full border border-green-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-white transition-all duration-200 shadow-sm group-hover:shadow-md">
+
+                <button id="clearSearch"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center hidden transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <div id="searchResults"
+                    class="absolute mt-2 w-full bg-white shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50">
+                </div>
+            </div>
+
+            {{-- Button --}}
+            <div class="flex gap-3 mt-4 md:hidden">
+                <a href="/register"
+                    class="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl">Daftar</a>
+                <a href="/login" class="flex-1 text-center px-4 py-2 bg-amber-500 text-white rounded-xl">Masuk</a>
+            </div>
+        </div>
     </header>
 
     <x-carousel />
@@ -156,194 +207,7 @@
     <x-footer />
 
     <x-cookie-consent />
-    <script>
-        const input = document.getElementById('searchInput');
-        const clearBtn = document.getElementById('clearSearch');
-        const resultsBox = document.getElementById('searchResults');
-
-        let currentResults = [];
-        let activeIndex = -1;
-        let debounceTimer;
-
-        input.addEventListener('input', function() {
-            clearTimeout(debounceTimer);
-
-            debounceTimer = setTimeout(() => {
-                handleSearch(this.value);
-            }, 200);
-        });
-
-        function handleSearch(keyword) {
-            keyword = keyword.toLowerCase();
-
-            resultsBox.innerHTML = '';
-            resultsBox.classList.add('hidden');
-            removeHighlights();
-
-            activeIndex = -1;
-            currentResults = [];
-
-            if (keyword.length > 0) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
-
-            if (keyword.length < 2) return;
-
-            const elements = document.querySelectorAll('h1, h2, h3, p, span, a, li');
-
-            elements.forEach(el => {
-                const text = el.innerText.toLowerCase();
-
-                if (text.includes(keyword)) {
-                    currentResults.push({
-                        element: el,
-                        text: el.innerText
-                    });
-
-                    highlightWord(el, keyword);
-                }
-            });
-
-            renderResults(keyword);
-        }
-
-        function renderResults(keyword) {
-            if (currentResults.length === 0) {
-                resultsBox.innerHTML = `<div class="p-3 text-sm text-gray-500">Tidak ditemukan</div>`;
-            } else {
-                currentResults.slice(0, 5).forEach((res, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'p-3 text-sm cursor-pointer rounded-lg';
-
-                    item.innerHTML = createSnippet(res.text, keyword)
-                        .replace(new RegExp(`(${keyword})`, 'gi'),
-                            '<span class="bg-yellow-200 rounded">$1</span>');
-
-                    item.addEventListener('click', () => {
-                        scrollToElement(res.element);
-                    });
-
-                    resultsBox.appendChild(item);
-                });
-            }
-
-            resultsBox.classList.remove('hidden');
-        }
-
-        input.addEventListener('keydown', function(e) {
-            const items = resultsBox.querySelectorAll('div');
-
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                activeIndex = (activeIndex + 1) % items.length;
-                updateActive(items);
-            }
-
-            if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                activeIndex = (activeIndex - 1 + items.length) % items.length;
-                updateActive(items);
-            }
-
-            if (e.key === 'Enter') {
-                e.preventDefault();
-
-                if (items.length === 0) return;
-
-                if (activeIndex >= 0) {
-                    items[activeIndex].click();
-                } else {
-                    items[0].click(); // default ke hasil pertama
-                }
-            }
-        });
-
-        function updateActive(items) {
-            items.forEach((item, index) => {
-                item.classList.remove('bg-emerald-100');
-
-                if (index === activeIndex) {
-                    item.classList.add('bg-emerald-100');
-                }
-            });
-        }
-
-        function scrollToElement(el) {
-            el.scrollIntoView({
-                behavior: 'instant',
-                block: 'center'
-            });
-
-            resultsBox.classList.add('hidden');
-        }
-
-        function highlightWord(element, keyword) {
-            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-            const nodes = [];
-
-            while (walker.nextNode()) {
-                nodes.push(walker.currentNode);
-            }
-
-            nodes.forEach(node => {
-                const text = node.nodeValue;
-                const lower = text.toLowerCase();
-
-                if (lower.includes(keyword)) {
-                    const span = document.createElement('span');
-                    const regex = new RegExp(`(${keyword})`, 'gi');
-
-                    span.innerHTML = text.replace(regex,
-                        `<mark class="bg-yellow-200/50 rounded">$1</mark>`);
-
-                    node.replaceWith(span);
-                }
-            });
-        }
-
-        function removeHighlights() {
-            document.querySelectorAll('mark').forEach(mark => {
-                const parent = mark.parentNode;
-                parent.replaceWith(document.createTextNode(parent.innerText));
-            });
-        }
-
-        function createSnippet(text, keyword) {
-            const lower = text.toLowerCase();
-            const index = lower.indexOf(keyword);
-
-            if (index === -1) return text.substring(0, 50) + '...';
-
-            const start = Math.max(index - 20, 0);
-            const end = Math.min(index + keyword.length + 20, text.length);
-
-            let snippet = text.substring(start, end);
-
-            if (start > 0) snippet = '...' + snippet;
-            if (end < text.length) snippet = snippet + '...';
-
-            return snippet;
-        }
-
-        clearBtn.addEventListener('click', function() {
-            input.value = '';
-            resultsBox.innerHTML = '';
-            resultsBox.classList.add('hidden');
-
-            removeHighlights();
-
-            clearBtn.classList.add('hidden');
-            input.focus();
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!resultsBox.contains(e.target) && e.target !== input) {
-                resultsBox.classList.add('hidden');
-            }
-        });
-    </script>
+    <script></script>
 </body>
 
 </html>
