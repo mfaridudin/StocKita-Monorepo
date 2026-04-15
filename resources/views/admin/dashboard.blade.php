@@ -87,9 +87,9 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-6 mb-6">
                 <div
-                    class="bg-white justify-between flex flex-col p-6 rounded-2xl col-span-2 border shadow-sm transition group">
+                    class="bg-white justify-between flex flex-col p-6 rounded-2xl lg:col-span-2 border shadow-sm transition group">
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <p class="text-sm text-gray-500">Total Revenue</p>
@@ -114,7 +114,7 @@
                     <canvas id="miniRevenueChart"></canvas>
                 </div>
 
-                <div class="bg-white p-6 col-span-3 rounded-2xl border">
+                <div class="bg-white p-6 lg:col-span-3 rounded-2xl border">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-semibold">Trend Revenue & Orders</h3>
 
