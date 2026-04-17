@@ -1,11 +1,12 @@
-<header id="headerDashboard"
+<header x-data="{ openDropdown: null }" id="headerDashboard"
     class="h-16 fixed top-0 left-0 md:left-64 right-0 z-50 bg-white border-b border-green-100 flex items-center justify-between px-3 md:px-6">
     <div class="flex items-center gap-4">
         <button id="toggleCollapse"
             class="hidden md:flex w-10 h-10 items-center justify-center relative z-[999] pointer-events-auto rounded-lg hover:bg-green-50">
             <svg id="iconMenu" class="w-6 h-6 text-gray-600 absolute md:opacity-0 lg:opacity-1 pointer-events-none"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
             </svg>
 
             <svg id="iconArrow" class="w-6 h-6 text-gray-600 absolute opacity-0 pointer-events-none"
@@ -36,7 +37,8 @@
         @include('partials.notifications')
 
         <div class="relative group inline-block">
-            <button class="flex items-center gap-2 p-2 rounded-lg hover:bg-green-50">
+            <button @click.stop="openDropdown = openDropdown === 'profile' ? null : 'profile'"
+                class="flex items-center gap-2 p-2 rounded-lg hover:bg-green-50">
                 <div
                     class="w-8 h-8 bg-green-500 text-white flex items-center justify-center rounded-full text-sm font-semibold">
                     {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
@@ -46,8 +48,8 @@
                 </span>
             </button>
 
-            <div
-                class="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible scale-95 group-hover:scale-100 transition-all duration-200 origin-top-right border-b-0 overflow-hidden">
+            <div x-show="openDropdown === 'profile'" @click.outside="openDropdown = null" @click.stop x-transition
+                class="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl origin-top-right overflow-hidden">
 
                 <div x-data class="py-2 space-y-1">
                     <a href="/profile"
