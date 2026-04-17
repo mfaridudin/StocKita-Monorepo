@@ -220,7 +220,7 @@
                             toast: true,
                             icon: 'error',
                             position: 'top-end',
-                            title: 'Terjadi kesalahan dibackend, cek console',
+                            title: 'Terjadi error pada system, tunggu beberapa saat untuk mencoba lagi',
                             showConfirmButton: false,
                             timer: 3000
                         });

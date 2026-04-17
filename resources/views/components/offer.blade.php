@@ -278,7 +278,7 @@
                     Swal.fire({
                         toast: true,
                         icon: 'error',
-                        position: 'top-end',
+                        position: 'Terjadi error pada system, tunggu beberapa saat untuk mencoba lagi',
                         title: 'Terjadi error',
                         showConfirmButton: false,
                         timer: 3000
