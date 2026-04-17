@@ -174,7 +174,7 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-medium">Nama</label>
+                        <label class="text-sm font-medium">Nama <span class="text-red-500">*</span></label>
                         <input type="text" name="name" x-ref="categoryInput"
                             class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
@@ -227,7 +227,7 @@
                 @method('PUT')
 
                 <div>
-                    <label class="text-sm font-medium">Nama</label>
+                    <label class="text-sm font-medium">Nama <span class="text-red-500">*</span></label>
                     <input type="text" name="name" x-model="categoryName" x-ref="categoryInput"
                         class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                     <x-input-error :messages="$errors->editCategory->get('name')" class="mt-2 text-red-500 text-sm" />

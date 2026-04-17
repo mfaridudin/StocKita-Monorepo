@@ -1,7 +1,7 @@
 <x-app-layout title="Detail Toko">
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 let type =
                     "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
 
@@ -14,7 +14,7 @@
                     timer: 3000
                 });
             });
-        </script>
+    </script>
     @endif
 
     <div class="space-y-8">
@@ -147,14 +147,14 @@
                     {{-- OWNER --}}
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium">Pemilik</label>
+                            <label class="text-sm font-medium">Pemilik <span class="text-red-500">*</span></label>
                             <input type="text" name="owner_name" class="w-full mt-1 px-4 py-2 border rounded-lg"
                                 value="{{ old('owner_name', $store->owner->name) }}">
                             <x-input-error :messages="$errors->get('owner_name')" />
                         </div>
 
                         <div>
-                            <label class="text-sm font-medium">Email Pemilik</label>
+                            <label class="text-sm font-medium">Email Pemilik <span class="text-red-500">*</span></label>
                             <input type="email" name="owner_email" class="w-full mt-1 px-4 py-2 border rounded-lg"
                                 value="{{ old('owner_email', $store->owner->email) }}">
                             <x-input-error :messages="$errors->get('owner_email')" />
@@ -164,14 +164,14 @@
                     {{-- STORE --}}
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium">Nama Toko</label>
+                            <label class="text-sm font-medium">Nama Toko <span class="text-red-500">*</span></label>
                             <input type="text" name="name" class="w-full mt-1 px-4 py-2 border rounded-lg"
                                 value="{{ old('name', $store->name) }}">
                             <x-input-error :messages="$errors->get('name')" />
                         </div>
 
                         <div>
-                            <label class="text-sm font-medium">Email Toko</label>
+                            <label class="text-sm font-medium">Email Toko <span class="text-red-500">*</span></label>
                             <input type="email" name="email" class="w-full mt-1 px-4 py-2 border rounded-lg"
                                 value="{{ old('email', $store->email) }}">
                             <x-input-error :messages="$errors->get('email')" />
@@ -189,7 +189,8 @@
                     {{-- ADDRESS --}}
                     <div>
                         <label class="text-sm font-medium">Alamat</label>
-                        <textarea name="address" class="w-full mt-1 px-4 py-2 border rounded-lg">{{ old('address', $store->address) }}</textarea>
+                        <textarea name="address"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg">{{ old('address', $store->address) }}</textarea>
                         <x-input-error :messages="$errors->get('address')" />
                     </div>
 

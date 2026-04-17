@@ -146,7 +146,7 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-medium">Toko</label>
+                        <label class="text-sm font-medium">Toko <span class="text-red-500">*</span></label>
                         <select name="store_id" x-model="storeId"
                             class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
 
@@ -164,21 +164,21 @@
 
 
                     <div>
-                        <label class="text-sm font-medium">Nama Gudang</label>
+                        <label class="text-sm font-medium">Nama Gudang <span class="text-red-500">*</span></label>
                         <input type="text" name="name" value="{{ old('name') }}"
                             class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
                     </div>
 
                     <div>
-                        <label class="text-sm font-medium">Lokasi</label>
+                        <label class="text-sm font-medium">Lokasi <span class="text-red-500">*</span></label>
                         <input type="text" name="location" value="{{ old('location') }}"
                             class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->get('location')" class="mt-2 text-red-500 text-sm" />
                     </div>
 
                     <div>
-                        <label class="text-sm font-medium">Deskripsi</label>
+                        <label class="text-sm font-medium">Deskripsi <span class="text-red-500">*</span></label>
                         <textarea name="description" class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">{{ old('description') }}</textarea>
                         <x-input-error :messages="$errors->get('description')" class="mt-2 text-red-500 text-sm" />
                     </div>

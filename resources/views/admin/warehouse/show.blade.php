@@ -4,8 +4,8 @@
     </script>
 
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 let type =
                     "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
 
@@ -18,7 +18,7 @@
                     timer: 3000
                 });
             });
-        </script>
+    </script>
     @endif
 
     <div class="space-y-6">
@@ -51,8 +51,7 @@
 
                 <div x-data class="w-full sm:w-auto">
                     @can('manage stock movement')
-                        <button
-                            @click="if (!canManageStockMovement) {
+                    <button @click="if (!canManageStockMovement) {
                         Swal.fire({
                             toast: true,
                             icon: 'error',
@@ -63,20 +62,19 @@
                         });
                     } else {
                         $dispatch('open-modal', {name:'create-stock'})
-                    }"
-                            class="w-full sm:w-auto justify-center px-4 py-3 text-sm sm:text-base
+                    }" class="w-full sm:w-auto justify-center px-4 py-3 text-sm sm:text-base
                     rounded-xl flex items-center gap-2 text-white font-semibold
                     {{ auth()->user()->can('manage stock movement')
                         ? 'bg-green-500 hover:scale-[1.02] active:scale-95 transition'
                         : 'bg-green-200 cursor-not-allowed' }}">
 
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
 
-                            Tambah Barang
-                        </button>
+                        Tambah Barang
+                    </button>
                     @endcan
                 </div>
 
@@ -111,90 +109,87 @@
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
 
             @forelse ($stocks as $stock)
-                <div class="bg-white border rounded-xl overflow-hidden group">
+            <div class="bg-white border rounded-xl overflow-hidden group">
 
-                    <div class="relative aspect-[4/3] bg-gray-100">
+                <div class="relative aspect-[4/3] bg-gray-100">
 
-                        <img src="{{ asset('storage/' . $stock->product->image) }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition">
+                    <img src="{{ asset('storage/' . $stock->product->image) }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition">
 
-                        <!-- QTY -->
-                        <span
-                            class="absolute top-2 left-2 text-xs font-bold bg-green-500 text-white px-2 py-1 rounded-lg">
-                            {{ $stock->qty }}
-                        </span>
+                    <!-- QTY -->
+                    <span class="absolute top-2 left-2 text-xs font-bold bg-green-500 text-white px-2 py-1 rounded-lg">
+                        {{ $stock->qty }}
+                    </span>
 
-                        <div x-data="{ open: false }" class="absolute top-2 right-2">
+                    <div x-data="{ open: false }" class="absolute top-2 right-2">
 
-                            <button @click="open = !open"
-                                class="w-6 h-6 flex items-center justify-center bg-black/40 text-white rounded-lg">
-                                ⋮
+                        <button @click="open = !open"
+                            class="w-6 h-6 flex items-center justify-center bg-black/40 text-white rounded-lg">
+                            ⋮
+                        </button>
+
+                        <div x-show="open" @click.outside="open=false"
+                            class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow border text-xs z-50">
+
+                            <button
+                                @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} }); open=false"
+                                class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-green-50 text-green-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="size-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                                Tambah
                             </button>
 
-                            <div x-show="open" @click.outside="open=false"
-                                class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow border text-xs z-50">
-
-                                <button
-                                    @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} }); open=false"
-                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-green-50 text-green-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-3">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 4.5v15m7.5-7.5h-15" />
-                                    </svg>
-                                    Tambah
-                                </button>
-
-                                <button
-                                    @click="$dispatch('open-modal', { 
+                            <button @click="$dispatch('open-modal', { 
                                         name: 'reduce-stock', 
                                         id: {{ $stock->id }}, 
                                         max: {{ $stock->qty }} 
                                     }); open=false"
-                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-yellow-50 text-yellow-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-3">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
-                                    </svg>
-                                    Kurangi
-                                </button>
+                                class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-yellow-50 text-yellow-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="size-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                                </svg>
+                                Kurangi
+                            </button>
 
-                                <button
-                                    @click="$dispatch('open-modal', { name: 'delete-stock', id: {{ $stock->id }} }); open=false"
-                                    class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-red-50 text-red-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="size-3">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                    </svg>
-                                    Hapus
-                                </button>
+                            <button
+                                @click="$dispatch('open-modal', { name: 'delete-stock', id: {{ $stock->id }} }); open=false"
+                                class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-red-50 text-red-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="size-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>
+                                Hapus
+                            </button>
 
-                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="p-3">
+                <div class="p-3">
 
-                        <h3 class="text-sm font-semibold truncate">
-                            {{ $stock->product->name }}
-                        </h3>
+                    <h3 class="text-sm font-semibold truncate">
+                        {{ $stock->product->name }}
+                    </h3>
 
-                        <p class="text-xs text-gray-500">
-                            {{ $stock->product->sku }}
-                        </p>
+                    <p class="text-xs text-gray-500">
+                        {{ $stock->product->sku }}
+                    </p>
 
-                        <p class="text-sm font-bold text-green-600 mt-1">
-                            Rp {{ number_format($stock->product->price, 0, ',', '.') }}
-                        </p>
-
-                    </div>
+                    <p class="text-sm font-bold text-green-600 mt-1">
+                        Rp {{ number_format($stock->product->price, 0, ',', '.') }}
+                    </p>
 
                 </div>
+
+            </div>
             @empty
-                <div class="col-span-full text-center text-gray-400 py-10">
-                    Belum ada produk di gudang ini
-                </div>
+            <div class="col-span-full text-center text-gray-400 py-10">
+                Belum ada produk di gudang ini
+            </div>
             @endforelse
 
         </div>
@@ -220,21 +215,22 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-medium">Produk</label>
+                        <label class="text-sm font-medium">Produk <span class="text-red-500">*</span></label>
                         <select name="product_id"
                             class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                             <option value="">--- Pilih Produk ---</option>
                             @foreach ($products as $product)
-                                <option value="{{ $product->id }}">
-                                    {{ $product->name }}
-                                </option>
+                            <option value="{{ $product->id }}">
+                                {{ $product->name }}
+                            </option>
                             @endforeach
                         </select>
-                        <x-input-error :messages="$errors->createStock->get('product_id')" class="mt-2 text-red-500 text-sm" />
+                        <x-input-error :messages="$errors->createStock->get('product_id')"
+                            class="mt-2 text-red-500 text-sm" />
                     </div>
 
                     <div>
-                        <label class="text-sm font-medium">Jumlah</label>
+                        <label class="text-sm font-medium">Jumlah <span class="text-red-500">*</span></label>
                         <input type="number" name="qty"
                             class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->createStock->get('qty')" class="mt-2 text-red-500 text-sm" />
@@ -258,12 +254,10 @@
 
     {{-- add stock --}}
     <x-modal name="add-stock" maxWidth="md" :show="session('open_modal') === 'add-stock'">
-        <div x-data="{ stockId: null }"
-            x-on:open-modal.window="
+        <div x-data="{ stockId: null }" x-on:open-modal.window="
             if ($event.detail.name === 'add-stock') {
                 stockId = $event.detail.id
-            }"
-            class="p-6">
+            }" class="p-6">
 
             <form :action="`/admin/stocks/${stockId}`" method="POST">
                 @csrf
@@ -271,8 +265,7 @@
 
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold">Tambah Stok</h3>
-                    <button type="button"
-                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'add-stock')">
+                    <button type="button" @click="$el.closest('form').reset(); $dispatch('close-modal', 'add-stock')">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12">
@@ -283,9 +276,8 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-medium">Masukan Stok</label>
-                        <input type="number" name="qty" value="{{ old('qty') }}"
-                            placeholder="Masukan Angka"
+                        <label class="text-sm font-medium">Masukan Stok <span class="text-red-500">*</span></label>
+                        <input type="number" name="qty" value="{{ old('qty') }}" placeholder="Masukan Angka"
                             class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->addStock->get('qty')" class="mt-2 text-red-500 text-sm" />
                     </div>
@@ -318,15 +310,13 @@
                     if (value < 1) this.qty = 1
                 })
             }
-        }"
-            x-on:open-modal.window="
+        }" x-on:open-modal.window="
         if ($event.detail.name === 'reduce-stock') {
             stockId = $event.detail.id
             max = $event.detail.max ?? 0
 
             qty = max
-        }"
-            class="p-6">
+        }" class="p-6">
 
             <form :action="`/admin/stocks/${stockId}/reduce`" method="POST">
                 @csrf
@@ -386,12 +376,10 @@
 
     {{-- modal hapus --}}
     <x-modal name="delete-stock" maxWidth="md">
-        <div x-data="{ stockId: null }"
-            x-on:open-modal.window="
+        <div x-data="{ stockId: null }" x-on:open-modal.window="
             if ($event.detail.name === 'delete-stock') {
                 stockId = $event.detail.id
-            }"
-            class="p-6">
+            }" class="p-6">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
                     Hapus Stok Produk

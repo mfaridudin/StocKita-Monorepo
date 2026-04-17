@@ -5,8 +5,8 @@
     </script>
 
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 let type =
                     "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
 
@@ -19,7 +19,7 @@
                     timer: 3000
                 });
             });
-        </script>
+    </script>
     @endif
     <div class="space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
@@ -74,9 +74,9 @@
                                 <select name="status"
                                     class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-xl bg-white">
                                     <option value="">Semua Status</option>
-                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif
+                                    <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>Aktif
                                     </option>
-                                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                                    <option value="inactive" {{ request('status')=='inactive' ? 'selected' : '' }}>
                                         Tidak
                                         Aktif</option>
                                 </select>
@@ -95,10 +95,10 @@
                                 <select name="type"
                                     class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white">
                                     <option value="">Semua Tipe</option>
-                                    <option value="regular" {{ request('type') == 'regular' ? 'selected' : '' }}>
+                                    <option value="regular" {{ request('type')=='regular' ? 'selected' : '' }}>
                                         Regular
                                     </option>
-                                    <option value="exclusive" {{ request('type') == 'exclusive' ? 'selected' : '' }}>
+                                    <option value="exclusive" {{ request('type')=='exclusive' ? 'selected' : '' }}>
                                         Exclusive</option>
                                 </select>
 
@@ -138,8 +138,7 @@
                     </div>
 
                     @can('create customers')
-                        <button type="button"
-                            @click="if (!canCreateCustomers) {
+                    <button type="button" @click="if (!canCreateCustomers) {
                                 Swal.fire({
                                     toast: true,
                                     icon: 'error',
@@ -151,13 +150,13 @@
                             } else {
                                 $dispatch('open-modal', { name: 'create-customer' })
                             }"
-                            class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Pelanggan Baru
-                        </button>
+                        class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Pelanggan Baru
+                    </button>
                     @endcan
 
                 </div>
@@ -179,51 +178,49 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($customers as $customer)
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">
-                                                {{ substr($customer->user->name, 0, 1) }}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-gray-900">{{ $customer->user->name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $customer->user->email ?? '-' }}
-                                            </div>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-semibold text-sm">
+                                            {{ substr($customer->user->name, 0, 1) }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">{{ $customer->user->name }}</div>
+                                        <div class="text-sm text-gray-500">{{ $customer->user->email ?? '-' }}
                                         </div>
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm">
-                                        <a href="https://wa.me/{{ $customer->phone }}"
-                                            class="text-green-600 hover:text-green-700 font-medium flex items-center gap-1">
-                                            {{ $customer->formatted_phone }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="px-3 py-1 {{ $customer->type === 'exclusive' ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-800' }} rounded-full text-xs font-medium">
-                                        {{ ucfirst($customer->type) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="px-3 py-1 {{ $customer->status === 'active' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-800' }} rounded-full text-xs font-medium">
-                                        {{ ucfirst($customer->status) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div x-data class="flex items-center gap-2">
-                                        @can('send customer email')
-                                            <form action="{{ route('customers.sendEmail', $customer->id) }}"
-                                                method="POST">
-                                                @csrf
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm">
+                                    <a href="https://wa.me/{{ $customer->phone }}"
+                                        class="text-green-600 hover:text-green-700 font-medium flex items-center gap-1">
+                                        {{ $customer->formatted_phone }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span
+                                    class="px-3 py-1 {{ $customer->type === 'exclusive' ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-800' }} rounded-full text-xs font-medium">
+                                    {{ ucfirst($customer->type) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span
+                                    class="px-3 py-1 {{ $customer->status === 'active' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-800' }} rounded-full text-xs font-medium">
+                                    {{ ucfirst($customer->status) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div x-data class="flex items-center gap-2">
+                                    @can('send customer email')
+                                    <form action="{{ route('customers.sendEmail', $customer->id) }}" method="POST">
+                                        @csrf
 
-                                                <button type="submit"
-                                                    class="p-1.5 text-gray-400 rounded-lg transition-all {{ auth()->user()->can('send customer email') ? 'hover:text-blue-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
-                                                    title="Kirim Email"
-                                                    @click.prevent="if (!{{ auth()->user()->can('send customer email') ? 'true' : 'false' }}) {
+                                        <button type="submit"
+                                            class="p-1.5 text-gray-400 rounded-lg transition-all {{ auth()->user()->can('send customer email') ? 'hover:text-blue-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
+                                            title="Kirim Email" @click.prevent="if (!{{ auth()->user()->can('send customer email') ? 'true' : 'false' }}) {
                                                     Swal.fire({
                                                         toast: true,
                                                         icon: 'error',
@@ -236,38 +233,35 @@
                                                     $el.closest('form').submit();
                                                 }">
 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        class="size-4">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                                                    </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                            </svg>
 
-                                                </button>
-                                            </form>
-                                        @endcan
+                                        </button>
+                                    </form>
+                                    @endcan
 
-                                        @can('view customers')
-                                            <a title="Detail Pelanggan"
-                                                href="{{ route('customers.show', $customer->id) }}"
-                                                class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                    class="size-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                                </svg>
+                                    @can('view customers')
+                                    <a title="Detail Pelanggan" href="{{ route('customers.show', $customer->id) }}"
+                                        class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg>
 
-                                            </a>
-                                        @endcan
+                                    </a>
+                                    @endcan
 
-                                        @can('delete customers')
-                                            <button title="Hapus Pelanggan"
-                                                class="p-1.5 text-gray-400 rounded-lg transition-all 
+                                    @can('delete customers')
+                                    <button title="Hapus Pelanggan"
+                                        class="p-1.5 text-gray-400 rounded-lg transition-all 
                                             {{ auth()->user()->can('delete customers') ? 'hover:text-red-600 hover:bg-gray-100' : 'cursor-not-allowed opacity-50' }}"
-                                                @click="if (!canDeleteCustomers) {
+                                        @click="if (!canDeleteCustomers) {
                                                 Swal.fire({
                                                     toast: true,
                                                     icon: 'error',
@@ -279,33 +273,31 @@
                                             } else {
                                                 $dispatch('open-modal', { name: 'delete-customer', id: {{ $customer->id }} })
                                             }">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                        @endcan
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr x-data>
-                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                                    <div
-                                        class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                             </path>
                                         </svg>
-                                    </div>
-                                    <h3 class="text-lg font-semibold mb-2">Belum ada pelanggan</h3>
-                                    <p class="mb-4">Mulai tambahkan pelanggan pertama Anda</p>
-                                    <button
-                                        @click="if (!canCreateCustomers) {
+                                    </button>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr x-data>
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                <div
+                                    class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold mb-2">Belum ada pelanggan</h3>
+                                <p class="mb-4">Mulai tambahkan pelanggan pertama Anda</p>
+                                <button @click="if (!canCreateCustomers) {
                                             Swal.fire({
                                                 toast: true,
                                                 icon: 'error',
@@ -317,11 +309,11 @@
                                         } else {
                                             $dispatch('open-modal', { name: 'create-customer' })
                                         }"
-                                        class="px-4 py-2 text-white rounded-lg font-medium {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600' : 'bg-green-200 cursor-not-allowed' }}">
-                                        + Tambah Pelanggan
-                                    </button>
-                                </td>
-                            </tr>
+                                    class="px-4 py-2 text-white rounded-lg font-medium {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600' : 'bg-green-200 cursor-not-allowed' }}">
+                                    + Tambah Pelanggan
+                                </button>
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -351,35 +343,40 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap <span
+                                class="text-red-500">*</span></label>
                         <input type="text" name="name" value="{{ old('name') }}"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email <span
+                                class="text-red-500">*</span></label>
                         <input type="email" name="email" value="{{ old('email') }}"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-500 text-sm" />
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pelanggan *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pelanggan <span
+                                    class="text-red-500">*</span></label>
                             <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                <option value="regular" {{ old('type') == 'regular' ? 'selected' : '' }}>Regular
+                                <option value="regular" {{ old('type')=='regular' ? 'selected' : '' }}>Regular
                                 </option>
-                                <option value="exclusive" {{ old('type') == 'exclusive' ? 'selected' : '' }}>Exclusive
+                                <option value="exclusive" {{ old('type')=='exclusive' ? 'selected' : '' }}>Exclusive
+                                    <span class="text-red-500">*</span>
                                 </option>
                             </select>
                             <x-input-error :messages="$errors->get('type')" class="mt-2 text-red-500 text-sm" />
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status <span
+                                    class="text-red-500">*</span></label>
                             <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Aktif
+                                <option value="active" {{ old('status')=='active' ? 'selected' : '' }}>Aktif
                                 </option>
-                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Tidak
+                                <option value="inactive" {{ old('status')=='inactive' ? 'selected' : '' }}>Tidak
                                     Aktif
                                 </option>
                             </select>
@@ -387,7 +384,8 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp <span
+                                class="text-red-500">*</span></label>
                         <input type="tel" name="phone" value="{{ old('phone') }}"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         <x-input-error :messages="$errors->get('phone')" class="mt-2 text-red-500 text-sm" />
@@ -410,12 +408,10 @@
 
     {{-- delete modal --}}
     <x-modal name="delete-customer" maxWidth="md">
-        <div x-data="{ customerId: null }"
-            x-on:open-modal.window="
+        <div x-data="{ customerId: null }" x-on:open-modal.window="
             if ($event.detail.name === 'delete-customer'    ) {
                 customerId = $event.detail.id
-            }"
-            class="p-6">
+            }" class="p-6">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
                     Hapus Pelanggan

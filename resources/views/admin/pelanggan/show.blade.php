@@ -5,8 +5,8 @@
 
 
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 let type =
                     "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
 
@@ -19,7 +19,7 @@
                     timer: 3000
                 });
             });
-        </script>
+    </script>
     @endif
     <div class="max-w-7xl mx-auto space-y-6">
 
@@ -51,8 +51,7 @@
             <div x-data class="flex gap-2 w-full sm:w-auto">
 
                 @can('edit customers')
-                    <button
-                        @click="if (!canEditCustomers) {
+                <button @click="if (!canEditCustomers) {
                     Swal.fire({
                         toast: true,
                         icon: 'error',
@@ -63,16 +62,15 @@
                     });
                 } else {
                     $dispatch('open-modal', { name: 'edit-customer' })
-                }"
-                        class="w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg
+                }" class="w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg
                 flex items-center justify-center gap-2
                 bg-blue-100 text-blue-600
                 {{ auth()->user()->can('edit customers')
                     ? 'hover:bg-blue-200 active:scale-95 transition'
                     : 'opacity-50 cursor-not-allowed' }}">
 
-                        Edit
-                    </button>
+                    Edit
+                </button>
                 @endcan
 
             </div>
@@ -126,38 +124,38 @@
                     <tbody class="divide-y">
 
                         @forelse ($orders as $order)
-                            <tr class="hover:bg-gray-50 transition">
+                        <tr class="hover:bg-gray-50 transition">
 
-                                <td class="px-6 py-4">
-                                    {{ $order->created_at->format('d M Y') }}
-                                </td>
+                            <td class="px-6 py-4">
+                                {{ $order->created_at->format('d M Y') }}
+                            </td>
 
-                                <td class="px-6 py-4 font-medium text-gray-700">
-                                    Rp {{ number_format($order->total, 0, ',', '.') }}
-                                </td>
+                            <td class="px-6 py-4 font-medium text-gray-700">
+                                Rp {{ number_format($order->total, 0, ',', '.') }}
+                            </td>
 
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="px-3 py-1 text-xs rounded-full
+                            <td class="px-6 py-4">
+                                <span
+                                    class="px-3 py-1 text-xs rounded-full
                                         {{ $order->status === 'selesai' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                                        {{ ucfirst($order->status) }}
-                                    </span>
-                                </td>
+                                    {{ ucfirst($order->status) }}
+                                </span>
+                            </td>
 
-                                <td class="px-6 py-4 text-right">
-                                    <a href="/admin/transactions/{{ $order->id }}"
-                                        class="text-blue-500 text-xs hover:underline">
-                                        Detail
-                                    </a>
-                                </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="/admin/transactions/{{ $order->id }}"
+                                    class="text-blue-500 text-xs hover:underline">
+                                    Detail
+                                </a>
+                            </td>
 
-                            </tr>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="4" class="text-center py-10 text-gray-400">
-                                    Belum ada transaksi
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="4" class="text-center py-10 text-gray-400">
+                                Belum ada transaksi
+                            </td>
+                        </tr>
                         @endforelse
 
                     </tbody>
@@ -188,7 +186,8 @@
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap <span
+                                class="text-red-500">*</span></label>
                         <input type="text" name="name" value="{{ $customer->user->name }}"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
@@ -201,7 +200,8 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pelanggan *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pelanggan <span
+                                    class="text-red-500">*</span></label>
                             <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
 
                                 <option value="regular" {{ $customer->type == 'regular' ? 'selected' : '' }}>
@@ -215,7 +215,8 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status <span
+                                    class="text-red-500">*</span></label>
                             <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
 
                                 <option value="active" {{ $customer->status == 'active' ? 'selected' : '' }}>
@@ -229,7 +230,8 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp <span
+                                class="text-red-500">*</span></label>
                         <input type="tel" name="phone" value="{{ $customer->formatted_phone }}"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         <x-input-error :messages="$errors->get('phone')" class="mt-2 text-red-500 text-sm" />

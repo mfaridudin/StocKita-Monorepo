@@ -220,7 +220,7 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-medium">Toko</label>
+                        <label class="text-sm font-medium">Toko <span class="text-red-500">*</span></label>
                         <select name="store"
                             class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                             <option value="">--- Pilih toko ---</option>
@@ -234,7 +234,7 @@
                     </div>
 
                     <div>
-                        <label class="text-sm font-medium">Nama</label>
+                        <label class="text-sm font-medium">Nama <span class="text-red-500">*</span></label>
                         <input type="text" name="name" x-ref="categoryName"
                             class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
@@ -287,7 +287,7 @@
                 @method('PUT')
 
                 <div>
-                    <label class="text-sm font-medium">Toko</label>
+                    <label class="text-sm font-medium">Toko <span class="text-red-500">*</span></label>
                     <select name="store" x-model="storeId"
                         class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
 
@@ -304,7 +304,7 @@
                 </div>
 
                 <div>
-                    <label class="text-sm font-medium">Nama</label>
+                    <label class="text-sm font-medium">Nama <span class="text-red-500">*</span></label>
                     <input type="text" name="name" x-model="categoryName" x-ref="editCategoryName"
                         class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                     <x-input-error :messages="$errors->editCategory->get('name')" class="mt-2 text-red-500 text-sm" />

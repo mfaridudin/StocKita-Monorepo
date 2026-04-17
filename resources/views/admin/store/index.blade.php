@@ -1,7 +1,7 @@
 <x-app-layout title="Toko">
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 let type =
                     "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
 
@@ -14,7 +14,7 @@
                     timer: 3000
                 });
             });
-        </script>
+    </script>
     @endif
     <div class="space-y-4">
 
@@ -56,52 +56,52 @@
 
                     <tbody class="divide-y divide-gray-100">
                         @forelse ($stores as $store)
-                            <tr class="hover:bg-gray-50 transition">
+                        <tr class="hover:bg-gray-50 transition">
 
-                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    {{ $store->name ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                {{ $store->name ?? '-' }}
+                            </td>
 
-                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
-                                    {{ $store->owner->name ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                {{ $store->owner->name ?? '-' }}
+                            </td>
 
-                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
-                                    {{ $store->slug ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                {{ $store->slug ?? '-' }}
+                            </td>
 
-                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
-                                    {{ $store->email ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                {{ $store->email ?? '-' }}
+                            </td>
 
-                                <td class="px-6 py-4 text-gray-500 whitespace-nowrap lg:whitespace-normal">
-                                    {{ $store->address ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap lg:whitespace-normal">
+                                {{ $store->address ?? '-' }}
+                            </td>
 
-                                <td class="px-6 py-4">
-                                    <div x-data class="flex justify-end gap-2">
+                            <td class="px-6 py-4">
+                                <div x-data class="flex justify-end gap-2">
 
-                                        <a href="/admin/store/{{ $store->id }}"
-                                            class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
-                                            Detail
-                                        </a>
+                                    <a href="/admin/store/{{ $store->id }}"
+                                        class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
+                                        Detail
+                                    </a>
 
-                                        <button
-                                            @click="$dispatch('open-modal', { name: 'delete-store', id: {{ $store->id }} })"
-                                            class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition">
-                                            Hapus
-                                        </button>
+                                    <button
+                                        @click="$dispatch('open-modal', { name: 'delete-store', id: {{ $store->id }} })"
+                                        class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition">
+                                        Hapus
+                                    </button>
 
-                                    </div>
-                                </td>
+                                </div>
+                            </td>
 
-                            </tr>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="4" class="text-center py-12 text-gray-400">
-                                    Belum ada Toko
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="4" class="text-center py-12 text-gray-400">
+                                Belum ada Toko
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -133,13 +133,13 @@
                     <div class="grid grid-cols-2 gap-4">
                         {{-- OWNER --}}
                         <div>
-                            <label class="text-sm font-medium">Pemilik</label>
+                            <label class="text-sm font-medium">Pemilik <span class="text-red-500">*</span></label>
                             <input type="text" name="owner_name" class="w-full mt-1 px-4 py-2 border rounded-lg">
                             <x-input-error :messages="$errors->get('owner_name')" />
                         </div>
 
                         <div>
-                            <label class="text-sm font-medium">Email Pemilik</label>
+                            <label class="text-sm font-medium">Email Pemilik <span class="text-red-500">*</span></label>
                             <input type="email" name="owner_email" class="w-full mt-1 px-4 py-2 border rounded-lg">
                             <x-input-error :messages="$errors->get('owner_email')" />
                         </div>
@@ -148,14 +148,14 @@
                     <div class="grid grid-cols-2 gap-4">
                         {{-- NAME --}}
                         <div>
-                            <label class="text-sm font-medium">Nama Toko</label>
+                            <label class="text-sm font-medium">Nama Toko <span class="text-red-500">*</span></label>
                             <input type="text" name="name" class="w-full mt-1 px-4 py-2 border rounded-lg">
                             <x-input-error :messages="$errors->get('name')" />
                         </div>
 
                         {{-- EMAIL --}}
                         <div>
-                            <label class="text-sm font-medium">Email</label>
+                            <label class="text-sm font-medium">Email <span class="text-red-500">*</span></label>
                             <input type="email" name="email" class="w-full mt-1 px-4 py-2 border rounded-lg">
                             <x-input-error :messages="$errors->get('email')" />
                         </div>
@@ -195,12 +195,10 @@
 
     {{-- delete modal --}}
     <x-modal name="delete-store" maxWidth="md">
-        <div x-data="{ storeId: null }"
-            x-on:open-modal.window="
+        <div x-data="{ storeId: null }" x-on:open-modal.window="
             if ($event.detail.name === 'delete-store') {
                 storeId = $event.detail.id
-            }"
-            class="p-6">
+            }" class="p-6">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
                     Hapus Toko

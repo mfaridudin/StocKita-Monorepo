@@ -190,14 +190,16 @@
                 <div class="space-y-4">
                     <div class="grid grid-col-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk <span
+                                    class="text-red-500">*</span></label>
                             <input type="text" name="name" value="{{ old('name') }}" x-ref="productName"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                             <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga <span
+                                    class="text-red-500">*</span></label>
                             <input type="number" name="price" value="{{ old('price') }}"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                             <x-input-error :messages="$errors->get('price')" class="mt-2 text-red-500 text-sm" />
@@ -205,7 +207,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori <span
+                                class="text-red-500">*</span></label>
                         <select name="category_id"
                             class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                             <option value="">-- Pilih Kategori --</option>
@@ -219,7 +222,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Gambar Produk</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Gambar Produk <span
+                                class="text-red-500">*</span></label>
                         <div
                             class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-gray-300 hover:bg-gray-50 transition-colors duration-200">
                             <input type="file" name="image" accept="image/*" class="hidden" id="imageUpload">
