@@ -51,8 +51,7 @@
                             </div>
 
                             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                                <a href="/register"
-                                    class="group relative 
+                                <a href="/register" class="group relative 
                                     bg-white text-green-700 hover:bg-green-100 
                                     px-6 sm:px-8 lg:px-10 
                                     py-4 sm:py-5 lg:py-6 
@@ -106,8 +105,7 @@
                         <div class="w-full lg:w-1/2 space-y-6 sm:space-y-8 lg:pr-12">
 
                             <div>
-                                <h1
-                                    class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl 
+                                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl 
                                     font-black 
                                     bg-gradient-to-r from-white via-white to-green-100/50 
                                     bg-clip-text text-transparent 
@@ -116,8 +114,7 @@
 
                                     Aplikasi Kasir
 
-                                    <span
-                                        class="block mt-2 sm:mt-0 
+                                    <span class="block mt-2 sm:mt-0 
                                         bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 
                                         bg-clip-text text-transparent drop-shadow-2xl">
                                         Terbaik
@@ -126,8 +123,7 @@
                                     Dan Terlengkap
                                 </h1>
 
-                                <p
-                                    class="text-base sm:text-lg md:text-xl 
+                                <p class="text-base sm:text-lg md:text-xl 
                                     text-white/95 max-w-md sm:max-w-lg 
                                     leading-relaxed font-medium drop-shadow-lg">
 
@@ -139,8 +135,7 @@
                             </div>
 
                             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                                <a href="/register"
-                                    class="group 
+                                <a href="/register" class="group 
                                     bg-white text-green-700 hover:bg-green-100 
                                     px-6 sm:px-8 lg:px-10 
                                     py-4 sm:py-5 lg:py-6 
@@ -195,8 +190,7 @@
                         <div class="w-full lg:w-1/2 space-y-6 sm:space-y-8 lg:pr-12">
 
                             <div>
-                                <h1
-                                    class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl 
+                                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl 
                                     font-black 
                                     bg-gradient-to-r from-white via-white to-green-100/50 
                                     bg-clip-text text-transparent 
@@ -207,16 +201,14 @@
 
                                     <br class="hidden sm:block">
 
-                                    <span
-                                        class="block mt-2 sm:mt-0 
+                                    <span class="block mt-2 sm:mt-0 
                                         bg-gradient-to-r from-green-300 via-green-200 to-emerald-300 
                                         bg-clip-text text-transparent drop-shadow-2xl">
                                         Dengan Kasir Pintar
                                     </span>
                                 </h1>
 
-                                <p
-                                    class="text-base sm:text-lg md:text-xl 
+                                <p class="text-base sm:text-lg md:text-xl 
                                     text-white/95 max-w-md sm:max-w-lg 
                                     leading-relaxed font-medium drop-shadow-lg">
 
@@ -228,8 +220,7 @@
                             </div>
 
                             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                                <a href="/register"
-                                    class="group relative 
+                                <a href="/register" class="group relative 
                                     bg-white text-green-700 hover:bg-green-100 
                                     px-6 sm:px-8 lg:px-10 
                                     py-4 sm:py-5 lg:py-6 
@@ -261,38 +252,38 @@
         </div>
 
 
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-4 p-4">
+        <div class="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-3 p-3">
             <button
-                class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white backdrop-blur-sm transition-all duration-300 hover:scale-150 active:scale-175 shadow-lg hover:shadow-white/30"></button>
+                class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
+
             <button
-                class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white backdrop-blur-sm transition-all duration-300 hover:scale-150 active:scale-175 shadow-lg hover:shadow-white/30"></button>
+                class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
+
             <button
-                class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white backdrop-blur-sm transition-all duration-300 hover:scale-150 active:scale-175 shadow-lg hover:shadow-white/30"></button>
+                class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
         </div>
 
 
-        <button
-            class="carousel-prev z-30
+        <button class="hidden md:flex carousel-prev z-30
                 absolute bottom-4 left-4 
                 lg:top-1/2 lg:left-8 lg:bottom-auto lg:-translate-y-1/2
                 w-12 h-12 lg:w-16 lg:h-16
                 bg-white/30 hover:bg-white/60 backdrop-blur-2xl 
                 rounded-2xl lg:rounded-3xl 
-                flex items-center justify-center text-white 
+                items-center justify-center text-white 
                 transition-all duration-300 hover:scale-110 
                 shadow-2xl border border-white/30">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
             </svg>
         </button>
-        <button
-            class="carousel-next z-30
+        <button class="hidden md:flex carousel-next z-30
                 absolute bottom-4 right-4 
                 lg:top-1/2 lg:right-8 lg:bottom-auto lg:-translate-y-1/2
                 w-12 h-12 lg:w-16 lg:h-16
                 bg-white/30 hover:bg-white/60 backdrop-blur-2xl 
                 rounded-2xl lg:rounded-3xl 
-                flex items-center justify-center text-white 
+                items-center justify-center text-white 
                 transition-all duration-300 hover:scale-110 
                 shadow-2xl border border-white/30">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -409,25 +400,49 @@
         // Touch/swipe support
         let startX = 0;
         let currentX = 0;
+        let isDragging = false;
 
         container.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            currentX = startX;
+            isDragging = true;
+
+            clearInterval(autoPlayInterval); // STOP autoplay
+            gsap.killTweensOf(track);
         });
 
         container.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+
             currentX = e.touches[0].clientX;
+            const diff = currentX - startX;
+
+            gsap.set(track, {
+                x: -(slideWidth * index) + diff
+            });
         });
 
-        container.addEventListener('touchend', (e) => {
+        container.addEventListener('touchend', () => {
+            if (!isDragging) return;
+
             const diff = startX - currentX;
-            if (Math.abs(diff) > 50) { // Minimum swipe distance
+
+            if (Math.abs(diff) > 80) {
                 if (diff > 0) {
                     nextSlide();
                 } else {
                     prevSlide();
                 }
-                resetAutoPlay();
+            } else {
+                gsap.to(track, {
+                    x: -(slideWidth * index),
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
             }
+
+            isDragging = false;
+            startAutoPlay(); // nyalain lagi autoplay
         });
 
         // Keyboard navigation
@@ -509,10 +524,10 @@
             height: 12vw;
         }
 
-        .carousel-dot {
-            width: 2.5vw;
-            height: 2.5vw;
-        }
+        /* .carousel-dot {
+            width: 1vw;
+            height: 1vw;
+        } */
     }
 
     /* Glassmorphism effect enhancements */
