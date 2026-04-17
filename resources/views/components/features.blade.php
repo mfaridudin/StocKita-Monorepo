@@ -1,4 +1,4 @@
-<section id="blog" class="py-24 bg-gray-50">
+<section id="features" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-3 md:px-6">
 
         <div class="text-center mb-16">
