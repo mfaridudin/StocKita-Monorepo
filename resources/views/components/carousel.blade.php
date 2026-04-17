@@ -16,12 +16,10 @@
                         </div>
                     </div>
 
-
-                    <div class="absolute top-0 right-0 w-3/4 h-full">
+                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full">
                         <img src="/image/hero1.png" alt="Business Growth"
                             class="w-full h-full object-cover object-right-top brightness-90 contrast-110">
                     </div>
-
 
                     <div class="relative z-20 h-full mx-auto flex items-center px-4 sm:px-6 lg:ml-32 lg:px-12">
                         <div class="w-full lg:w-1/2 space-y-6 sm:space-y-8 lg:pr-12">
@@ -95,8 +93,7 @@
                         </div>
                     </div>
 
-
-                    <div class="absolute top-0 right-0 w-3/4 h-full">
+                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full">
                         <img src="/image/hero2.png" alt="POS System"
                             class="w-full h-full object-cover object-right-top brightness-90 contrast-110">
                     </div>
@@ -179,12 +176,10 @@
                         </div>
                     </div>
 
-
-                    <div class="absolute top-0 right-0 w-3/4 h-full">
+                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full">
                         <img src="/image/hero3.png" alt="Retail Success"
                             class="w-full h-full object-cover object-right-top brightness-90 contrast-110">
                     </div>
-
 
                     <div class="relative z-20 h-full mx-auto flex items-center px-4 sm:px-6 lg:ml-32 lg:px-12">
                         <div class="w-full lg:w-1/2 space-y-6 sm:space-y-8 lg:pr-12">
@@ -251,7 +246,6 @@
             </div>
         </div>
 
-
         <div class="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-3 p-3">
             <button
                 class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
@@ -262,7 +256,6 @@
             <button
                 class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
         </div>
-
 
         <button class="hidden md:flex carousel-prev z-30
                 absolute bottom-4 left-4 
@@ -407,7 +400,7 @@
             currentX = startX;
             isDragging = true;
 
-            clearInterval(autoPlayInterval); // STOP autoplay
+            clearInterval(autoPlayInterval);
             gsap.killTweensOf(track);
         });
 
@@ -442,7 +435,7 @@
             }
 
             isDragging = false;
-            startAutoPlay(); // nyalain lagi autoplay
+            startAutoPlay();
         });
 
         // Keyboard navigation
