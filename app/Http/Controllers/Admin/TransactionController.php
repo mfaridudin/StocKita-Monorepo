@@ -210,7 +210,7 @@ class TransactionController extends Controller
     {
         $storeId = $request->store_id;
 
-        $customers = Customer::with('user')->where('store_id', $storeId)->whereHas('user', function ($q) use ($request) {
+        $customers = Customer::with('user')->where('store_id', $storeId)->where('status', 'active')->whereHas('user', function ($q) use ($request) {
             $q->where('name', 'like', '%' . $request->q . '%');
         })
             ->limit(5)

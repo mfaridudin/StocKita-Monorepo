@@ -177,7 +177,7 @@ Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/customers/search', function (Request $request) {
-        return Customer::with('user')
+        return Customer::with('user')->where('status', 'active')
             ->whereHas('user', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->q . '%');
             })
