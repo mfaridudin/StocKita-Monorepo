@@ -31,6 +31,15 @@ class User extends Authenticatable
         ];
     }
 
+    // url dashboard
+    public function getDashboardUrl()
+    {
+        if ($this->hasRole('admin')) return '/admin/dashboard';
+        if ($this->hasRole('buyer')) return '/buyer/dashboard';
+
+        return '/dashboard';
+    }
+
     public function activeSubscription()
     {
         return $this->hasOne(Subscription::class)
@@ -73,11 +82,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(MidtransTransaction::class);
     }
-
-    // public function store()
-    // {
-    //     return $this->belongsTo(Store::class);
-    // }
 
     public function store()
     {
