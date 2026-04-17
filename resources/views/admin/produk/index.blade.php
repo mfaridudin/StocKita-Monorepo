@@ -1,7 +1,7 @@
 <x-app-layout title="Produk">
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 let type =
                     "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
 
@@ -14,7 +14,7 @@
                     timer: 3000
                 });
             });
-        </script>
+    </script>
     @endif
     <div class="space-y-6">
 
@@ -30,8 +30,7 @@
 
             <div x-data class="flex gap-3">
                 @can('create products')
-                    <button
-                        @click.prevent="if (!canCreateProducts) {
+                <button @click.prevent="if (!canCreateProducts) {
                         Swal.fire({
                             toast: true,
                             icon: 'error',
@@ -42,16 +41,15 @@
                         });
                     } else {
                         $dispatch('open-modal', { name: 'add-produk'})
-                    }"
-                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
+                    }" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
                             ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
                             : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Tambah Produk
-                    </button>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Tambah Produk
+                </button>
                 @endcan
             </div>
         </div>
@@ -71,16 +69,15 @@
 
                             <option value="">Semua</option>
                             @foreach ($stores as $store)
-                                <option value="{{ $store->id }}"
-                                    {{ request('store') == $store->id ? 'selected' : '' }}>
-                                    {{ $store->name }}
-                                </option>
+                            <option value="{{ $store->id }}" {{ request('store')==$store->id ? 'selected' : '' }}>
+                                {{ $store->name }}
+                            </option>
                             @endforeach
                         </select>
 
                         <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
                         </div>
@@ -108,51 +105,51 @@
 
                     <tbody class="divide-y">
                         @forelse ($products as $product)
-                            <tr class="hover:bg-gray-50 transition">
+                        <tr class="hover:bg-gray-50 transition">
 
-                                <td class="pl-6 pr-12 py-4 flex items-center gap-4 whitespace-nowrap">
-                                    <img src="{{ asset('storage/' . $product->image) }}"
-                                        class="w-12 h-12 object-cover rounded-lg border"
-                                        onerror="this.src='https://via.placeholder.com/100'">
+                            <td class="pl-6 pr-12 py-4 flex items-center gap-4 whitespace-nowrap">
+                                <img src="{{ asset('storage/' . $product->image) }}"
+                                    class="w-12 h-12 object-cover rounded-lg border"
+                                    onerror="this.src='https://via.placeholder.com/100'">
 
-                                    <div>
-                                        <p class="font-semibold text-gray-800">
-                                            {{ $product->name }}
-                                        </p>
-                                        <p class="text-xs text-gray-500">
-                                            SKU: {{ $product->sku }}
-                                        </p>
-                                    </div>
-                                </td>
+                                <div>
+                                    <p class="font-semibold text-gray-800">
+                                        {{ $product->name }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        SKU: {{ $product->sku }}
+                                    </p>
+                                </div>
+                            </td>
 
-                                <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-                                    Rp {{ number_format($product->price, 0, ',', '.') }}
-                                </td>
+                            <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+                                Rp {{ number_format($product->price, 0, ',', '.') }}
+                            </td>
 
-                                <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
-                                    {{ $product->category->name ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                {{ $product->category->name ?? '-' }}
+                            </td>
 
-                                <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
-                                    {{ $product->store->name ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                {{ $product->store->name ?? '-' }}
+                            </td>
 
-                                <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
-                                    {{ $product->store->owner->name ?? '-' }}
-                                </td>
+                            <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                {{ $product->store->owner->name ?? '-' }}
+                            </td>
 
-                                <td x-data class="px-6 py-4 text-right">
-                                    <div class="flex justify-end gap-2">
+                            <td x-data class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
 
-                                        <a href="/admin/products/{{ $product->id }}"
-                                            class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
-                                            Detail
-                                        </a>
+                                    <a href="/admin/products/{{ $product->id }}"
+                                        class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                                        Detail
+                                    </a>
 
-                                        @can('delete products')
-                                            <button
-                                                class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
-                                                @click="if (!canDeleteProducts) {
+                                    @can('delete products')
+                                    <button
+                                        class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
+                                        @click="if (!canDeleteProducts) {
                                             Swal.fire({
                                                 toast: true,
                                                 icon: 'error',
@@ -164,19 +161,19 @@
                                         } else {
                                             $dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })
                                         }">
-                                                Hapus
-                                            </button>
-                                        @endcan
-                                    </div>
-                                </td>
+                                        Hapus
+                                    </button>
+                                    @endcan
+                                </div>
+                            </td>
 
-                            </tr>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="5" class="text-center py-10 text-gray-400">
-                                    Belum ada produk
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="5" class="text-center py-10 text-gray-400">
+                                Belum ada produk
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -186,12 +183,10 @@
 
     {{-- delete modal --}}
     <x-modal name="delete-product" maxWidth="md">
-        <div x-data="{ productId: null }"
-            x-on:open-modal.window="
+        <div x-data="{ productId: null }" x-on:open-modal.window="
             if ($event.detail.name === 'delete-product') {
                 productId = $event.detail.id
-            }"
-            class="p-6">
+            }" class="p-6">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
                     Hapus Produk
@@ -228,14 +223,17 @@
 
     {{-- modal add produk --}}
     <x-modal name="add-produk" maxWidth="xl" :show="$errors->any()">
-        <div class="p-6">
+        <div x-data x-on:open-modal.window="
+        if ($event.detail.name === 'add-produk') {
+            setTimeout(() => $refs.productName.focus(), 100)
+        }
+    " class="p-6">
             <form action="/admin/products" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900">Tambah Produk</h3>
-                    <button type="button"
-                        @click="$el.closest('form').reset(); $dispatch('close-modal', 'add-produk')">
+                    <button type="button" @click="$el.closest('form').reset(); $dispatch('close-modal', 'add-produk')">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12">
@@ -248,7 +246,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
-                            <input type="text" name="name" value="{{ old('name') }}"
+                            <input type="text" name="name" value="{{ old('name') }}" x-ref="productName"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
                             <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500 text-sm" />
                         </div>
@@ -266,9 +264,9 @@
                         <select name="store_id" id="storeSelect" class="w-full px-4 py-2 border rounded-lg">
                             <option value="">-- Pilih Toko --</option>
                             @foreach ($stores as $store)
-                                <option value="{{ $store->id }}">
-                                    {{ $store->name }}
-                                </option>
+                            <option value="{{ $store->id }}">
+                                {{ $store->name }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -289,8 +287,8 @@
                             <input type="file" name="image" accept="image/*" class="hidden" id="imageUpload">
                             <div id="uploadPlaceholder">
                                 <label for="imageUpload" class="cursor-pointer block">
-                                    <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
