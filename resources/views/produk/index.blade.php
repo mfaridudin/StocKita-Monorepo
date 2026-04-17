@@ -27,30 +27,19 @@
                 </p>
             </div>
 
-            <div class="flex w-full sm:w-auto">
+            <div x-data class="flex w-full sm:w-auto">
                 @can('create products')
-                    <button
-                        @click.prevent="if (!canCreateProducts) {
-                        Swal.fire({
-                            toast: true,
-                            icon: 'error',
-                            position: 'top-end',
-                            title: 'Kamu tidak punya izin menambah produk!',
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
-                    } else {
-                        $dispatch('open-modal', { name: 'add-produk'})
-                    }"
-                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl {{ auth()->user()->can('create products')
-                            ? 'bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5'
-                            : 'bg-green-200 border-gray-200 cursor-not-allowed' }}">
+                    <button @click.prevent="$dispatch('open-modal', { name: 'add-produk'})"
+                        class="w-full
+                        sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white
+                        font-medium text-sm rounded-xl bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200
+                        transform hover:-translate-y-0.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Tambah Produk
-                    </button>
+                    </button>   
                 @endcan
             </div>
 
@@ -270,8 +259,6 @@
     </x-modal>
 
     <script>
-        const canCreateProducts = @json(auth()->user()->can('create products'));
-        const canDeleteProducts = @json(auth()->user()->can('delete products'));
         const canUploadImage = @json(auth()->user()->can('upload product images'));
     </script>
 
