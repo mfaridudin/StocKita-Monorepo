@@ -21,7 +21,7 @@ MIDTRANS_CLIENT_KEY=your_client_key
 
 ## 4. Settings Snap Reference
 
-* Dashboard → Settings → Snap Reference
+* Dashboard → Settings → Snap Reference -> sesuaikan nama website
 
 
 ## 5. Set Payment Notification URL
@@ -30,7 +30,7 @@ MIDTRANS_CLIENT_KEY=your_client_key
 * Isi URL callback (contoh):
 
 ```
-https://domain.com/midtrans/callback
+https://domain.com/midtrans/webhook
 ```
 
 ## 6. Jika pakai localhost
