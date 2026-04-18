@@ -462,27 +462,6 @@ toggle.addEventListener('click', () => {
 });
 
 // search
-window.closeMobileMenu = function () {
-    const menu = document.getElementById('mobileMenu');
-    const menuIcon = document.getElementById("menuIcon");
-    const closeIcon = document.getElementById("closeIcon");
-
-    if (!menu || menu.classList.contains('hidden')) return;
-
-    gsap.to(menu, {
-        height: 0,
-        opacity: 0,
-        duration: 0.3,
-        ease: "power2.in",
-        onComplete: () => {
-            menu.classList.add('hidden');
-        }
-    });
-
-    gsap.to(menuIcon, { opacity: 1, scale: 1, duration: 0.2 });
-    gsap.to(closeIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
-};
-
 const inputs = document.querySelectorAll('#searchInput');
 const clearBtns = document.querySelectorAll('#clearSearch');
 const resultsBoxes = document.querySelectorAll('#searchResults');
@@ -508,7 +487,6 @@ inputs.forEach((input, i) => {
 
         resultsBox.innerHTML = '';
         resultsBox.classList.add('hidden');
-        removeHighlights();
 
         activeIndex = -1;
         currentResults = [];
@@ -521,18 +499,21 @@ inputs.forEach((input, i) => {
 
         if (keyword.length < 2) return;
 
-        const elements = document.querySelectorAll('h1, h2, h3, p, span, a, li');
+        const cards = document.querySelectorAll('.feature-item, .blog-card'); // ini
 
-        elements.forEach(el => {
-            const text = el.innerText.toLowerCase();
+        cards.forEach(card => {
+            const title = card.querySelector('h3')?.innerText || '';
+            const desc = card.querySelector('p')?.innerText || '';
+            const link = card.getAttribute('href');
 
-            if (text.includes(keyword)) {
+            const combinedText = (title + ' ' + desc).toLowerCase();
+
+            if (combinedText.includes(keyword)) {
                 currentResults.push({
-                    element: el,
-                    text: el.innerText
+                    title,
+                    desc,
+                    link
                 });
-
-                highlightWord(el, keyword);
             }
         });
 
@@ -547,12 +528,13 @@ inputs.forEach((input, i) => {
                 const item = document.createElement('div');
                 item.className = 'p-3 text-sm cursor-pointer rounded-lg';
 
-                item.innerHTML = createSnippet(res.text, keyword)
-                    .replace(new RegExp(`(${keyword})`, 'gi'),
-                        '<span class="bg-yellow-200 rounded">$1</span>');
+                item.innerHTML = `
+                    <div class="font-semibold">${res.title}</div>
+                    <div class="text-xs text-gray-500">${res.desc.substring(0, 60)}...</div>
+                `;
 
                 item.addEventListener('click', () => {
-                    scrollToElement(res.element);
+                    window.location.href = res.link;
                 });
 
                 resultsBox.appendChild(item);
@@ -600,76 +582,10 @@ inputs.forEach((input, i) => {
         });
     }
 
-    function scrollToElement(el) {
-        const yOffset = -100;
-        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-        window.scrollTo({
-            top: y,
-            behavior: 'instant'
-        });
-
-        resultsBox.classList.add('hidden');
-
-        if (window.closeMobileMenu) {
-            window.closeMobileMenu();
-        }
-    }
-
-    function highlightWord(element, keyword) {
-        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-        const nodes = [];
-
-        while (walker.nextNode()) {
-            nodes.push(walker.currentNode);
-        }
-
-        nodes.forEach(node => {
-            const text = node.nodeValue;
-            const lower = text.toLowerCase();
-
-            if (lower.includes(keyword)) {
-                const span = document.createElement('span');
-                const regex = new RegExp(`(${keyword})`, 'gi');
-
-                span.innerHTML = text.replace(regex,
-                    `<mark class="bg-yellow-200/50 rounded">$1</mark>`);
-
-                node.replaceWith(span);
-            }
-        });
-    }
-
-    function removeHighlights() {
-        document.querySelectorAll('mark').forEach(mark => {
-            const parent = mark.parentNode;
-            parent.replaceWith(document.createTextNode(parent.innerText));
-        });
-    }
-
-    function createSnippet(text, keyword) {
-        const lower = text.toLowerCase();
-        const index = lower.indexOf(keyword);
-
-        if (index === -1) return text.substring(0, 50) + '...';
-
-        const start = Math.max(index - 20, 0);
-        const end = Math.min(index + keyword.length + 20, text.length);
-
-        let snippet = text.substring(start, end);
-
-        if (start > 0) snippet = '...' + snippet;
-        if (end < text.length) snippet = snippet + '...';
-
-        return snippet;
-    }
-
     clearBtn.addEventListener('click', function () {
         input.value = '';
         resultsBox.innerHTML = '';
         resultsBox.classList.add('hidden');
-
-        removeHighlights();
 
         clearBtn.classList.add('hidden');
         input.focus();

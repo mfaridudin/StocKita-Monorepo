@@ -122,7 +122,7 @@
                 class="pl-12 pr-4 py-3 bg-slate-100 w-full border border-green-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-white transition-all duration-200 shadow-sm group-hover:shadow-md">
 
             <button id="clearSearch"
-                class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center hidden transition">
+                class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center hidden transition">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
