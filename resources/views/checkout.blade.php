@@ -45,14 +45,14 @@
 
                     <ul class="space-y-2 text-gray mb-6">
                         @foreach ($plan->features as $feature)
-                            <li>✔ {{ $feature }}</li>
+                        <li>✔ {{ $feature }}</li>
                         @endforeach
                     </ul>
 
                     @if ($interval == 'yearly')
-                        <div class="text-sm text-emerald-600 font-semibold">
-                            Hemat lebih dengan paket tahunan
-                        </div>
+                    <div class="text-sm text-emerald-600 font-semibold">
+                        Hemat lebih dengan paket tahunan
+                    </div>
                     @endif
                 </div>
 
@@ -77,7 +77,8 @@
                             <span>Total</span>
                             <span>
                                 Rp
-                                {{ number_format($interval == 'yearly' ? $plan->yearly_price : $plan->price, 2, ',', '.') }}
+                                {{ number_format($interval == 'yearly' ? $plan->yearly_price : $plan->price, 2, ',',
+                                '.') }}
                             </span>
                         </div>
                     </div>
@@ -88,8 +89,8 @@
                     </button>
                     <div class="flex justify-center">
                         <p class="flex items-center gap-1 text-xs text-gray-400  mt-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-4">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                             </svg>
@@ -177,7 +178,7 @@
                     toast: true,
                     icon: 'error',
                     position: 'top-end',
-                    title: 'Terjadi Kesalahan dari backend',
+                    title: 'Terjadi error pada system, tunggu beberapa saat untuk mencoba lagi',
                     showConfirmButton: false,
                     timer: 3000
                 });
