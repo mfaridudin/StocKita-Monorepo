@@ -390,19 +390,60 @@ document.addEventListener("DOMContentLoaded", () => {
             sidebar.removeEventListener("mouseleave", handleMouseLeave);
         };
     });
+});
 
-    // landingpage
-    const toggle = document.getElementById('menuToggle');
-    const menu = document.getElementById('mobileMenu');
-    const menuLinks = document.querySelectorAll('#mobileMenu a');
-    const menuIcon = document.getElementById("menuIcon");
-    const closeIcon = document.getElementById("closeIcon");
+// landingpage
+const toggle = document.getElementById('menuToggle');
+const menu = document.getElementById('mobileMenu');
+const menuLinks = document.querySelectorAll('#mobileMenu a');
+const menuIcon = document.getElementById("menuIcon");
+const closeIcon = document.getElementById("closeIcon");
 
-    let isOpen = false;
+let isOpen = false;
 
-    function closeMobileMenu() {
-        if (!isOpen) return;
+function closeMobileMenu() {
+    if (!isOpen) return;
 
+    gsap.to(menu, {
+        height: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.in",
+        onComplete: () => {
+            menu.classList.add('hidden');
+        }
+    });
+
+    gsap.to(menuIcon, { opacity: 1, scale: 1, duration: 0.2 });
+    gsap.to(closeIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
+
+    isOpen = false;
+}
+
+menuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        closeMobileMenu();
+    });
+});
+
+toggle.addEventListener('click', () => {
+    if (!isOpen) {
+        menu.classList.remove('hidden');
+
+        gsap.fromTo(menu, {
+            height: 0,
+            opacity: 0
+        }, {
+            height: "auto",
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out"
+        });
+
+        gsap.to(menuIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
+        gsap.to(closeIcon, { opacity: 1, scale: 1, duration: 0.2 });
+
+    } else {
         gsap.to(menu, {
             height: 0,
             opacity: 0,
@@ -415,50 +456,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         gsap.to(menuIcon, { opacity: 1, scale: 1, duration: 0.2 });
         gsap.to(closeIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
-
-        isOpen = false;
     }
 
-    menuLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            closeMobileMenu();
-        });
-    });
-
-    toggle.addEventListener('click', () => {
-        if (!isOpen) {
-            menu.classList.remove('hidden');
-
-            gsap.fromTo(menu, {
-                height: 0,
-                opacity: 0
-            }, {
-                height: "auto",
-                opacity: 1,
-                duration: 0.4,
-                ease: "power2.out"
-            });
-
-            gsap.to(menuIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
-            gsap.to(closeIcon, { opacity: 1, scale: 1, duration: 0.2 });
-
-        } else {
-            gsap.to(menu, {
-                height: 0,
-                opacity: 0,
-                duration: 0.3,
-                ease: "power2.in",
-                onComplete: () => {
-                    menu.classList.add('hidden');
-                }
-            });
-
-            gsap.to(menuIcon, { opacity: 1, scale: 1, duration: 0.2 });
-            gsap.to(closeIcon, { opacity: 0, scale: 0.6, duration: 0.2 });
-        }
-
-        isOpen = !isOpen;
-    });
+    isOpen = !isOpen;
 });
 
 // search
