@@ -1,7 +1,7 @@
 @php
-    $user_id = auth()->id();
-    $plans = App\Models\Plan::get();
-    $subscription = App\Models\Subscription::where('user_id', $user_id)->where('status', 'active')->first();
+$user_id = auth()->id();
+$plans = App\Models\Plan::get();
+$subscription = App\Models\Subscription::where('user_id', $user_id)->where('status', 'active')->first();
 @endphp
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -29,73 +29,81 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            @foreach ($plans as $index => $plan)
+            <div class="offer-card w-full
+            {{ $plan->name == 'Pro' 
+                ? 'bg-emerald-500 text-white p-8 shadow-2xl relative' 
+                : 'bg-white p-8 border shadow-sm hover:shadow-xl' }} 
+            {{ $loop->last ? 'md:col-span-2 lg:col-span-1' : '' }}
+            rounded-3xl transition 
+        ">
 
-            @foreach ($plans as $plan)
-                <div
-                    class="offer-card 
-                        {{ $plan->name == 'Pro' ? 'bg-emerald-500 text-white p-10 shadow-2xl scale-105 relative' : 'bg-white p-8 border shadow-sm hover:shadow-xl' }} 
-                        rounded-3xl transition">
+                {{-- Badge --}}
+                @if ($plan->name == 'Pro')
+                <span class="absolute top-4 right-4 bg-white text-emerald-600 text-xs px-3 py-1 rounded-full">
+                    POPULER
+                </span>
+                @endif
 
-                    @if ($plan->name == 'Pro')
-                        <span class="absolute top-4 right-4 bg-white text-emerald-600 text-xs px-3 py-1 rounded-full">
-                            POPULER
-                        </span>
+                @if ($plan->id == 1)
+                <span
+                    class="absolute top-4 right-4 bg-emerald-100 text-emerald-600 text-xs px-3 py-1 rounded-full font-semibold">
+                    FREE TRIAL
+                </span>
+                @endif
+
+                {{-- Title --}}
+                <h3 class="text-xl font-semibold mb-2">{{ $plan->name }}</h3>
+
+                <p class="{{ $plan->name == 'Pro' ? 'opacity-90' : 'text-gray-500' }} mb-6">
+                    @if ($plan->name == 'Starter')
+                    Untuk bisnis kecil
+                    @elseif ($plan->name == 'Business')
+                    Untuk skala besar
+                    @else
+                    Untuk bisnis berkembang
                     @endif
+                </p>
 
-                    @if ($plan->id == 1)
-                        <span
-                            class="absolute top-4 right-4 bg-emerald-100 text-emerald-600 text-xs px-3 py-1 rounded-full font-semibold">
-                            FREE TRIAL
-                        </span>
-                    @endif
-
-                    <h3 class="text-xl font-semibold mb-2">{{ $plan->name }}</h3>
-
-                    <p class="{{ $plan->name == 'Pro' ? 'opacity-90' : 'text-gray-500' }} mb-6">
-                        @if ($plan->name == 'Starter')
-                            Untuk bisnis kecil
-                        @elseif ($plan->name == 'Business')
-                            Untuk skala besar
-                        @else
-                            Untuk bisnis berkembang
-                        @endif
-                    </p>
-
-                    <div class="mb-6">
-                        <div
-                            class="text-sm mt-1 {{ $plan->name == 'Pro' ? 'text-white' : 'text-emerald-500' }}  save-badge hidden">
-                            Hemat 20%
-                        </div>
-                        <div class="text-4xl font-bold price" data-monthly="{{ $plan->price }}"
-                            data-yearly="{{ $plan->yearly_price }}">
-                            Rp {{ $plan->price }}
-                        </div>
+                {{-- Price --}}
+                <div class="mb-6">
+                    <div
+                        class="text-sm mt-1 {{ $plan->name == 'Pro' ? 'text-white' : 'text-emerald-500' }} save-badge hidden">
+                        Hemat 20%
                     </div>
 
-                    <ul class="space-y-3 mb-8">
-                        @foreach ($plan->features as $feature)
-                            <li>✔ {{ $feature }}</li>
-                        @endforeach
-                    </ul>
-
-                    @if ($plan->name == 'Starter')
-                        <button class="w-full py-3 rounded-xl bg-gray-900 text-white pay-btn"
-                            data-plan-id="{{ $plan->id }}">
-                            Mulai Gratis
-                        </button>
-                    @elseif($plan->name == 'Pro')
-                        <button class="w-full py-3 rounded-xl bg-white text-emerald-600 font-semibold pay-btn"
-                            data-plan-id="{{ $plan->id }}">
-                            Pilih Paket
-                        </button>
-                    @else
-                        <button class="w-full py-3 rounded-xl bg-gray-900 text-white pay-btn"
-                            data-plan-id="{{ $plan->id }}">
-                            Pilih Paket
-                        </button>
-                    @endif
-
+                    <div class="text-4xl font-bold price" data-monthly="{{ $plan->price }}"
+                        data-yearly="{{ $plan->yearly_price }}">
+                        Rp {{ $plan->price }}
+                    </div>
                 </div>
+
+                {{-- Features --}}
+                <ul class="space-y-3 mb-8">
+                    @foreach ($plan->features as $feature)
+                    <li>✔ {{ $feature }}</li>
+                    @endforeach
+                </ul>
+
+                {{-- Button --}}
+                @if ($plan->name == 'Starter')
+                <button class="w-full py-3 rounded-xl bg-gray-900 text-white pay-btn" data-plan-id="{{ $plan->id }}">
+                    Mulai Gratis
+                </button>
+
+                @elseif($plan->name == 'Pro')
+                <button class="w-full py-3 rounded-xl bg-white text-emerald-600 font-semibold pay-btn"
+                    data-plan-id="{{ $plan->id }}">
+                    Pilih Paket
+                </button>
+
+                @else
+                <button class="w-full py-3 rounded-xl bg-gray-900 text-white pay-btn" data-plan-id="{{ $plan->id }}">
+                    Pilih Paket
+                </button>
+                @endif
+
+            </div>
             @endforeach
 
         </div>
