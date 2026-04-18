@@ -11,32 +11,10 @@
 
 <body class="bg-gray-50 text-gray-800">
 
-    <header class="bg-white/80 backdrop-blur border-b sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="/" class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg">
-                    <img src="/image/icon/icon.png" alt="icon">
-                </div>
-                <div>
-                    <h1
-                        class="font-bold text-2xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                        StocKita</h1>
-                    <p class="text-xs text-slate-500 font-medium">Inventory Pro</p>
-                </div>
-            </a>
-        </div>
-    </header>
+    <x-landingpage-header />
 
     <section class="bg-white border-b">
-        <div class="max-w-4xl mx-auto px-6 py-16">
-
-            <a href="/#blog" class="flex items-center gap-2 text-sm text-emerald-600 hover:underline">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
-                </svg>
-                Kembali ke Artikel
-            </a>
+        <div class="max-w-4xl mx-auto px-6 py-20">
 
             <h1 class="text-4xl md:text-5xl font-bold mt-6 leading-tight text-gray-900">
                 {{ $title }}
@@ -62,8 +40,7 @@
     <section class="py-16">
         <div class="max-w-4xl mx-auto px-6">
 
-            <div
-                class="prose prose-lg max-w-none 
+            <div class="prose prose-lg max-w-none 
                 prose-headings:font-bold 
                 prose-h2:text-2xl 
                 prose-h2:mt-12 

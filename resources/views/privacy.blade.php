@@ -1,7 +1,16 @@
 <x-legal-layout>
 
-    <section class="bg-emerald-50 py-16">
-        <div class="max-w-4xl mx-auto px-6 text-center">
+    <section class="bg-emerald-50 py-6">
+        <div class="max-w-6xl mx-auto px-4 flex flex-wrap items-center justify-center md:justify-end gap-3">
+            <nav
+                class="w-full sm:w-auto flex flex-wrap sm:flex-nowrap items-center gap-4 sm:gap-6 text-xs sm:text-sm justify-center sm:justify-end">
+                <a href="/privacy" class="text-gray-600 hover:text-emerald-600">Privacy</a>
+                <a href="/dmca" class="text-gray-600 hover:text-emerald-600">DMCA & Hak Cipta</a>
+                <a href="/terms" class="text-gray-600 hover:text-emerald-600">Syarat & Ketentuan</a>
+            </nav>
+
+        </div>
+        <div class="max-w-4xl mx-auto px-6 py-16 text-center">
             <h2 class="text-4xl font-bold text-gray-900 mb-4">
                 Kebijakan Privasi
             </h2>
@@ -11,7 +20,7 @@
         </div>
     </section>
 
-    <main class="px-4 sm:px-6 max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
         <div class="space-y-10 leading-relaxed">
 

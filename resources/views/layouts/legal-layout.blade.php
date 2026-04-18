@@ -11,7 +11,7 @@
 
 <body class="bg-white text-gray-800">
 
-    <header class="w-full border-b bg-white sticky top-0 z-50">
+    {{-- <header class="w-full border-b bg-white sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
 
             <a href="/" class="font-bold text-base sm:text-lg text-emerald-600">
@@ -26,9 +26,10 @@
             </nav>
 
         </div>
-    </header>
+    </header> --}}
+    <x-landingpage-header />
 
-    <main>
+    <main class="pt-20">
         {{ $slot }}
     </main>
 

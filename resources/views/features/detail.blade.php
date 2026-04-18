@@ -10,34 +10,11 @@
 
 <body class="bg-gray-50 text-slate-900 antialiased">
 
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <a href="/" class="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
-                    <div class="w-11 h-11 bg-emerald-600 rounded-xl flex items-center justify-center shadow-sm">
-                        <img src="/image/icon/icon.png" alt="StocKita" class="w-6 h-6">
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-900 tracking-tight">StocKita</h1>
-                        <p class="text-xs text-slate-500 font-medium tracking-wide">Inventory Pro</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </header>
+    <x-landingpage-header />
 
     <section class="bg-gradient-to-br from-emerald-600 to-emerald-500 text-white py-20 relative overflow-hidden">
-        <div class="max-w-6xl mx-auto px-6">
-            <a href="/#features"
-                class="inline-flex items-center gap-2 text-emerald-200 hover:text-white transition-colors duration-200 mb-8 group">
-                <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                Kembali
-            </a>
-        </div>
-        <div class="max-w-5xl mx-auto pb-12 text-center px-6">
+
+        <div class="max-w-5xl mx-auto pb-12 text-center pt-12 px-6">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                 {{ $title }}
             </h1>
@@ -59,25 +36,24 @@
     </div>
 
     @if (!empty($highlights))
-        <section class="max-w-6xl mx-auto px-6 mt-10">
-            <div class="grid md:grid-cols-3 gap-6 text-center">
-                @foreach ($highlights as $item)
-                    <div
-                        class="bg-white p-6 rounded-2xl border hover:border-emerald-200 transition-colors duration-200">
-                        <div
-                            class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-md">
-                            <span class="text-white font-bold text-lg">{{ $loop->index + 1 }}</span>
-                        </div>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-3">
-                            {{ $item['title'] }}
-                        </h3>
-                        <p class="text-slate-600">
-                            {{ $item['desc'] }}
-                        </p>
-                    </div>
-                @endforeach
+    <section class="max-w-6xl mx-auto px-6 mt-10">
+        <div class="grid md:grid-cols-3 gap-6 text-center">
+            @foreach ($highlights as $item)
+            <div class="bg-white p-6 rounded-2xl border hover:border-emerald-200 transition-colors duration-200">
+                <div
+                    class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-md">
+                    <span class="text-white font-bold text-lg">{{ $loop->index + 1 }}</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                    {{ $item['title'] }}
+                </h3>
+                <p class="text-slate-600">
+                    {{ $item['desc'] }}
+                </p>
             </div>
-        </section>
+            @endforeach
+        </div>
+    </section>
     @endif
 
     <section class="py-24">
@@ -92,18 +68,18 @@
 
                 <div class="space-y-4">
                     @foreach ($benefits as $benefit)
+                    <div
+                        class="flex items-start space-x-3 p-4 bg-white rounded-xl border border-slate-100 hover:border-emerald-200 hover:shadow-sm transition-all duration-200 group">
                         <div
-                            class="flex items-start space-x-3 p-4 bg-white rounded-xl border border-slate-100 hover:border-emerald-200 hover:shadow-sm transition-all duration-200 group">
-                            <div
-                                class="w-6 h-6 flex-shrink-0 mt-0.5 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
-                                <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <p class="text-slate-700 font-medium leading-relaxed">{{ $benefit }}</p>
+                            class="w-6 h-6 flex-shrink-0 mt-0.5 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                            <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
                         </div>
+                        <p class="text-slate-700 font-medium leading-relaxed">{{ $benefit }}</p>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -117,70 +93,69 @@
             </h2>
             <div class="relative border-l-2 border-emerald-600 space-y-10">
                 @foreach ($steps as $index => $step)
-                    <div class="relative pl-8 group">
-                        <div
-                            class="absolute -left-5 top-1 w-10 h-10 bg-emerald-600 text-white flex items-center justify-center rounded-full font-bold shadow-md">
-                            {{ $index + 1 }}
-                        </div>
-                        <h3 class="font-semibold text-lg mb-1 text-slate-900">
-                            Langkah {{ $index + 1 }}
-                        </h3>
-                        <p class="text-slate-600">
-                            {{ $step }}
-                        </p>
+                <div class="relative pl-8 group">
+                    <div
+                        class="absolute -left-5 top-1 w-10 h-10 bg-emerald-600 text-white flex items-center justify-center rounded-full font-bold shadow-md">
+                        {{ $index + 1 }}
                     </div>
+                    <h3 class="font-semibold text-lg mb-1 text-slate-900">
+                        Langkah {{ $index + 1 }}
+                    </h3>
+                    <p class="text-slate-600">
+                        {{ $step }}
+                    </p>
+                </div>
                 @endforeach
             </div>
         </div>
     </section>
 
     @if (!empty($use_cases))
-        <section class="bg-white py-16">
-            <div class="max-w-6xl mx-auto px-6">
-                <h2 class="text-2xl font-bold text-center mb-10 text-slate-900">
-                    Cocok Digunakan Untuk
-                </h2>
-                <div class="grid md:grid-cols-3 gap-6">
-                    @foreach ($use_cases as $case)
-                        <div
-                            class="bg-slate-50 p-6 rounded-2xl border hover:border-emerald-200 transition-colors duration-200 text-center">
-                            <p class="font-semibold text-slate-900">
-                                {{ $case }}
-                            </p>
-                        </div>
-                    @endforeach
+    <section class="bg-white py-16">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-center mb-10 text-slate-900">
+                Cocok Digunakan Untuk
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                @foreach ($use_cases as $case)
+                <div
+                    class="bg-slate-50 p-6 rounded-2xl border hover:border-emerald-200 transition-colors duration-200 text-center">
+                    <p class="font-semibold text-slate-900">
+                        {{ $case }}
+                    </p>
                 </div>
+                @endforeach
             </div>
-        </section>
+        </div>
+    </section>
     @endif
 
     @if (!empty($faqs))
-        <section class="py-16">
-            <div class="max-w-6xl px-6 mx-auto">
-                <h2 class="text-2xl font-bold text-center mb-10 text-slate-900">
-                    Pertanyaan Umum
-                </h2>
-                <div class="space-y-4">
-                    @foreach ($faqs as $faq)
-                        <details
-                            class="bg-white p-6 rounded-xl border hover:border-slate-200 transition-colors duration-200 group">
-                            <summary
-                                class="cursor-pointer font-semibold text-slate-900 flex items-center justify-between">
-                                {{ $faq['q'] }}
-                                <svg class="w-5 h-5 text-slate-400 group-open:-rotate-180 transition-transform duration-200"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </summary>
-                            <p class="text-slate-600 mt-3 pl-1">
-                                {{ $faq['a'] }}
-                            </p>
-                        </details>
-                    @endforeach
-                </div>
+    <section class="py-16">
+        <div class="max-w-6xl px-6 mx-auto">
+            <h2 class="text-2xl font-bold text-center mb-10 text-slate-900">
+                Pertanyaan Umum
+            </h2>
+            <div class="space-y-4">
+                @foreach ($faqs as $faq)
+                <details
+                    class="bg-white p-6 rounded-xl border hover:border-slate-200 transition-colors duration-200 group">
+                    <summary class="cursor-pointer font-semibold text-slate-900 flex items-center justify-between">
+                        {{ $faq['q'] }}
+                        <svg class="w-5 h-5 text-slate-400 group-open:-rotate-180 transition-transform duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </summary>
+                    <p class="text-slate-600 mt-3 pl-1">
+                        {{ $faq['a'] }}
+                    </p>
+                </details>
+                @endforeach
             </div>
-        </section>
+        </div>
+    </section>
     @endif
 
     <section class="bg-emerald-600 text-white py-20 text-center">
