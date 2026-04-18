@@ -36,17 +36,37 @@ $notifications = auth()->user()->notifications()->latest()->limit(10)->get();
 
             @forelse ($notifications as $notif)
             <a href="{{ auth()->user()->hasRole('admin') 
-                        ? '/admin' . $notif->data['url'] 
-                        : $notif->data['url'] }}" class="block p-3 border-b hover:bg-gray-50 transition
+                ? '/admin' . $notif->data['url'] 
+                : $notif->data['url'] }}" class="flex items-center justify-between relative p-3 border-b hover:bg-gray-50 transition
                 {{ is_null($notif->read_at) ? 'bg-blue-50' : '' }}">
 
-                <p class="text-sm font-semibold text-gray-800 truncate">
-                    {{ $notif->data['title'] }}
-                </p>
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 truncate">
+                        {{ $notif->data['title'] }}
+                    </p>
 
-                <p class="text-xs text-gray-500 truncate">
-                    {{ $notif->data['message'] }}
-                </p>
+                    <p class="text-xs text-gray-500 truncate">
+                        {{ $notif->data['message'] }}
+                    </p>
+
+                    <div class="text-xs text-gray-400 mt-1">
+                        {{ $notif->created_at->diffForHumans() }}
+                    </div>
+                </div>
+
+                <button @click.prevent.stop=" fetch('/notifications/{{ $notif->id }}', {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }).then(() => {
+                    $el.closest('a')?.remove();
+                });" class="p-1 rounded-full hover:bg-gray-200 z-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </a>
             @empty
             <p class="p-3 text-sm text-center text-gray-500">
