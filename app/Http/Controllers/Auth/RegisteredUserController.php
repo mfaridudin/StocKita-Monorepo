@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Plan;
 use App\Models\Store;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Notifications\NewOwnerNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -82,14 +84,20 @@ class RegisteredUserController extends Controller
                 'owner_id' => $user->id,
                 'slug' => $this->generateUniqueSlug($user->name . '-store'),
             ]);
+
+            $admins = User::role('admin')->get();
+
+            foreach ($admins as $admin) {
+                $admin->notify(new NewOwnerNotification($user));
+            }
         }
 
         $plan = session('plan_id');
         $interval = session('interval');
 
-        Auth::login($user);
-
         if ($plan) {
+
+            Auth::login($user);
 
             $planModel = Plan::find($plan);
 
@@ -103,18 +111,6 @@ class RegisteredUserController extends Controller
         }
 
         return redirect("/dashboard");
-
-        if ($user) {
-            Subscription::updateOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'plan_id' => 1,
-                    'interval' => 'monthly',
-                    'status' => 'active',
-                    'current_period_end' => now()->addDays(30),
-                ]
-            );
-        }
 
         event(new Registered($user));
 

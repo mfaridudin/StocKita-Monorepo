@@ -117,6 +117,19 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/customers/by-store', [AdminTransactionController::class, 'byStore']);
+
+    //notif
+    Route::post('/notifications/read', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return response()->json(['ok' => true]);
+    });
+
+    Route::delete('/notifications/{id}', function ($id) {
+        $notif = auth()->user()->notifications()->findOrFail($id);
+        $notif->delete();
+
+        return response()->json(['success' => true]);
+    });
 });
 
 /*
