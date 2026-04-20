@@ -97,9 +97,17 @@ class WarehouseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(WarehouseStoreRequest $request, string $id)
     {
-        //
+        $warehouse = Warehouse::findOrFail($id);
+
+        $warehouse->update([
+            'name' => $request->name,
+            'location' => $request->location,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->back()->with('success', 'Gudang Berhasil diupdate!');
     }
 
     /**

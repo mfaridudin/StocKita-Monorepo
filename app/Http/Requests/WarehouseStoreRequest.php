@@ -28,12 +28,12 @@ class WarehouseStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'location' => ['required', 'string'],
             'description' => ['required', 'string'],
-
+            
             'store_id' => [
-                Rule::requiredIf(Auth::user()->hasRole('admin')),
-                'exists:stores,id'
-            ],
-        ];
+                    $this->isMethod('post') ? Rule::requiredIf(Auth::user()->hasRole('admin')) : 'nullable',
+                    'exists:stores,id'
+                ],
+            ];
     }
 
     public function messages(): array

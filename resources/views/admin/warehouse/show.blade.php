@@ -276,7 +276,8 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-medium">Masukan Stok <span class="text-red-500">*</span></label>
+                        <label class="text-sm font-medium">Masukan Stok <span class="text-red-500">*</span>
+                        </label>
                         <input type="number" name="qty" value="{{ old('qty') }}" placeholder="Masukan Angka"
                             class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500">
                         <x-input-error :messages="$errors->addStock->get('qty')" class="mt-2 text-red-500 text-sm" />
