@@ -1,7 +1,12 @@
+@php
+$isAdmin = auth()->user()->hasRole('admin');
+
+$prefix = $isAdmin ? '/admin' : '';
+@endphp
 <x-app-layout title="Langganan">
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 let type =
                     "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
 
@@ -14,7 +19,7 @@
                     timer: 3000
                 });
             });
-        </script>
+    </script>
     @endif
     <div class="space-y-6">
 
@@ -29,7 +34,7 @@
             </div>
 
             <div x-data class="flex gap-3">
-                <a href="{{ route('admin.subscriptions.create') }}"
+                <a href="{{ $prefix }}/subscriptions/create"
                     class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,9 +55,9 @@
                             <select name="interval"
                                 class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-xl bg-white">
                                 <option value="">Semua Interval</option>
-                                <option value="monthly" {{ request('status') == 'monthly' ? 'selected' : '' }}>Monthly
+                                <option value="monthly" {{ request('status')=='monthly' ? 'selected' : '' }}>Monthly
                                 </option>
-                                <option value="yearly" {{ request('status') == 'yearly' ? 'selected' : '' }}>Yearly
+                                <option value="yearly" {{ request('status')=='yearly' ? 'selected' : '' }}>Yearly
                                 </option>
                             </select>
 
@@ -69,10 +74,10 @@
                             <select name="status"
                                 class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white">
                                 <option value="">Semua Status</option>
-                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
+                                <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>
                                     Active
                                 </option>
-                                <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>
+                                <option value="expired" {{ request('status')=='expired' ? 'selected' : '' }}>
                                     Expired
                                 </option>
                             </select>
@@ -91,10 +96,9 @@
                                 class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white">
                                 <option value="">Semua Tipe</option>
                                 @foreach ($plans as $plan)
-                                    <option value="{{ $plan->id }}"
-                                        {{ request('type') == '$plan->id' ? 'selected' : '' }}>
-                                        {{ $plan->name }}
-                                    </option>
+                                <option value="{{ $plan->id }}" {{ request('type')=='$plan->id' ? 'selected' : '' }}>
+                                    {{ $plan->name }}
+                                </option>
                                 @endforeach
                             </select>
 
@@ -125,8 +129,7 @@
 
                         </div>
 
-                        <button type="submit"
-                            class="px-6 py-3 bg-blue-500 text-white rounded-xl text-sm font-semibold">
+                        <button type="submit" class="px-6 py-3 bg-blue-500 text-white rounded-xl text-sm font-semibold">
                             Filter
                         </button>
                     </div>
@@ -147,118 +150,116 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($subscriptions as $subscription)
-                            <tr class="hover:bg-gray-50 transition-colors">
+                        <tr class="hover:bg-gray-50 transition-colors">
 
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">
-                                                {{ substr($subscription->user->name, 0, 1) }}
-                                            </span>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-semibold text-sm">
+                                            {{ substr($subscription->user->name, 0, 1) }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">
+                                            {{ $subscription->user->name }}
                                         </div>
-                                        <div>
-                                            <div class="font-medium text-gray-900">
-                                                {{ $subscription->user->name }}
-                                            </div>
-                                            <div class="text-sm text-gray-500">
-                                                {{ $subscription->user->email ?? '-' }}
-                                            </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{ $subscription->user->email ?? '-' }}
                                         </div>
                                     </div>
-                                </td>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
+                                    {{ $subscription->plan->name ?? '-' }}
+                                </span>
+                            </td>
 
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-                                        {{ $subscription->plan->name ?? '-' }}
-                                    </span>
-                                </td>
+                            <td class="px-6 py-4 text-sm text-gray-700">
+                                {{ ucfirst($subscription->interval) }}
+                            </td>
 
-                                <td class="px-6 py-4 text-sm text-gray-700">
-                                    {{ ucfirst($subscription->interval) }}
-                                </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+                                {{ \Carbon\Carbon::parse($subscription->created_at)->format('d M Y') }}
+                                -
+                                {{ \Carbon\Carbon::parse($subscription->current_period_end)->format('d M Y') }}
+                            </td>
 
-                                <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
-                                    {{ \Carbon\Carbon::parse($subscription->created_at)->format('d M Y') }}
-                                    -
-                                    {{ \Carbon\Carbon::parse($subscription->current_period_end)->format('d M Y') }}
-                                </td>
-
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="px-3 py-1 text-xs rounded-full font-medium
+                            <td class="px-6 py-4">
+                                <span
+                                    class="px-3 py-1 text-xs rounded-full font-medium
                                         {{ $subscription->status === 'expired' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }}">
-                                        {{ $subscription->status }}
-                                    </span>
-                                </td>
+                                    {{ $subscription->status }}
+                                </span>
+                            </td>
 
-                                <td class="px-6 py-4">
-                                    <div x-data class="flex items-center gap-2">
+                            <td class="px-6 py-4">
+                                <div x-data class="flex items-center gap-2">
 
-                                        <form action="{{ route('admin.subscriptions.toggle', $subscription->id) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('PATCH')
+                                    <form action="{{ route('admin.subscriptions.toggle', $subscription->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PATCH')
 
-                                            <button type="submit"
-                                                class="p-1.5 rounded-lg transition-all
+                                        <button type="submit" class="p-1.5 rounded-lg transition-all
                                                 {{ $subscription->status === 'active'
                                                     ? 'text-yellow-600 hover:bg-yellow-100'
                                                     : 'text-green-600 hover:bg-green-100' }}">
 
-                                                {!! $subscription->status === 'active'
-                                                    ? '
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 text-yellow-600">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    '
-                                                    : '
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 text-green-600">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ' !!}
-                                            </button>
-                                        </form>
+                                            {!! $subscription->status === 'active'
+                                            ? '
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="2" stroke="currentColor" class="size-5 text-yellow-600">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                                            </svg>
+                                            '
+                                            : '
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="2" stroke="currentColor" class="size-5 text-green-600">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                                            </svg>
+                                            ' !!}
+                                        </button>
+                                    </form>
 
-                                        {{-- upgrade / downgarde --}}
-                                        <button
-                                            @click="$dispatch('open-modal', { 
+                                    {{-- upgrade / downgarde --}}
+                                    <button @click="$dispatch('open-modal', { 
                                                 name: 'upgrade-subscription', 
                                                 id: {{ $subscription->id }},
                                                 plan_id: {{ $subscription->plan_id }},
                                                 interval: '{{ $subscription->interval }}'
-                                            })"
-                                            class="p-1.5 text-yellow-600 hover:bg-yellow-100 rounded-lg"
-                                            title="Upgrade / downgrade">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="size-5">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-                                            </svg>
-                                        </button>
+                                            })" class="p-1.5 text-yellow-600 hover:bg-yellow-100 rounded-lg"
+                                        title="Upgrade / downgrade">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                                        </svg>
+                                    </button>
 
-                                        <button
-                                            @click="$dispatch('open-modal', { name: 'delete-subscription', id: {{ $subscription->id }} })"
-                                            class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-gray-100 rounded-lg">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="size-5 text-red-500">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
-                                        </button>
+                                    <button
+                                        @click="$dispatch('open-modal', { name: 'delete-subscription', id: {{ $subscription->id }} })"
+                                        class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-gray-100 rounded-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-5 text-red-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
 
-                                    </div>
-                                </td>
+                                </div>
+                            </td>
 
-                            </tr>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
-                                    <h3 class="text-lg font-semibold mb-2">Belum ada langganan</h3>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                                <h3 class="text-lg font-semibold mb-2">Belum ada langganan</h3>
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -272,7 +273,7 @@
     {{-- create modal --}}
     <x-modal name="create-subscription" maxWidth="md" :show="$errors->any()">
         <div class="p-6">
-            <form action="/admin/customers" method="POST">
+            <form action="//customers" method="POST">
                 @csrf
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold">Tambah Pelanggan Baru</h3>
@@ -295,9 +296,9 @@
                             <option value="">--- Pilih toko ---</option>
 
                             @foreach ($stores as $store)
-                                <option value="{{ $store->id }}">
-                                    {{ $store->name }}
-                                </option>
+                            <option value="{{ $store->id }}">
+                                {{ $store->name }}
+                            </option>
                             @endforeach
 
                         </select>
@@ -320,9 +321,9 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pelanggan *</label>
                             <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                <option value="regular" {{ old('type') == 'regular' ? 'selected' : '' }}>Regular
+                                <option value="regular" {{ old('type')=='regular' ? 'selected' : '' }}>Regular
                                 </option>
-                                <option value="exclusive" {{ old('type') == 'exclusive' ? 'selected' : '' }}>Exclusive
+                                <option value="exclusive" {{ old('type')=='exclusive' ? 'selected' : '' }}>Exclusive
                                 </option>
                             </select>
                             <x-input-error :messages="$errors->get('type')" class="mt-2 text-red-500 text-sm" />
@@ -331,9 +332,9 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
                             <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Aktif
+                                <option value="active" {{ old('status')=='active' ? 'selected' : '' }}>Aktif
                                 </option>
-                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Tidak
+                                <option value="inactive" {{ old('status')=='inactive' ? 'selected' : '' }}>Tidak
                                     Aktif
                                 </option>
                             </select>
@@ -364,12 +365,10 @@
 
     {{-- delete modal --}}
     <x-modal name="delete-subscription" maxWidth="md">
-        <div x-data="{ subscriptionId: null }"
-            x-on:open-modal.window="
+        <div x-data="{ subscriptionId: null }" x-on:open-modal.window="
             if ($event.detail.name === 'delete-subscription'    ) {
                 subscriptionId = $event.detail.id
-            }"
-            class="p-6">
+            }" class="p-6">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
                     Hapus Pelanggan
@@ -394,7 +393,7 @@
                 </p>
             </div>
 
-            <form :action="`/admin/subscriptions/${subscriptionId}`" method="POST" class="mt-6">
+            <form :action="`{{ $prefix }}/subscriptions/${subscriptionId}`" method="POST" class="mt-6">
                 @csrf
                 @method('DELETE')
 
@@ -416,26 +415,24 @@
 
     {{-- upgarede modal --}}
     <x-modal name="upgrade-subscription" maxWidth="md">
-        <div x-data="{ subscriptionId: null, planId: '', interval: '' }"
-            x-on:open-modal.window="
+        <div x-data="{ subscriptionId: null, planId: '', interval: '' }" x-on:open-modal.window="
         if ($event.detail.name === 'upgrade-subscription') {
             subscriptionId = $event.detail.id
             planId = $event.detail.plan_id
             interval = $event.detail.interval
-        }"
-            class="p-6">
+        }" class="p-6">
 
             <h3 class="text-lg font-semibold mb-4">Upgrade / Downgrade Paket</h3>
 
-            <form :action="`/admin/subscriptions/${subscriptionId}`" method="POST">
+            <form :action="`{{ $prefix }}/subscriptions/${subscriptionId}`" method="POST">
                 @csrf
                 @method('PUT')
 
                 <select name="plan_id" x-model="planId" class="w-full px-4 py-2 border rounded-lg mb-4">
                     @foreach ($plans as $plan)
-                        <option value="{{ $plan->id }}">
-                            {{ $plan->name }}
-                        </option>
+                    <option value="{{ $plan->id }}">
+                        {{ $plan->name }}
+                    </option>
                     @endforeach
                 </select>
 

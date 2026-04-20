@@ -64,6 +64,9 @@ class SubscriptionController extends Controller
 
     public function store(Request $request)
     {
+        $isAdmin = auth()->user()->hasRole('admin');
+        $prefix = $isAdmin ? '/admin' : '';
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'plan_id' => 'required|exists:plans,id',
@@ -85,7 +88,7 @@ class SubscriptionController extends Controller
         $user = User::find($request->user_id);
         $user->syncAllLimits();
 
-        return redirect('/admin/subscriptions')
+        return redirect($prefix . '/subscriptions')
             ->with('success', 'Langganan berhasil dibuat!');
     }
 

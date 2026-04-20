@@ -1,3 +1,8 @@
+@php
+$isAdmin = auth()->user()->hasRole('admin');
+
+$prefix = $isAdmin ? '/admin' : '';
+@endphp
 <x-app-layout title="Toko">
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
     <script>
@@ -81,7 +86,7 @@
                             <td class="px-6 py-4">
                                 <div x-data class="flex justify-end gap-2">
 
-                                    <a href="/admin/store/{{ $store->id }}"
+                                    <a href="{{ $prefix }}/store/{{ $store->id }}"
                                         class="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
                                         Detail
                                     </a>
@@ -112,7 +117,7 @@
     {{-- create modal --}}
     <x-modal name="create-store" maxWidth="xl" :show="$errors->any()">
         <div class="p-6">
-            <form action="/admin/store" method="POST">
+            <form action="{{ $prefix }}/store" method="POST">
                 @csrf
 
                 <div class="flex justify-between items-center mb-6 pb-4 border-b">
@@ -223,7 +228,7 @@
                 </p>
             </div>
 
-            <form :action="`/admin/store/${storeId}`" method="POST" class="mt-6">
+            <form :action="`{{ $prefix }}/store/${storeId}`" method="POST" class="mt-6">
                 @csrf
                 @method('DELETE')
 

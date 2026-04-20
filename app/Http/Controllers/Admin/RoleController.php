@@ -30,13 +30,15 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
+        $isAdmin = auth()->user()->hasRole('admin');
+        $prefix = $isAdmin ? 'admin.' : '';
         $role = Role::create([
             'name' => $request->name,
         ]);
 
         $role->syncPermissions($request->permissions);
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route($prefix . 'roles.index');
     }
 
     public function edit(Role $role)
@@ -48,13 +50,16 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role)
     {
+        $isAdmin = auth()->user()->hasRole('admin');
+        $prefix = $isAdmin ? '/admin' : '';
+
         $role->update([
             'name' => $request->name,
         ]);
 
         $role->syncPermissions($request->permissions);
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route($prefix . 'roles.index');
     }
 
     public function destroy(Role $role)

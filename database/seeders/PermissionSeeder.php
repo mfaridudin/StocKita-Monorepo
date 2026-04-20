@@ -57,7 +57,6 @@ class PermissionSeeder extends Seeder
             'view order history',
 
             // Admin
-            'manage users',
             'manage roles',
             'manage permissions',
         ];

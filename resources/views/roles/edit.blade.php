@@ -1,3 +1,8 @@
+@php
+$isAdmin = auth()->user()->hasRole('admin');
+
+$prefix = $isAdmin ? 'admin.' : '';
+@endphp
 <x-app-layout title="Edit Role - {{ $role->name }}">
     <div class="py-8 mx-auto">
         <!-- Header -->
@@ -19,7 +24,7 @@
                 </div>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('admin.roles.index') }}"
+                <a href="{{ route($prefix . 'roles.index') }}"
                     class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -31,7 +36,7 @@
         </div>
 
         <div class="bg-white shadow-2xl rounded-2xl border border-gray-200 overflow-hidden">
-            <form method="POST" action="{{ route('admin.roles.update', $role) }}" class="p-8">
+            <form method="POST" action="{{ route($prefix . 'roles.update', $role) }}" class="p-8">
                 @csrf
                 @method('PUT')
                 <div class="mb-10">
@@ -50,14 +55,14 @@
                             placeholder="Masukkan nama role" required>
                     </div>
                     @error('name')
-                        <p class="mt-2 text-sm text-red-600 flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            {{ $message }}
-                        </p>
+                    <p class="mt-2 text-sm text-red-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        {{ $message }}
+                    </p>
                     @enderror
                 </div>
 
@@ -78,26 +83,27 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         @foreach ($permissions as $permission)
-                            <div class="group">
-                                <label
-                                    class="flex items-center p-4 border border-gray-200 rounded-xl hover:border-gray-400 hover:shadow-md transition-all duration-200 cursor-pointer h-full @if ($role->hasPermissionTo($permission->name)) bg-blue-50 border-blue-200 @else bg-white @endif">
+                        <div class="group">
+                            <label
+                                class="flex items-center p-4 border border-gray-200 rounded-xl hover:border-gray-400 hover:shadow-md transition-all duration-200 cursor-pointer h-full @if ($role->hasPermissionTo($permission->name)) bg-blue-50 border-blue-200 @else bg-white @endif">
 
 
-                                    <div class="flex items-center justify-between w-full ml-10">
-                                        <div>
-                                            <div class="font-medium text-gray-900 group-hover:text-gray-700">
-                                                {{ $permission->name }}
-                                            </div>
-                                            <div class="text-sm text-gray-500">
-                                                {{ ucfirst(str_replace('_', ' ', $permission->name)) }}
-                                            </div>
+                                <div class="flex items-center justify-between w-full ml-10">
+                                    <div>
+                                        <div class="font-medium text-gray-900 group-hover:text-gray-700">
+                                            {{ $permission->name }}
                                         </div>
-                                        <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                            class="h-5 w-5 text-blue-600 focus:ring-none border-gray-300 rounded-full focus:ring-2"
-                                            {{ in_array($permission->name, old('permissions', $role->permissions->pluck('name')->toArray())) ? 'checked' : '' }}>
+                                        <div class="text-sm text-gray-500">
+                                            {{ ucfirst(str_replace('_', ' ', $permission->name)) }}
+                                        </div>
                                     </div>
-                                </label>
-                            </div>
+                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                        class="h-5 w-5 text-blue-600 focus:ring-none border-gray-300 rounded-full focus:ring-2"
+                                        {{ in_array($permission->name, old('permissions',
+                                    $role->permissions->pluck('name')->toArray())) ? 'checked' : '' }}>
+                                </div>
+                            </label>
+                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -111,7 +117,7 @@
                         </svg>
                         Update Role
                     </button>
-                    <a href="{{ route('admin.roles.index') }}"
+                    <a href="{{ route($prefix . 'roles.index') }}"
                         class="flex-1 text-center py-4 px-6 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
                         Batal
                     </a>
@@ -121,21 +127,21 @@
     </div>
 
     @if (session('success'))
-        <div
-            class="fixed top-4 right-4 z-50 bg-green-100 border border-green-400 text-green-700 px-6 py-3 rounded-xl shadow-lg max-w-sm mx-auto">
-            {{ session('success') }}
-        </div>
+    <div
+        class="fixed top-4 right-4 z-50 bg-green-100 border border-green-400 text-green-700 px-6 py-3 rounded-xl shadow-lg max-w-sm mx-auto">
+        {{ session('success') }}
+    </div>
     @endif
 
     @if ($errors->any())
-        <div
-            class="fixed top-4 right-4 z-50 bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-xl shadow-lg max-w-sm mx-auto">
-            <ul class="list-disc list-inside space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div
+        class="fixed top-4 right-4 z-50 bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-xl shadow-lg max-w-sm mx-auto">
+        <ul class="list-disc list-inside space-y-1">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 </x-app-layout>
 

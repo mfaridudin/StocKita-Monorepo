@@ -210,7 +210,10 @@ Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function
         'categories' => CategoryController::class,
         'warehouse' => WarehouseController::class,
         'customers' => CustomerController::class,
+        'store' => StoreController::class,
+        'roles' => RoleController::class,
         'transactions' => TransactionController::class,
+        'subscriptions' => SubscriptionController::class,
     ]);
 
     // Custom Actions
