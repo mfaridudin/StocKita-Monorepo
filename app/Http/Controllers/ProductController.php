@@ -8,7 +8,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Imagick;
+// use Imagick;
+use Intervention\Image\Laravel\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -75,24 +76,26 @@ class ProductController extends Controller
             if (auth()->user()->can('upload product images')) {
                 $file = $request->file('image');
                 $filename = 'prd-' . time() . '.webp';
-                $path = storage_path('app/public/products/' . $filename);
-                $image = new Imagick($file->getRealPath());
-                $size = min($image->getImageWidth(), $image->getImageHeight());
-                $image->cropImage($size, $size, ($image->getImageWidth() - $size) / 2, ($image->getImageHeight() - $size) / 2);
-                $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-                $image->setImageFormat('webp');
-                $image->setImageCompressionQuality(30);
-                $image->setOption('webp:method', '6');
-                $image->stripImage();
-                $image->writeImage($path);
-                $image->clear();
-                $image->destroy();
+
+                // Pastikan folder ada
+                $directory = storage_path('app/public/products');
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+
+                $path = $directory . '/' . $filename;
+
+                Image::read($file)
+                    ->cover(200, 200, 'center')
+                    ->toWebp(30)
+                    ->save($path);
+
                 $imagePath = 'products/' . $filename;
             } else {
                 session()->flash('error', 'Gambar tidak diupload karena tidak punya izin');
             }
         }
-        
+
         Product::create([
             'name' => $request->name,
             'sku' => $this->generateSku(),
@@ -192,28 +195,10 @@ class ProductController extends Controller
             $path = $directory . '/' . $filename;
 
             try {
-                $image = new Imagick($file->getRealPath());
-
-                $size = min($image->getImageWidth(), $image->getImageHeight());
-                $image->cropImage(
-                    $size,
-                    $size,
-                    ($image->getImageWidth() - $size) / 2,
-                    ($image->getImageHeight() - $size) / 2
-                );
-
-                $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-
-                $image->setImageFormat('webp');
-                $image->setImageCompressionQuality(30);
-                $image->setOption('webp:method', '6');
-
-                $image->stripImage();
-
-                $image->writeImage($path);
-
-                $image->clear();
-                $image->destroy();
+                Image::read($file)
+                    ->cover(200, 200, 'center')
+                    ->toWebp(30)
+                    ->save($path);
 
                 $imagePath = 'products/' . $filename;
 

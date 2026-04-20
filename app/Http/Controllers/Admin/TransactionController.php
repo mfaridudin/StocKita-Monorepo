@@ -228,167 +228,102 @@ class TransactionController extends Controller
     // buat struk
     private function generateReceipt($transaction)
     {
-        $storeId = $transaction->store_id;
-        $store = Store::findOrFail($storeId);
+        $store = Store::findOrFail($transaction->store_id);
 
-        $manager = new ImageManager(new Driver);
+        $driver = extension_loaded('imagick') ? new Driver() : new Driver();
+        $manager = new ImageManager($driver);
 
         $width = 350;
         $leftX = 35;
         $center = $width / 2;
-
-        $tempHeight = 2000;
-
-        $img = $manager->create($width, $tempHeight)->fill('white');
-
         $fontPath = public_path('fonts/RobotoMono-Regular.ttf');
+
+        // Gunakan tempHeight yang cukup
+        $tempHeight = 2000;
+        $img = $manager->create($width, $tempHeight)->fill('white');
 
         $y = 30;
 
+        // --- Header Toko ---
         $img->text(strtoupper($store->name ?? 'TOKO'), $center, $y, function ($font) use ($fontPath) {
-            $font->file($fontPath);
-            $font->size(22);
-            $font->align('center');
+            $font->file($fontPath)->size(22)->align('center')->color('000');
         });
 
         $y += 25;
-
         $address = strtoupper($store->address ?? 'ALAMAT TOKO');
-
         $charPerLine = floor(($width - ($leftX * 2)) / 7);
         $lines = explode("\n", wordwrap($address, $charPerLine, "\n", true));
 
         foreach ($lines as $line) {
             $img->text($line, $center, $y, function ($font) use ($fontPath) {
-                $font->file($fontPath);
-                $font->size(12);
-                $font->align('center');
+                $font->file($fontPath)->size(12)->align('center')->color('000');
             });
-
             $y += 16;
         }
 
         $y += 5;
-
-        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12));
+        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 20;
 
-        $img->text($transaction->invoice_code, $leftX, $y, fn($font) => $font->file($fontPath)->size(12));
+        // --- Info Transaksi ---
+        $img->text($transaction->invoice_code, $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 18;
-
-        $img->text($transaction->created_at->format('d/m/Y H:i'), $leftX, $y, fn($font) => $font->file($fontPath)->size(12));
+        $img->text($transaction->created_at->format('d/m/Y H:i'), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
+        $y += 20;
+        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 20;
 
-        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12));
-        $y += 20;
-
+        // --- Items ---
         foreach ($transaction->items as $item) {
-
             $name = strtoupper($item->product->name);
             $lines = receipt_wrap($name, 20);
 
             foreach ($lines as $i => $lineText) {
-
                 if ($i === 0) {
                     $left = $lineText . ' x' . $item->qty;
                     $right = 'Rp ' . number_format($item->subtotal, 0, ',', '.');
-
-                    $img->text(
-                        receipt_format($left, $right),
-                        $leftX,
-                        $y,
-                        fn($font) => $font->file($fontPath)->size(12)
-                    );
+                    $img->text(receipt_format($left, $right), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
                 } else {
-                    $img->text(
-                        $lineText,
-                        $leftX,
-                        $y,
-                        fn($font) => $font->file($fontPath)->size(12)
-                    );
+                    $img->text($lineText, $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
                 }
-
                 $y += 18;
             }
         }
 
         $y += 10;
-
-        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12));
+        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 20;
 
-        $img->text(
-            receipt_format('TOTAL', 'Rp ' . number_format($transaction->total, 0, ',', '.')),
-            $leftX,
-            $y,
-            fn($font) => $font->file($fontPath)->size(12)
-        );
-
+        // --- Totals ---
+        $img->text(receipt_format('TOTAL', 'Rp ' . number_format($transaction->total, 0, ',', '.')), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 18;
-
-        $img->text(
-            receipt_format('TUNAI', 'Rp ' . number_format($transaction->paid, 0, ',', '.')),
-            $leftX,
-            $y,
-            fn($font) => $font->file($fontPath)->size(12)
-        );
-
+        $img->text(receipt_format('TUNAI', 'Rp ' . number_format($transaction->paid, 0, ',', '.')), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 18;
-
-        $img->text(
-            receipt_format('KEMBALI', 'Rp ' . number_format($transaction->change, 0, ',', '.')),
-            $leftX,
-            $y,
-            fn($font) => $font->file($fontPath)->size(12)
-        );
-
+        $img->text(receipt_format('KEMBALI', 'Rp ' . number_format($transaction->change, 0, ',', '.')), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 25;
 
-        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12));
+        $img->text(receipt_line(), $leftX, $y, fn($font) => $font->file($fontPath)->size(12)->color('000'));
         $y += 25;
 
-        $img->text('TERIMA KASIH', $center, $y, function ($font) use ($fontPath) {
-            $font->file($fontPath);
-            $font->size(12);
-            $font->align('center');
-        });
-
+        // --- Footer ---
+        $img->text('TERIMA KASIH', $center, $y, fn($font) => $font->file($fontPath)->size(12)->align('center')->color('000'));
         $y += 18;
+        $img->text('SELAMAT BERBELANJA KEMBALI', $center, $y, fn($font) => $font->file($fontPath)->size(11)->align('center')->color('000'));
 
-        $img->text('SELAMAT BERBELANJA KEMBALI', $center, $y, function ($font) use ($fontPath) {
-            $font->file($fontPath);
-            $font->size(11);
-            $font->align('center');
-        });
-
-        $finalHeight = $y + 20;
-
+        // --- Finalisasi Gambar ---
+        $finalHeight = $y + 30;
         $img->crop($width, $finalHeight, 0, 0);
 
         $dir = storage_path('app/public/receipts');
-
-        if (! file_exists($dir)) {
+        if (!file_exists($dir)) {
             mkdir($dir, 0755, true);
         }
 
-        $tempPath = $dir . '/receipt-' . $transaction->id . '-temp.png';
-        $img->save($tempPath);
+        $fileName = 'receipt-' . $transaction->id . '.webp';
+        $finalPath = $dir . '/' . $fileName;
 
-        $finalPath = $dir . '/receipt-' . $transaction->id . '.webp';
-        $quality = 60;
+        $img->toWebp(30)->save($finalPath);
 
-        Log::info("Membuat temp receipt: $tempPath");
-
-        exec("magick convert $tempPath -strip -quality 40 -define webp:method=6 $finalPath 2>&1", $output, $return_var);
-
-        Log::info('Output ImageMagick: ' . json_encode($output));
-        Log::info("Return var: $return_var");
-
-        if ($return_var !== 0) {
-            Log::error('ImageMagick gagal membuat struk untuk transaksi ' . $transaction->id);
-        }
-        @unlink($tempPath);
-
-        return 'receipts/receipt-' . $transaction->id . '.webp';
+        return 'receipts/' . $fileName;
     }
 }
