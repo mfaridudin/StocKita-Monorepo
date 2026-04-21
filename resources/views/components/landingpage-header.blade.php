@@ -129,10 +129,15 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
                 </button>
+            </div>
+
+            <div class="absolute left-0 right-0 mt-2 px-2">
 
                 <div id="searchResults"
-                    class="absolute mt-2 w-full bg-black shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50">
+                    class="w-full bg-white shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50">
+                    <!-- isi result -->
                 </div>
+
             </div>
 
             {{-- Button --}}
