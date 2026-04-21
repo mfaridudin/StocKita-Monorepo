@@ -25,6 +25,7 @@
             </div>
 
             <div x-data class="flex gap-3">
+                @can('create warehouse')
                 <button @click="$dispatch('open-modal', { name: 'create-warehouse' })"
                     class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,6 +34,7 @@
                     </svg>
                     Tambah Gudang
                 </button>
+                @endcan
             </div>
         </div>
 
@@ -102,6 +104,7 @@
                                         Detail
                                     </a>
 
+                                    @can('edit warehouse')
                                     <button @click="$dispatch('open-modal', { 
                                         name: 'edit-warehouse', 
                                         id: {{ $w->id }},
@@ -112,12 +115,15 @@
                                         class="px-3 py-1 text-xs bg-amber-100 text-amber-600 rounded-lg hover:bg-amber-200">
                                         Edit
                                     </button>
+                                    @endcan
 
+                                    @can('delete warehouse')
                                     <button
                                         @click="$dispatch('open-modal', { name: 'delete-warehouse', id: {{ $w->id }} })"
                                         class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
                                         Hapus
                                     </button>
+                                    @endcan
                                 </div>
                             </td>
 

@@ -18,6 +18,7 @@
     @endif
     <div class="space-y-4">
 
+        @can('create warehouse')
         <div x-data class="flex justify-between">
             <h1 class="text-lg font-semibold">Gudang</h1>
             <button @click="$dispatch('open-modal', { name: 'create-warehouse' })"
@@ -25,6 +26,7 @@
                 + Tambah
             </button>
         </div>
+        @endcan
 
         <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
@@ -56,6 +58,7 @@
                                         Detail
                                     </a>
 
+                                    @can('edit warehouse')
                                     <button @click="$dispatch('open-modal', { 
                                         name: 'edit-warehouse', 
                                         id: {{ $w->id }},
@@ -66,12 +69,16 @@
                                         class="px-3 py-1 text-xs bg-amber-100 text-amber-600 rounded-lg hover:bg-amber-200">
                                         Edit
                                     </button>
+                                    @endcan
 
+                                    @can('delete warehouse')
                                     <button
                                         @click="$dispatch('open-modal', { name: 'delete-warehouse', id: {{ $w->id }} })"
                                         class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
                                         Hapus
                                     </button>
+                                    @endcan
+
                                 </div>
                             </td>
 

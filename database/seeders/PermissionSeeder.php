@@ -54,8 +54,16 @@ class PermissionSeeder extends Seeder
             'delete store',
 
             // Inventory
-            'manage warehouse',
-            'manage stock movement',
+            'view warehouse',
+            'edit warehouse',
+            'create warehouse',
+            'delete warehouse',
+
+            'create inventory',
+            'delete inventory',
+            'adjust stock',
+            
+            // 'create inventory',
 
             // Buyer
             'view own orders',

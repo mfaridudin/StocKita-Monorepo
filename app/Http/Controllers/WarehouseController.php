@@ -13,7 +13,10 @@ class WarehouseController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:manage warehouse')->only(['index', 'show', 'store', 'destroy']);
+        $this->middleware('permission:view warehouse')->only(['index', 'show']);
+        $this->middleware('permission:create warehouse')->only(['store']);
+        $this->middleware('permission:edit warehouse')->only(['update']);
+        $this->middleware('permission:delete warehouse')->only(['destroy']);
     }
 
     // generate code

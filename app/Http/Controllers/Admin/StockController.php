@@ -11,7 +11,9 @@ class StockController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:manage stock movement')->only(['store', 'update', 'reduce', 'destroy']);
+        $this->middleware('permission:create inventory')->only(['store',]);
+        $this->middleware('permission:adjust stock')->only(['update', 'reduce']);
+        $this->middleware('permission:delete inventory')->only(['destroy']);
     }
 
     public function store(Request $request)

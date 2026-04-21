@@ -33,9 +33,15 @@ class RolePermissionAssignSeeder extends Seeder
             'delete products',
             'upload product images',
 
-            // Inventory
-            'manage warehouse',
-            'manage stock movement',
+            // Invento
+            'view warehouse',
+            'edit warehouse',
+            'create warehouse',
+            'delete warehouse',
+
+            'create inventory',             
+            'delete inventory',
+            'adjust stock',
 
             // Customers
             'view customers',

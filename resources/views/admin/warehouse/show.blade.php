@@ -1,6 +1,6 @@
 <x-app-layout title="Detail Gudang">
     <script>
-        const canManageStockMovement = @json(auth()->user()->can('manage stock movement'));
+        const canManageStockMovement = @json(auth()->user()->can('create inventory'));
     </script>
 
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
@@ -50,23 +50,10 @@
                 </div>
 
                 <div x-data class="w-full sm:w-auto">
-                    @can('manage stock movement')
-                    <button @click="if (!canManageStockMovement) {
-                        Swal.fire({
-                            toast: true,
-                            icon: 'error',
-                            position: 'top-end',
-                            title: 'Tidak punya izin!',
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
-                    } else {
-                        $dispatch('open-modal', {name:'create-stock'})
-                    }" class="w-full sm:w-auto justify-center px-4 py-3 text-sm sm:text-base
+                    @can('create inventory')
+                    <button @click="$dispatch('open-modal', {name:'create-stock'})" class="w-full sm:w-auto justify-center px-4 py-3 text-sm sm:text-base
                     rounded-xl flex items-center gap-2 text-white font-semibold
-                    {{ auth()->user()->can('manage stock movement')
-                        ? 'bg-green-500 hover:scale-[1.02] active:scale-95 transition'
-                        : 'bg-green-200 cursor-not-allowed' }}">
+                  bg-green-500 hover:scale-[1.02] active:scale-95 transition">
 
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -121,6 +108,7 @@
                         {{ $stock->qty }}
                     </span>
 
+                    @canany(['adjust stock', 'delete inventory'])
                     <div x-data="{ open: false }" class="absolute top-2 right-2">
 
                         <button @click="open = !open"
@@ -128,9 +116,10 @@
                             ⋮
                         </button>
 
+
                         <div x-show="open" @click.outside="open=false"
                             class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow border text-xs z-50">
-
+                            @can('adjust stock')
                             <button
                                 @click="$dispatch('open-modal', { name: 'add-stock', id: {{ $stock->id }} }); open=false"
                                 class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-green-50 text-green-600">
@@ -153,7 +142,9 @@
                                 </svg>
                                 Kurangi
                             </button>
+                            @endcan
 
+                            @can('delete inventory')
                             <button
                                 @click="$dispatch('open-modal', { name: 'delete-stock', id: {{ $stock->id }} }); open=false"
                                 class="w-full text-left px-3 py-2 flex gap-1 items-center hover:bg-red-50 text-red-600">
@@ -164,9 +155,12 @@
                                 </svg>
                                 Hapus
                             </button>
+                            @endcan
 
                         </div>
+
                     </div>
+                    @endcanany
                 </div>
 
                 <div class="p-3">
