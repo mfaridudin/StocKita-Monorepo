@@ -14,7 +14,7 @@
     <x-landingpage-header />
 
     <section class="bg-white border-b">
-        <div class="max-w-4xl mx-auto px-6 py-20">
+        <div class="max-w-4xl mx-auto px-6 pb-20 pt-32">
 
             <h1 class="text-4xl md:text-5xl font-bold mt-6 leading-tight text-gray-900">
                 {{ $title }}
