@@ -16,7 +16,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full">
+                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full pointer-events-none">
                         <img src="/image/hero1.png" alt="Business Growth"
                             class="w-full h-full object-cover object-right-top brightness-90 contrast-110">
                     </div>
@@ -93,7 +93,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full">
+                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full pointer-events-none">
                         <img src="/image/hero2.png" alt="POS System"
                             class="w-full h-full object-cover object-right-top brightness-90 contrast-110">
                     </div>
@@ -176,7 +176,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full">
+                    <div class="absolute top-0 right-0 w-full lg:w-3/4 h-full pointer-events-none">
                         <img src="/image/hero3.png" alt="Retail Success"
                             class="w-full h-full object-cover object-right-top brightness-90 contrast-110">
                     </div>
@@ -246,15 +246,15 @@
             </div>
         </div>
 
-        <div class="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-3 p-3">
+        <div class="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-3 p-3 z-[9999]">
             <button
-                class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
+                class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
 
             <button
-                class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
+                class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
 
             <button
-                class="carousel-dot w-1 h-1 md:w-2 md:h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
+                class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300 active:scale-125"></button>
         </div>
 
         <button class="hidden md:flex carousel-prev z-30
