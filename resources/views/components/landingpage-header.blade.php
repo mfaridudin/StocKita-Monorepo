@@ -58,7 +58,7 @@
                 </button>
 
                 <div id="searchResults"
-                    class="absolute mt-2 w-full bg-white shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50">
+                    class="absolute mt-2 w-full bg-white shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50 no-scrollbar">
                 </div>
             </div>
             <div class="flex items-center gap-4">
