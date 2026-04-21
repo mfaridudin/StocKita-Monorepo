@@ -276,7 +276,7 @@ Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function
     // Settings
     Route::get('/settings', [SettingController::class, 'index']);
 
-    Route::put('/store/{id}', [SettingController::class, 'updateStore']);
+    Route::put('/settings/store/{id}', [SettingController::class, 'updateStore']);
 });
 
 /*

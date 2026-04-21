@@ -6,18 +6,26 @@ use App\Models\Plan;
 use App\Models\Setting;
 use App\Models\Store;
 use App\Models\Subscription;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
      public function __construct()
     {
-        $this->middleware('permission:manage store settings')->only(['updateStore']);
+        $this->middleware('permission:view settings')->only(['index']);
+        $this->middleware('permission:edit store')->only(['updateStore']);
     }
     
+    
+    private function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = Store::where('slug', 'LIKE', $slug . '%')->count();
+
+        return $count ? "{$slug}-{$count}" : $slug;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -82,6 +90,7 @@ class SettingController extends Controller
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
+                'slug' => $this->generateUniqueSlug($data['name']),
                 'address' => $data['address'],
             ]
         );

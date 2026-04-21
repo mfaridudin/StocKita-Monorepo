@@ -2,7 +2,6 @@
 $isAdmin = auth()->user()->hasRole('admin');
 $isOwner = auth()->user()->hasRole('owner');
 $hasAccess = !$isOwner || auth()->user()->hasActiveSubscription();
-$canManageSettings = auth()->user()->can('manage settings') || auth()->user()->can('manage store settings');
 
 $prefix = $isAdmin ? '/admin' : '';
 @endphp
@@ -61,7 +60,7 @@ $prefix = $isAdmin ? '/admin' : '';
             <p class="sidebar-title will-change-transform font-semibold">Master Data</p>
             @endif
 
-            @can('manage store')
+            @can('view store')
             <a href="{{ $prefix }}/store" class="nav-item {{ str_contains($currentPath, 'store') ? 'active' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-5">
@@ -196,7 +195,7 @@ $prefix = $isAdmin ? '/admin' : '';
         @endcan
 
         {{-- settings --}}
-        @if ($canManageSettings)
+        @can('view settings')
         <a href="{{ $prefix }}/settings" class="nav-item {{ str_contains($currentPath, 'settings') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-5">
@@ -207,7 +206,9 @@ $prefix = $isAdmin ? '/admin' : '';
 
             <span class="sidebar-text will-change-transform">Settings</span>
         </a>
-        @endif
+        @endcan
+
+
         @endif
 
         {{-- subscription --}}

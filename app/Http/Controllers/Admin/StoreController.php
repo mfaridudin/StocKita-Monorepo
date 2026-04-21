@@ -14,7 +14,10 @@ class StoreController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:manage store')->only(['index', 'store', 'show', 'update', 'destroy']);
+        $this->middleware('permission:view store')->only(['index', 'show']);
+        $this->middleware('permission:create store')->only('store');
+        $this->middleware('permission:edit store')->only('update');
+        $this->middleware('permission:delete store')->only('destroy');
     }
 
     public function index()

@@ -32,11 +32,12 @@
                     </p>
                 </div>
 
+                @can('edit store')
                 <button x-data @click="$dispatch('open-modal', { name: 'edit-store' })"
                     class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
                     Edit
                 </button>
-
+                @endcan
             </div>
         </div>
 

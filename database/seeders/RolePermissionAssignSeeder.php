@@ -50,7 +50,8 @@ class RolePermissionAssignSeeder extends Seeder
             'delete transactions',
 
             // Settings
-            'manage store settings',
+            'view settings',
+            'edit store',
             'edit own profile'
         ]);
 

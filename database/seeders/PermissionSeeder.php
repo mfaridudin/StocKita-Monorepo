@@ -43,10 +43,15 @@ class PermissionSeeder extends Seeder
             'delete categories',
 
             // Settings
-            'manage store',
-            'manage store settings',
+            'view settings',
             'manage subscription',
             'edit own profile',
+
+            // store
+            'view store',
+            'create store',
+            'edit store',
+            'delete store',
 
             // Inventory
             'manage warehouse',
