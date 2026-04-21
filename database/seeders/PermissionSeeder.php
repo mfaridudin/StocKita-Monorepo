@@ -57,8 +57,7 @@ class PermissionSeeder extends Seeder
             'view order history',
 
             // Admin
-            'manage roles',
-            'manage permissions',
+            'manage roles & permissions',
         ];
 
         foreach ($permissions as $perm) {

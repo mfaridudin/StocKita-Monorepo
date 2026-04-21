@@ -11,7 +11,7 @@ class RoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:manage permissions');
+        $this->middleware('permission:manage roles & permissions');
     }
 
     public function index()
@@ -51,7 +51,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $isAdmin = auth()->user()->hasRole('admin');
-        $prefix = $isAdmin ? '/admin' : '';
+        $prefix = $isAdmin ? 'admin.' : '';
 
         $role->update([
             'name' => $request->name,
