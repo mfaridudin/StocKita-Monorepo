@@ -143,11 +143,11 @@ $prefix = $isAdmin ? '/admin' : '';
         </div>
 
         {{-- transaksi --}}
+        @can('view transactions')
         <div class="sidebar-group will-change-transform group-item mt-6">
             @if ($isAdmin)
             <p class="sidebar-title will-change-transform font-semibold">Transaksi</p>
             @endif
-
             <a href="{{ $prefix }}/transactions"
                 class="nav-item {{ str_contains($currentPath, 'transactions') ? 'active' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -158,10 +158,33 @@ $prefix = $isAdmin ? '/admin' : '';
                 <span class=" sidebar-text will-change-transform">Transaksi</span>
             </a>
         </div>
+        @endcan
+
+        @role('buyer')
+        <a href="/buyer/dashboard" class="nav-item {{ $currentPath == 'buyer/dashboard' ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+            </svg>
+
+            <span class="sidebar-text will-change-transform">Dashboard</span>
+        </a>
+
+        <a href="/buyer/orders" class="nav-item {{ str_starts_with($currentPath, 'buyer/orders') ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+
+            <span class="sidebar-text will-change-transform">Riwayat</span>
+        </a>
+        @endrole
 
         <div class="border-t border-green-100 my-4"></div>
 
-        @can('manage permissions')
+        @can('manage roles & permissions')
         <a href="{{ $prefix }}/roles" class="nav-item {{ str_contains($currentPath, 'roles') ? 'active' : '' }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -198,29 +221,6 @@ $prefix = $isAdmin ? '/admin' : '';
             <span class="sidebar-text will-change-transform">Subscription</span>
         </a>
         @endif
-
-
-        @role('buyer')
-        <a href="/buyer/dashboard" class="nav-item {{ $currentPath == 'buyer/dashboard' ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-            </svg>
-
-            <span class="sidebar-text will-change-transform">Dashboard</span>
-        </a>
-
-        <a href="/buyer/orders" class="nav-item {{ str_starts_with($currentPath, 'buyer/orders') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-
-            <span class="sidebar-text will-change-transform">Riwayat</span>
-        </a>
-        @endrole
     </nav>
 </aside>
 <div id="overlay" class="fixed inset-0 bg-black/30 z-40 md:z-[100] hidden lg:hidden"></div>
