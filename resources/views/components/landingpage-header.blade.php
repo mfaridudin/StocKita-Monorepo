@@ -101,59 +101,61 @@
     </nav>
 
     {{-- mobile menu --}}
-    <div id="mobileMenu" class="lg:hidden hidden px-4 pb-4 bg-white border-t border-slate-200 shadow-md">
+    <div id="mobileMenu" class="lg:hidden hidden bg-white border-t border-slate-200 shadow-md overflow-hidden">
 
-        <ul class="flex flex-col gap-2 mt-3">
-            <li><a href="/#home" class="block py-2 text-slate-700 hover:text-emerald-600">Home</a></li>
-            <li><a href="/#features" class="block py-2 text-slate-700 hover:text-emerald-600">Fitur</a></li>
-            <li><a href="/#blog" class="block py-2 text-slate-700 hover:text-emerald-600">Panduan</a></li>
-            <li><a href="/#offer" class="block py-2 text-slate-700 hover:text-emerald-600">Harga</a></li>
-        </ul>
+        <div class="px-4 pb-4">
+            <ul class="flex flex-col gap-2 mt-3">
+                <li><a href="/#home" class="block py-2 text-slate-700 hover:text-emerald-600">Home</a></li>
+                <li><a href="/#features" class="block py-2 text-slate-700 hover:text-emerald-600">Fitur</a></li>
+                <li><a href="/#blog" class="block py-2 text-slate-700 hover:text-emerald-600">Panduan</a></li>
+                <li><a href="/#offer" class="block py-2 text-slate-700 hover:text-emerald-600">Harga</a></li>
+            </ul>
 
-        {{-- Search mobile --}}
-        <div class="relative w-full lg:hidden group">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6 absolute left-4 top-1/2 -translate-y-1/2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-
-            <input id="searchInput" type="text" placeholder="Cari..."
-                class="pl-12 pr-4 py-3 bg-slate-100 w-full border border-green-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-white transition-all duration-200 shadow-sm group-hover:shadow-md">
-
-            <button id="clearSearch"
-                class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center hidden transition">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            {{-- Search mobile --}}
+            <div class="relative w-full lg:hidden group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6 absolute left-4 top-1/2 -translate-y-1/2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
-            </button>
 
-            <div id="searchResults"
-                class="absolute mt-2 w-full bg-white shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50">
+                <input id="searchInput" type="text" placeholder="Cari..."
+                    class="pl-12 pr-4 py-3 bg-slate-100 w-full border border-green-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-white transition-all duration-200 shadow-sm group-hover:shadow-md">
+
+                <button id="clearSearch"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center hidden transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <div id="searchResults"
+                    class="absolute mt-2 w-full bg-black shadow-lg rounded-xl max-h-60 overflow-y-auto hidden z-50">
+                </div>
             </div>
-        </div>
 
-        {{-- Button --}}
-        <div class="flex items-center gap-4 mt-4 md:hidden">
+            {{-- Button --}}
+            <div class="flex items-center gap-4 mt-4 md:hidden">
 
-            @guest
-            <a href="/register" class="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl">
-                Daftar
-            </a>
+                @guest
+                <a href="/register" class="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl">
+                    Daftar
+                </a>
 
-            <a href="/login" class="flex-1 text-center px-4 py-2 bg-amber-500 text-white rounded-xl">
-                Masuk
-            </a>
-            @endguest
+                <a href="/login" class="flex-1 text-center px-4 py-2 bg-amber-500 text-white rounded-xl">
+                    Masuk
+                </a>
+                @endguest
 
-            @auth
-            <a href="{{ auth()->user()->getDashboardUrl() }}"
-                class="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl">
-                Dashboard
-            </a>
-            @endauth
+                @auth
+                <a href="{{ auth()->user()->getDashboardUrl() }}"
+                    class="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl">
+                    Dashboard
+                </a>
+                @endauth
 
+            </div>
         </div>
     </div>
 </header>
