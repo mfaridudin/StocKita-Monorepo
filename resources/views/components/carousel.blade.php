@@ -392,46 +392,70 @@
 
         // Touch/swipe support
         let startX = 0;
+        let startY = 0;
         let currentX = 0;
         let isDragging = false;
+        let isScrolling = null;
+        let startTrackX = 0;
 
         container.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
             currentX = startX;
             isDragging = true;
+            isScrolling = null;
 
             clearInterval(autoPlayInterval);
+
             gsap.killTweensOf(track);
-        });
+            
+            isTransitioning = false; 
+
+            startTrackX = gsap.getProperty(track, "x");
+            
+            index = Math.round(Math.abs(startTrackX) / slideWidth);
+
+        }, { passive: true });
 
         container.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
 
             currentX = e.touches[0].clientX;
-            const diff = currentX - startX;
+            let currentY = e.touches[0].clientY;
+            const diffX = currentX - startX;
+            const diffY = currentY - startY;
+
+            if (isScrolling === null) {
+                isScrolling = Math.abs(diffX) < Math.abs(diffY);
+            }
+
+            if (isScrolling) {
+                isDragging = false;
+                return;
+            }
+
+            if (e.cancelable) {
+                e.preventDefault();
+            }
 
             gsap.set(track, {
-                x: -(slideWidth * index) + diff
+                x: startTrackX + diffX
             });
-        });
+        }, { passive: false });
 
         container.addEventListener('touchend', () => {
-            if (!isDragging) return;
+            if (!isDragging || isScrolling) return;
 
-            const diff = startX - currentX;
+            const diffX = startX - currentX;
 
-            if (Math.abs(diff) > 80) {
-                if (diff > 0) {
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
                     nextSlide();
                 } else {
                     prevSlide();
                 }
             } else {
-                gsap.to(track, {
-                    x: -(slideWidth * index),
-                    duration: 0.4,
-                    ease: "power2.out"
-                });
+                moveToSlide(index); 
             }
 
             isDragging = false;
@@ -458,10 +482,13 @@
 <style>
     .carousel-container {
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        touch-action: pan-y;
+        /* TAMBAHKAN INI: Mencegah browser bentrok saat swipe horizontal */
     }
 
     .carousel-track {
         will-change: transform;
+        /* Ini sudah cukup dan benar */
         transform: translate3d(0, 0, 0);
         backface-visibility: hidden;
     }
