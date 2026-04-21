@@ -30,6 +30,7 @@ use App\Models\User;
 // Buyer
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 Route::get('/', fn() => view('welcome'));
 
@@ -76,6 +77,50 @@ Route::get('/features/{slug}', function ($slug) {
         'faqs' => $features[$slug]['faqs'],
         'use_cases' => $features[$slug]['use_cases'],
         'highlights' => $features[$slug]['highlights'],
+    ]);
+});
+
+// serach 
+Route::get('/search', function (Request $request) {
+    $query = strtolower($request->get('q'));
+    $isAjax = $request->get('ajax');
+
+    $allBlogs = config('blog');
+    $allFeatures = config('features');
+
+    $results = [];
+
+    foreach ($allBlogs as $slug => $item) {
+        if (str_contains(strtolower($item['title']), $query) || str_contains(strtolower($item['content']), $query)) {
+            $results[] = [
+                'title' => $item['title'],
+                'excerpt' => Str::limit(strip_tags($item['content']), 150),
+                'link' => "/blog/{$slug}",
+                'image' => $item['image'],
+                'type' => 'Panduan'
+            ];
+        }
+    }
+
+    foreach ($allFeatures as $slug => $item) {
+        if (str_contains(strtolower($item['title']), $query) || str_contains(strtolower($item['description']), $query)) {
+            $results[] = [
+                'title' => $item['title'],
+                'excerpt' => $item['excerpt'],
+                'link' => "/features/{$slug}",
+                'image' => $item['image'],
+                'type' => 'Fitur'
+            ];
+        }
+    }
+
+    if ($isAjax) {
+        return response()->json($results);
+    }
+
+    return view('search-results', [
+        'results' => $results,
+        'query' => $request->get('q')
     ]);
 });
 

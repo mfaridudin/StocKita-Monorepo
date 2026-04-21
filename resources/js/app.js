@@ -482,8 +482,8 @@ inputs.forEach((input, i) => {
         }, 200);
     });
 
-    function handleSearch(keyword) {
-        keyword = keyword.toLowerCase();
+    async function handleSearch(keyword) {
+        keyword = keyword.toLowerCase().trim();
 
         resultsBox.innerHTML = '';
         resultsBox.classList.add('hidden');
@@ -491,6 +491,7 @@ inputs.forEach((input, i) => {
         activeIndex = -1;
         currentResults = [];
 
+        // toggle tombol clear
         if (keyword.length > 0) {
             clearBtn.classList.remove('hidden');
         } else {
@@ -499,25 +500,17 @@ inputs.forEach((input, i) => {
 
         if (keyword.length < 2) return;
 
-        const cards = document.querySelectorAll('.feature-item, .blog-card'); // ini
+        try {
+            const res = await fetch(`/search?q=${encodeURIComponent(keyword)}&ajax=1`);
+            const data = await res.json();
 
-        cards.forEach(card => {
-            const title = card.querySelector('h3')?.innerText || '';
-            const desc = card.querySelector('p')?.innerText || '';
-            const link = card.getAttribute('href');
+            currentResults = data;
 
-            const combinedText = (title + ' ' + desc).toLowerCase();
+            renderResults(keyword);
 
-            if (combinedText.includes(keyword)) {
-                currentResults.push({
-                    title,
-                    desc,
-                    link
-                });
-            }
-        });
-
-        renderResults(keyword);
+        } catch (err) {
+            console.error('Search error:', err);
+        }
     }
 
     function renderResults(keyword) {
@@ -526,11 +519,19 @@ inputs.forEach((input, i) => {
         } else {
             currentResults.slice(0, 5).forEach((res, index) => {
                 const item = document.createElement('div');
-                item.className = 'p-3 text-sm cursor-pointer rounded-lg';
+                item.className = `
+                    group p-3 text-sm cursor-pointer rounded-lg
+                    transition-all duration-150 ease-in-out
+                    hover:bg-slate-100
+                `;
 
                 item.innerHTML = `
-                    <div class="font-semibold">${res.title}</div>
-                    <div class="text-xs text-gray-500">${res.desc.substring(0, 60)}...</div>
+                    <div class="font-medium text-slate-800 group-hover:text-emerald-600 transition-colors">
+                        ${res.title}
+                    </div>
+                    <div class="text-xs text-slate-500 mt-0.5">
+                        ${(res.excerpt || '').substring(0, 60)}...
+                    </div>
                 `;
 
                 item.addEventListener('click', () => {
@@ -539,36 +540,47 @@ inputs.forEach((input, i) => {
 
                 resultsBox.appendChild(item);
             });
+            if (currentResults.length > 0) {
+                const seeAll = document.createElement('div');
+                seeAll.className = 'p-3 text-sm text-center border-t border-slate-100 text-emerald-600 font-bold cursor-pointer hover:bg-slate-50';
+                seeAll.innerHTML = `Lihat semua hasil untuk "${keyword}"`;
+                seeAll.onclick = () => window.location.href = `/search?q=${encodeURIComponent(keyword)}`;
+                resultsBox.appendChild(seeAll);
+            }
         }
 
         resultsBox.classList.remove('hidden');
     }
 
     input.addEventListener('keydown', function (e) {
-        const items = resultsBox.querySelectorAll('div');
-
-        if (items.length === 0) return;
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            activeIndex = (activeIndex + 1) % items.length;
-            updateActive(items);
-        }
-
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            activeIndex = (activeIndex - 1 + items.length) % items.length;
-            updateActive(items);
-        }
+        const items = resultsBox.querySelectorAll('div[cursor-pointer]');
+        const keyword = this.value.trim();
 
         if (e.key === 'Enter') {
             e.preventDefault();
 
-            if (activeIndex >= 0) {
+            if (activeIndex >= 0 && items[activeIndex]) {
                 items[activeIndex].click();
-            } else {
-                items[0].click();
             }
+            else if (keyword.length > 0) {
+                window.location.href = `/search?q=${encodeURIComponent(keyword)}`;
+            }
+        }
+
+        if (e.key === 'ArrowDown') {
+            const resultItems = resultsBox.querySelectorAll('.cursor-pointer');
+            if (resultItems.length === 0) return;
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % resultItems.length;
+            updateActive(resultItems);
+        }
+
+        if (e.key === 'ArrowUp') {
+            const resultItems = resultsBox.querySelectorAll('.cursor-pointer');
+            if (resultItems.length === 0) return;
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + resultItems.length) % resultItems.length;
+            updateActive(resultItems);
         }
     });
 
