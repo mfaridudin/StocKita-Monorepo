@@ -10,17 +10,17 @@ $prefix = $isAdmin ? '/admin' : '';
     transform transition-transform duration-300
      will-change-[width]">
 
-    <a href="{{ auth()->user()->getDashboardUrl() }}"
-        class="flex items-center justify-between px-4 py-6 border-b h-16 border-green-50">
+    <div class="flex items-center justify-between px-4 py-6 border-b h-16 border-green-50">
 
-        <div class="flex items-center gap-3">
+
+        <a href="{{ auth()->user()->getDashboardUrl() }}" class="flex items-center gap-3">
             <img src="/image/icon/icon.png" alt="icon" class="w-10 md:absolute top-3 left-5">
 
             <span
                 class="text-2xl sidebar-text font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent md:absolute left-20">
                 StocKita
             </span>
-        </div>
+        </a>
 
         <button id="closeSidebar" class="lg:hidden p-2 text-gray-600 hover:bg-green-50 rounded-lg">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -29,7 +29,7 @@ $prefix = $isAdmin ? '/admin' : '';
             </svg>
         </button>
 
-    </a>
+    </div>
 
     <nav class="flex-1 px-4 py-6 space-y-1">
         @php $currentPath = request()->path(); @endphp
