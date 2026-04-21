@@ -1,5 +1,5 @@
 <header x-data="{ openDropdown: null }" id="headerDashboard"
-    class="h-16 fixed top-0 left-0 md:left-64 right-0 md:z-50 bg-white border-b border-green-100 flex items-center justify-between px-3 md:px-6">
+    class="h-16 fixed top-0 left-0 md:left-64 right-0 z-50 bg-white border-b border-green-100 flex items-center justify-between px-3 md:px-6">
     <div class="flex items-center gap-4">
         <button id="toggleCollapse"
             class="hidden md:flex w-10 h-10 items-center justify-center relative z-[999] pointer-events-auto rounded-lg hover:bg-green-50">
@@ -49,7 +49,7 @@
             </button>
 
             <div x-show="openDropdown === 'profile'" @click.outside="openDropdown = null" @click.stop x-transition
-                class="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl origin-top-right overflow-hidden">
+                class="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl origin-top-right overflow-hidden z-50">
 
                 <div x-data class="py-2 space-y-1">
                     <a href="/profile"

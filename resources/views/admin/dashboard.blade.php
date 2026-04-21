@@ -3,7 +3,7 @@
 
         {{-- header --}}
         <div
-            class="bg-white/80 backdrop-blur-md shadow-sm border-b border-green-200 rounded-2xl border border-green-200">
+            class="bg-white/80 backdrop-blur-md shadow-sm border-b border-green-200 rounded-2xl border">
             <div class="max-w-7xl">
                 <div class="flex items-center justify-between">
                     <div class="px-6 py-6">

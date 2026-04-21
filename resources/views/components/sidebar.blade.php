@@ -6,7 +6,7 @@ $hasAccess = !$isOwner || auth()->user()->hasActiveSubscription();
 $prefix = $isAdmin ? '/admin' : '';
 @endphp
 
-<aside id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-green-100 z-50 md:z-20 flex flex-col
+<aside id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-green-100 z-[9999] md:z-20 flex flex-col
     transform transition-transform duration-300
      will-change-[width]">
 
