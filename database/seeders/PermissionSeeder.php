@@ -63,7 +63,9 @@ class PermissionSeeder extends Seeder
             'delete inventory',
             'adjust stock',
             
-            // 'create inventory',
+            // role
+            'create roles',
+            'edit roles',
 
             // Buyer
             'view own orders',

@@ -12,6 +12,8 @@ class RoleController extends Controller
     public function __construct()
     {
         $this->middleware('permission:manage roles & permissions');
+        $this->middleware('permission:create roles')->only('store');
+        $this->middleware('permission:edit roles')->only('edit', 'update');
     }
 
     public function index()
@@ -20,13 +22,6 @@ class RoleController extends Controller
 
         return view('roles.index', compact('roles'));
     }
-
-    // public function create()
-    // {
-    //     $permissions = Permission::all();
-
-    //     return view('roles.create', compact('permissions'));
-    // }
 
     public function store(Request $request)
     {
