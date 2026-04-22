@@ -3,7 +3,7 @@
 ## 1. Register Akun
 Daftar akun di: https://midtrans.com
 
----
+--- 
 
 ## 2. Aktifkan Mode Sandbox
 - Masuk ke dashboard Midtrans
@@ -46,15 +46,15 @@ Bagian ini sangat penting agar sistem bisa otomatis mengetahui status pembayaran
 ### Cara Setup:
 
 1. Masuk ke menu **Integrations** (sidebar kiri)
-2. Pilih **Configurations**
+2. Pilih **Configurations** **Lewati bagian lainya, langsung klik Configurations**
 3. Cari field: **Payment Notification URL**
 4. Isi dengan endpoint webhook kamu, contoh:
 
 ```txt
 https://domainanda.com/midtrans/webhook
 ```
-
-5. Klik **Save / Update**
+5. Isi hanya bagian **Payment Notification** URL saja
+6. Klik **Save / Update**
 
 ---
 
