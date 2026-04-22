@@ -64,7 +64,6 @@ class PermissionSeeder extends Seeder
             'adjust stock',
             
             // role
-            'create roles',
             'edit roles',
 
             // Buyer
