@@ -164,3 +164,10 @@
         </div>
     </div>
 </header>
+
+<style>
+    .search-card:hover .title-text {
+        color: #059669 !important;
+        /* Warna emerald-600 */
+    }
+</style>

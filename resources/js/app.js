@@ -519,14 +519,15 @@ inputs.forEach((input, i) => {
         } else {
             currentResults.slice(0, 5).forEach((res, index) => {
                 const item = document.createElement('div');
+
                 item.className = `
-                    group p-3 text-sm cursor-pointer rounded-lg
+                    search-card p-3 text-sm cursor-pointer rounded-lg
                     transition-all duration-150 ease-in-out
                     hover:bg-emerald-50
                 `;
 
                 item.innerHTML = `
-                    <div class="font-medium text-slate-800 hover:text-emerald-600 transition-colors">
+                    <div class="title-text font-medium text-slate-800 transition-colors">
                         ${res.title}
                     </div>
                     <div class="text-xs text-slate-500 mt-0.5">
