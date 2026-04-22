@@ -33,9 +33,7 @@
         {{ $slot }}
     </main>
 
-    <footer class="border-t py-6 text-center text-xs sm:text-sm text-gray-500 px-4">
-        © 2026 StocKita. All rights reserved.
-    </footer>
+    <x-footer />
 
 </body>
 
