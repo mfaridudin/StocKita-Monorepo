@@ -522,11 +522,11 @@ inputs.forEach((input, i) => {
                 item.className = `
                     group p-3 text-sm cursor-pointer rounded-lg
                     transition-all duration-150 ease-in-out
-                    hover:bg-slate-100
+                    hover:bg-emerald-50
                 `;
 
                 item.innerHTML = `
-                    <div class="font-medium text-slate-800 group-hover:text-emerald-600 transition-colors">
+                    <div class="font-medium text-slate-800 hover:text-emerald-600 transition-colors">
                         ${res.title}
                     </div>
                     <div class="text-xs text-slate-500 mt-0.5">
