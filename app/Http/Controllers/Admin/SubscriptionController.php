@@ -85,8 +85,20 @@ class SubscriptionController extends Controller
                 ? now()->addYear()
                 : now()->addMonth(),
         ]);
+
         $user = User::find($request->user_id);
+
+        $subscription = $user->subscription;
+
         $user->syncAllLimits();
+
+        logActivity('CREATE', $subscription, [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'plan' => $plan->name,
+            'interval' => $request->interval,
+            'status' => 'active',
+        ]);
 
         return redirect($prefix . '/subscriptions')
             ->with('success', 'Langganan berhasil dibuat!');
@@ -103,6 +115,11 @@ class SubscriptionController extends Controller
         $isUpgrade = $newPlan->price > $oldPlan->price;
         $isDowngrade = $newPlan->price < $oldPlan->price;
 
+        $before = [
+            'plan' => $oldPlan->name,
+            'interval' => $subscription->interval,
+        ];
+
         $subscription->update([
             'plan_id' => $request->plan_id,
             'interval' => $request->interval,
@@ -115,6 +132,24 @@ class SubscriptionController extends Controller
 
         $user = User::find($user);
         $user->syncAllLimits();
+
+        $actionType = 'UPDATE';
+
+        if ($isUpgrade) {
+            $actionType = 'UPGRADE_SUBSCRIPTION';
+        } elseif ($isDowngrade) {
+            $actionType = 'DOWNGRADE_SUBSCRIPTION';
+        }
+
+        // 🔥 LOG UPDATE SUBSCRIPTION
+        logActivity($actionType, $subscription, [
+            'user_id' => $subscription->user_id,
+            'before' => $before,
+            'after' => [
+                'plan' => $newPlan->name,
+                'interval' => $request->interval,
+            ],
+        ]);
 
         if ($isUpgrade) {
             $message = 'Berhasil upgrade paket!';
@@ -131,6 +166,8 @@ class SubscriptionController extends Controller
     {
         $subscription = Subscription::findOrFail($id);
 
+        $oldStatus = $subscription->status;
+
         if ($subscription->status === 'active') {
             $subscription->update([
                 'status' => 'cancelled'
@@ -141,13 +178,28 @@ class SubscriptionController extends Controller
             ]);
         }
 
+        logActivity('TOGGLE_SUBSCRIPTION', $subscription, [
+            'user_id' => $subscription->user_id,
+            'before' => $oldStatus,
+            'after' => $subscription->status,
+        ]);
+
         return back()->with('success', 'Status langganan berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         $subscription = Subscription::findOrFail($id);
+
+        $data = [
+            'user_id' => $subscription->user_id,
+            'plan' => $subscription->plan->name,
+            'interval' => $subscription->interval,
+        ];
+
         $subscription->delete();
+
+        logActivity('DELETE', $subscription, $data);
 
         return redirect()->back()->with('success', 'Data langganan berhasil dihapus!');
     }
