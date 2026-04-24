@@ -241,6 +241,7 @@ Route::middleware(['auth', 'role:admin'])
 
         // import exel 
         Route::post('/products/import', [AdminProductController::class, 'import'])->name('products.import');
+        Route::post('/customers/import', [AdminCustomerController::class, 'import'])->name('customers.import');
     });
 
 /*
@@ -298,6 +299,7 @@ Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function
 
     // import exel 
     Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
+    Route::post('/customers/import', [CustomerController::class, 'import'])->name('customers.import');
 });
 
 /*

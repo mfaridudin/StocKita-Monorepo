@@ -32,8 +32,20 @@
                 </p>
             </div>
 
+
             @can('create customers')
             <div x-data class="flex gap-3">
+                <button type="button" @click="$dispatch('open-modal', { name: 'import-customer' })"
+                    class="px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-medium flex items-center gap-2">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M12 3v13.5m0 0 3-3m-3 3-3-3" />
+                    </svg>
+
+                    Import
+                </button>
                 <button type="button" @click="if (!canCreateCustomers) {
                         Swal.fire({
                             toast: true,
@@ -500,6 +512,77 @@
         <div class="p-6">
             <h3 class="text-lg font-semibold mb-6">Kirim Email</h3>
             <!-- Email form content -->
+        </div>
+    </x-modal>
+
+    <x-modal name="import-customer" maxWidth="md">
+        <div class="p-6">
+            <form action="{{ route('admin.customers.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">Import Pelanggan</h3>
+                    <button type="button" @click="$dispatch('close-modal', 'import-customer')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Target Toko</label>
+                        <select name="store_id" required class="w-full px-4 py-2 border border-gray-200 rounded-lg">
+                            <option value="">-- Pilih Toko --</option>
+                            @foreach($stores as $store)
+                            <option value="{{ $store->id }}">{{ $store->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-700">
+                        Format Excel:
+                        <ul class="list-disc ml-5 mt-1">
+                            <li>nama</li>
+                            <li>email</li>
+                            <li>no_telepon</li>
+                            <li>alamat</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            File Excel <span class="text-red-500">*</span>
+                        </label>
+
+                        <input type="file" name="file" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white
+                               file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+                               file:text-sm file:font-medium file:bg-blue-50 file:text-blue-600
+                               hover:file:bg-blue-100">
+
+                        <x-input-error :messages="$errors->get('file')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <a href="{{ asset('template/customer_import.xlsx') }}"
+                        class="text-sm text-blue-600 hover:underline">
+                        Download template Excel
+                    </a>
+
+                    <div class="flex gap-3 pt-4">
+                        <button type="button" @click="$dispatch('close-modal', 'import-customer')"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            Batal
+                        </button>
+
+                        <button type="submit"
+                            class="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium">
+                            Import Data
+                        </button>
+                    </div>
+
+                </div>
+            </form>
         </div>
     </x-modal>
 </x-app-layout>

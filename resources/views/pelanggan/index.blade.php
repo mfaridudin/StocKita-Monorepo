@@ -66,108 +66,104 @@
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mt-6">
 
             <form method="GET" action="">
-                <div x-data class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div class="flex flex-col gap-4">
 
-                    <div class="flex flex-col w-full lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div x-data class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
                         <div class="flex flex-wrap gap-3">
-                            <div class="relative w-full sm:w-48">
+
+                            <div class="relative w-full sm:w-44">
                                 <select name="status"
-                                    class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-xl bg-white">
+                                    class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 text-sm">
                                     <option value="">Semua Status</option>
                                     <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>Aktif
                                     </option>
-                                    <option value="inactive" {{ request('status')=='inactive' ? 'selected' : '' }}>
-                                        Tidak
+                                    <option value="inactive" {{ request('status')=='inactive' ? 'selected' : '' }}>Tidak
                                         Aktif</option>
                                 </select>
-
                                 <div
-                                    class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                    class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
+                                    <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                             d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>
                                 </div>
                             </div>
 
-                            <div class="relative w-full sm:w-48">
+                            <div class="relative w-full sm:w-44">
                                 <select name="type"
-                                    class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-lg bg-white">
+                                    class="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 text-sm">
                                     <option value="">Semua Tipe</option>
-                                    <option value="regular" {{ request('type')=='regular' ? 'selected' : '' }}>
-                                        Regular
+                                    <option value="regular" {{ request('type')=='regular' ? 'selected' : '' }}>Regular
                                     </option>
                                     <option value="exclusive" {{ request('type')=='exclusive' ? 'selected' : '' }}>
                                         Exclusive</option>
                                 </select>
-
                                 <div
-                                    class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                    class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
+                                    <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                             d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>
                                 </div>
                             </div>
+
                         </div>
 
-                        <div class="flex items-center gap-3 justify-between flex-1 lg:w-auto">
-                            <div class="relative w-full max-w-[600px]">
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
 
+                            <div class="relative w-full sm:w-72 lg:w-80">
                                 <input type="text" name="search" value="{{ request('search') }}"
-                                    placeholder="Cari nama, email, atau nomor telepon..."
-                                    class="w-full pl-10 py-3 border border-gray-200 rounded-xl text-sm">
-
-                                <div class="absolute left-2 top-3 text-gray-400 pointer-events-none">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    placeholder="Cari nama, email, atau nomor..."
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500">
+                                <div class="absolute left-3 top-2.5 text-gray-400 pointer-events-none">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                                        </path>
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
-
                             </div>
 
+                            <button type="submit"
+                                class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold whitespace-nowrap transition">
+                                Filter
+                            </button>
+
+                            <button type="button" @click="$dispatch('open-modal', { name: 'import-customer' })"
+                                class="px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-medium flex items-center gap-2 whitespace-nowrap transition">
+                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M12 3v13.5m0 0 3-3m-3 3-3-3M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
+                                </svg>
+                                Import
+                            </button>
+
+
                             <a href="{{ route('customers.export', request()->query()) }}"
-                                class="px-6 py-3 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                class="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium flex items-center gap-2 whitespace-nowrap transition">
+                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                 </svg>
                                 Export
                             </a>
 
-                            <button type="submit"
-                                class="px-6 py-3 bg-blue-500 text-white rounded-xl text-sm font-semibold">
-                                Filter
+                            @can('create customers')
+                            <button type="button" @click="if (!canCreateCustomers) {
+                        Swal.fire({ toast: true, icon: 'error', position: 'top-end', title: 'Kamu tidak punya izin menambah pelanggan!', showConfirmButton: false, timer: 3000 });
+                    } else {
+                        $dispatch('open-modal', { name: 'create-customer' })
+                    }" class="px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap shadow transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                Pelanggan Baru
                             </button>
+                            @endcan
+
                         </div>
                     </div>
-
-                    @can('create customers')
-                    <button type="button" @click="if (!canCreateCustomers) {
-                                Swal.fire({
-                                    toast: true,
-                                    icon: 'error',
-                                    position: 'top-end',
-                                    title: 'Kamu tidak punya izin menambah pelanggan!',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-                            } else {
-                                $dispatch('open-modal', { name: 'create-customer' })
-                            }"
-                        class="px-6 whitespace-nowrap py-3 text-white rounded-xl text-sm font-semibold flex items-center gap-2 {{ auth()->user()->can('create customers') ? 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all' : 'bg-green-200 cursor-not-allowed' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Pelanggan Baru
-                    </button>
-                    @endcan
 
                 </div>
             </form>
@@ -471,6 +467,74 @@
         <div class="p-6">
             <h3 class="text-lg font-semibold mb-6">Kirim Email</h3>
             <!-- Email form content -->
+        </div>
+    </x-modal>
+
+    <x-modal name="import-customer" maxWidth="md">
+        <div class="p-6">
+            <form action="{{ route('customers.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">Import Pelanggan</h3>
+                    <button type="button" @click="$dispatch('close-modal', 'import-customer')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Content -->
+                <div class="space-y-4">
+
+                    <!-- Info format -->
+                    <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-700">
+                        Format Excel:
+                        <ul class="list-disc ml-5 mt-1">
+                            <li>nama</li>
+                            <li>email</li>
+                            <li>no_telepon</li>
+                            <li>alamat</li>
+                        </ul>
+                    </div>
+
+                    <!-- Upload -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            File Excel <span class="text-red-500">*</span>
+                        </label>
+
+                        <input type="file" name="file" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white
+                               file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+                               file:text-sm file:font-medium file:bg-blue-50 file:text-blue-600
+                               hover:file:bg-blue-100">
+
+                        <x-input-error :messages="$errors->get('file')" class="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <!-- Download Template -->
+                    <a href="{{ asset('template/customer_import.xlsx') }}"
+                        class="text-sm text-blue-600 hover:underline">
+                        Download template Excel
+                    </a>
+
+                    <!-- Action -->
+                    <div class="flex gap-3 pt-4">
+                        <button type="button" @click="$dispatch('close-modal', 'import-customer')"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            Batal
+                        </button>
+
+                        <button type="submit"
+                            class="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium">
+                            Import Data
+                        </button>
+                    </div>
+
+                </div>
+            </form>
         </div>
     </x-modal>
 </x-app-layout>

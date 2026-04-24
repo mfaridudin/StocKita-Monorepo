@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerStoreRequest;
+use App\Imports\CustomerImport;
 use App\Mail\SendCustomerEmail;
 use App\Models\Customer;
 use App\Models\Transaction;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -217,5 +219,40 @@ class CustomerController extends Controller
         ]);
 
         return back()->with('success', 'Email berhasil dikirim!');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(new CustomerImport, $request->file('file'));
+
+            return back()->with('success', 'Data pelanggan berhasil diimport!');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errorMessages = [];
+
+            foreach ($failures as $failure) {
+                $rowNumber = $failure->row();
+
+                $message = $failure->errors()[0];
+                $cleanMessage = str_replace(':row', $rowNumber, $message);
+
+                if (isset($failure->values()[$failure->attribute()])) {
+                    $cleanMessage = str_replace(':input', $failure->values()[$failure->attribute()], $cleanMessage);
+                }
+
+                $errorMessages[] = $cleanMessage;
+            }
+
+            $fullMessage = implode("<br>", $errorMessages);
+
+            return back()->with('error', $fullMessage);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
