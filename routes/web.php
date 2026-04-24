@@ -175,6 +175,8 @@ Route::middleware(['auth'])->group(function () {
 
         return response()->json(['success' => true]);
     });
+
+    Route::get('/transactions/export', [AdminTransactionController::class, 'export'])->name('transactions.export');
 });
 
 /*

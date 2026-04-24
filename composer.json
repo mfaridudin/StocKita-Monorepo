@@ -13,9 +13,11 @@
         "giggsey/libphonenumber-for-php": "^9.0",
         "intervention/image": "^3.11",
         "intervention/image-laravel": "^1.5",
+        "laravel-notification-channels/webpush": "*",
         "laravel/framework": "^13.0",
         "laravel/socialite": "^5.25",
         "laravel/tinker": "^3.0",
+        "maatwebsite/excel": "^3.1",
         "midtrans/midtrans-php": "^2.6",
         "spatie/laravel-permission": "^7.2"
     },
