@@ -167,13 +167,14 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
 
+        $before = $product->only(['name', 'price', 'category_id']);
+
         $product->update([
             'name' => $request->name,
             'price' => $request->price,
             'category_id' => $request->category_id,
         ]);
 
-        $before = $product->only(['name', 'price', 'category_id']);
         logActivity('UPDATE', $product, [
             'before' => $before,
             'after' => $product->only(['name', 'price', 'category_id'])

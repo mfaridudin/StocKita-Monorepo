@@ -78,6 +78,12 @@ class CategoryController extends Controller
             'store_id' => $request->store,
         ]);
 
+        logActivity('CREATE', $category, [
+            'name' => $category->name,
+            'slug' => $category->slug,
+            'store_id' => $category->store_id,
+        ]);
+
         return redirect()->back()->with('success', 'Data berhasil disimpan!');
     }
 
@@ -120,10 +126,18 @@ class CategoryController extends Controller
                 ->withInput();
         }
 
+        $before = $category->only(['name', 'slug']);
+
+
         $category->update([
             'name' => $request->name,
             'slug' => $this->generateUniqueSlug($request->name),
             'store_id' => $request->store,
+        ]);
+
+        logActivity('UPDATE', $category, [
+            'before' => $before,
+            'after' => $category->only(['name', 'slug'])
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil diperbarui!');
@@ -140,7 +154,11 @@ class CategoryController extends Controller
             return redirect()->back()->with('error', 'Kategori tidak bisa dihapus karena masih memiliki produk!');
         }
 
+        $data = $category->only(['name', 'slug', 'store_id']);
+
         $category->delete();
+
+        logActivity('DELETE', $category, $data);
 
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
