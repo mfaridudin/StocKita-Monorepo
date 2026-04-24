@@ -196,6 +196,42 @@ class CustomerController extends Controller
         return Excel::download(new CustomerExport(auth()->user()), 'daftar-pelanggan.xlsx');
     }
 
+    public function template()
+    {
+        return Excel::download(new class implements
+            \Maatwebsite\Excel\Concerns\FromArray,
+            \Maatwebsite\Excel\Concerns\WithHeadings
+        {
+            public function headings(): array
+            {
+                return [
+                    'nama',
+                    'email',
+                    'no_telepon',
+                    'alamat',
+                ];
+            }
+
+            public function array(): array
+            {
+                return [
+                    [
+                        'Budi Santoso',
+                        'budi@email.com',
+                        '081234567890',
+                        'Jl. Contoh No.1',
+                    ],
+                    [
+                        'Siti Aminah',
+                        'siti@email.com',
+                        '+6281234567890',
+                        'Bandung',
+                    ]
+                ];
+            }
+        }, 'template-customer.xlsx');
+    }
+
     // import exel
     public function import(Request $request)
     {

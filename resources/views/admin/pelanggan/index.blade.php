@@ -564,7 +564,7 @@
                         <x-input-error :messages="$errors->get('file')" class="mt-2 text-red-500 text-sm" />
                     </div>
 
-                    <a href="{{ asset('template/customer_import.xlsx') }}"
+                    <a href="{{ route('customers.template')}}"
                         class="text-sm text-blue-600 hover:underline">
                         Download template Excel
                     </a>

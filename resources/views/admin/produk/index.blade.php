@@ -410,6 +410,9 @@
 
                     <p id="fileName" class="mt-3 text-sm text-green-600 hidden"></p>
                 </div>
+                <a href="{{ route('products.template')}}" class="text-sm text-blue-600 hover:underline">
+                    Download template Excel
+                </a>
 
                 <div class="flex justify-end gap-2 pt-4">
                     <button type="button" @click="$dispatch('close-modal', 'import-produk')"

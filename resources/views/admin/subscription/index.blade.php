@@ -502,13 +502,8 @@ $prefix = $isAdmin ? '/admin' : '';
                     <p class="text-red-500 text-sm">{{ $message }}</p>
                     @enderror
 
-                    <a href="/subscriptions/template"
-                        class="flex items-center justify-center gap-2 w-full px-4 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                        </svg>
-                        Download Template Excel
+                    <a href="/subscriptions/template" class="text-sm text-blue-600 hover:underline">
+                        Download template Excel
                     </a>
 
                     <div class="flex gap-3 pt-2">

@@ -195,6 +195,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/subscriptions/template', [SubscriptionController::class, 'template'])->name('subscriptions.template');
     Route::post('/subscriptions/import', [SubscriptionController::class, 'import'])->name('subscriptions.import');
 
+    Route::get('/customers/template', [AdminCustomerController::class, 'template'])->name('customers.template');
+    Route::get('/products/template', [AdminProductController::class, 'template'])->name('products.template');
+
     // email
     Route::post('/email-template/{key}', [SettingController::class, 'updateEmail'])
         ->name('email-template.update');

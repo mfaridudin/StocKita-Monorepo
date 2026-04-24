@@ -247,6 +247,43 @@ class ProductController extends Controller
         return Excel::download(new ProductsExport(auth()->user()), 'daftar-produk.xlsx');
     }
 
+    public function template()
+    {
+        return Excel::download(new class implements
+            \Maatwebsite\Excel\Concerns\FromArray,
+            \Maatwebsite\Excel\Concerns\WithHeadings
+        {
+            public function headings(): array
+            {
+                return [
+                    'kategori',
+                    'nama_produk',
+                    'sku',
+                    'harga',
+                ];
+            }
+
+            public function array(): array
+            {
+                return [
+                    [
+                        'Makanan',
+                        'Keripik Singkong',
+                        'SKU-001',
+                        10000,
+                    ],
+                    [
+                        'Minuman',
+                        'Teh Botol',
+                        'SKU-002',
+                        5000,
+                    ],
+                    ['', '', '', '']
+                ];
+            }
+        }, 'template-produk.xlsx');
+    }
+
     public function import(Request $request)
     {
         $request->validate([

@@ -515,7 +515,7 @@
                     </div>
 
                     <!-- Download Template -->
-                    <a href="{{ asset('template/customer_import.xlsx') }}"
+                    <a href="{{ route('customers.template')}}"
                         class="text-sm text-blue-600 hover:underline">
                         Download template Excel
                     </a>
