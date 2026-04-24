@@ -121,18 +121,7 @@
                                     @can('delete products')
                                     <button
                                         class="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 rounded-lg {{ auth()->user()->can('delete products') ? 'hover:bg-red-100 transition' : 'cursor-not-allowed' }}"
-                                        @click="if (!canDeleteProducts) {
-                                            Swal.fire({
-                                                toast: true,
-                                                icon: 'error',
-                                                position: 'top-end',
-                                                title: 'Kamu tidak punya izin menghapus produk!',
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            });
-                                        } else {
-                                            $dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })
-                                        }">
+                                        @click="$dispatch('open-modal', { name: 'delete-product', id: {{ $product->id }} })">
                                         Hapus
                                     </button>
                                     @endcan

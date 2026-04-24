@@ -432,6 +432,24 @@
     </script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const excelUpload = document.getElementById('excelUpload');
+        const fileName = document.getElementById('fileName');
+
+        if (!excelUpload) return;
+
+        excelUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                fileName.textContent = file.name;
+                fileName.classList.remove('hidden');
+            }
+        });
+    });
+    </script>
+
+    <script>
         document.getElementById('storeSelect').addEventListener('change', function() {
             let storeId = this.value;
             let categorySelect = document.getElementById('categorySelect');
