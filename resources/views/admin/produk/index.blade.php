@@ -136,7 +136,7 @@
                         <tr class="hover:bg-gray-50 transition">
 
                             <td class="pl-6 pr-12 py-4 flex items-center gap-4 whitespace-nowrap">
-                                <img src="{{ asset('storage/' . $product->image) }}"
+                                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('image/product/products.jpg') }}"
                                     class="w-12 h-12 object-cover rounded-lg border"
                                     onerror="this.src='https://via.placeholder.com/100'">
 

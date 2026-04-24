@@ -43,7 +43,7 @@
                                 <div
                                     class="h-24 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                                     @if ($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}"
+                                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('image/product/products.jpg') }}"
                                             class="w-full h-full object-contain p-2">
                                     @else
                                         📦

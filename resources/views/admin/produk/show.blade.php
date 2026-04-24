@@ -51,7 +51,7 @@
             <div class="lg:col-span-1">
                 <div class="rounded-xl shadow-sm border border-gray-200 h-full lg:max-h-[348px] relative group">
 
-                    <img src="{{ asset('storage/' . $product->image) }}"
+                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('image/product/products.jpg') }}"
                         class="w-full h-80 lg:h-full object-cover rounded-lg"
                         onerror="this.src='https://via.placeholder.com/300x400?text=No+Image'">
 
