@@ -231,6 +231,9 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/categories-by-store/{store}', function ($storeId) {
             return Category::where('store_id', $storeId)->get();
         });
+
+        // import exel 
+        Route::post('/products/import', [AdminProductController::class, 'import'])->name('products.import');
     });
 
 /*
@@ -285,6 +288,9 @@ Route::middleware(['auth', 'role:owner', 'subscription.active'])->group(function
     Route::get('/settings', [SettingController::class, 'index']);
 
     Route::put('/settings/store/{id}', [SettingController::class, 'updateStore']);
+
+    // import exel 
+    Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
 });
 
 /*

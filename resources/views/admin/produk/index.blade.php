@@ -2,20 +2,26 @@
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                let type =
-                    "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            let type = "{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}";
+            
+            let message = `{!! $message !!}`; 
+            
+            let isLongMessage = message.length > 50;
 
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: type,
-                    title: "{{ $message }}",
-                    showConfirmButton: false,
-                    timer: 3000
-                });
+            Swal.fire({
+                icon: type,
+                title: isLongMessage ? "Peringatan Import" : message,
+                html: isLongMessage ? message : "", 
+                toast: isLongMessage ? false : true,
+                position: isLongMessage ? 'center' : 'top-end',
+                showConfirmButton: isLongMessage ? true : false,
+                timer: isLongMessage ? null : 3000,
+                confirmButtonColor: '#4f46e5',
             });
+        });
     </script>
     @endif
+
     <div class="space-y-6">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -54,7 +60,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+        <div x-data class="bg-white rounded-xl border shadow-sm overflow-hidden">
 
             <form method="GET" action="{{ route('admin.products.index') }}" class="p-4">
                 <div class="flex flex-col sm:flex-row gap-3">
@@ -92,6 +98,18 @@
                         </svg>
                         Export Excel
                     </a>
+
+                    <button @click.prevent="$dispatch('open-modal', { name: 'import-produk'})"
+                        class="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center justify-center gap-2">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" />
+                        </svg>
+
+                        Import Excel
+                    </button>
 
                     <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                         Filter
@@ -330,6 +348,78 @@
                             Simpan
                         </button>
                     </div>
+                </div>
+            </form>
+        </div>
+    </x-modal>
+
+    {{-- modal import --}}
+    <x-modal name="import-produk" maxWidth="md">
+        <div class="p-6">
+            <form action="{{ route('admin.products.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Import Produk (Excel)
+                    </h3>
+
+                    <button type="button" @click="$dispatch('close-modal', 'import-produk')"
+                        class="text-gray-400 hover:text-gray-600 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Target Toko</label>
+                    <select name="store_id" required class="w-full px-4 py-2 border border-gray-200 rounded-lg">
+                        <option value="">-- Pilih Toko --</option>
+                        @foreach($stores as $store)
+                        <option value="{{ $store->id }}">{{ $store->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <p class="text-sm text-gray-600 mb-4">
+                    Upload file Excel (.xlsx / .xls). Pastikan format sesuai template.
+                </p>
+
+                <div
+                    class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-gray-300 hover:bg-gray-50 transition">
+
+                    <input type="file" name="file" accept=".xlsx,.xls" class="hidden" id="excelUpload">
+
+                    <label for="excelUpload" class="cursor-pointer block">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M12 3v13.5m0 0l-4.5-4.5m4.5 4.5l4.5-4.5" />
+                        </svg>
+
+                        <p class="text-sm font-medium text-gray-700 mb-1">
+                            Klik untuk upload file Excel
+                        </p>
+
+                        <p class="text-xs text-gray-500">
+                            Format: .xlsx / .xls (max 5MB)
+                        </p>
+                    </label>
+
+                    <p id="fileName" class="mt-3 text-sm text-green-600 hidden"></p>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-4">
+                    <button type="button" @click="$dispatch('close-modal', 'import-produk')"
+                        class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                        Batal
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Import
+                    </button>
                 </div>
             </form>
         </div>

@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
+use App\Imports\ProductsImport;
 use App\Models\Category;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 // use Imagick;
 use Intervention\Image\Laravel\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -172,6 +175,41 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus!');
+    }
+
+    // import exel
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(new ProductsImport, $request->file('file'));
+            return back()->with('success', 'Data produk berhasil diimport!');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errorMessages = [];
+
+            foreach ($failures as $failure) {
+                $rowNumber = $failure->row();
+
+                $message = $failure->errors()[0];
+                $cleanMessage = str_replace(':row', $rowNumber, $message);
+
+                if (isset($failure->values()[$failure->attribute()])) {
+                    $cleanMessage = str_replace(':input', $failure->values()[$failure->attribute()], $cleanMessage);
+                }
+
+                $errorMessages[] = $cleanMessage;
+            }
+
+            $fullMessage = implode("<br>", $errorMessages);
+
+            return back()->with('error', $fullMessage);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     // update image

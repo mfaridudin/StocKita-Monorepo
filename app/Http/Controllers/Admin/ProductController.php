@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\ProductsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
+use App\Imports\ProductsImport;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 // use Imagick;
@@ -169,7 +171,6 @@ class ProductController extends Controller
     }
 
     // update image
-    // update image
     public function updateImage(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -224,6 +225,40 @@ class ProductController extends Controller
         return Excel::download(new ProductsExport, 'daftar-produk.xlsx');
     }
 
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+            'store_id' => 'required'
+        ]);
+
+        try {
+            Excel::import(new ProductsImport($request->store_id), $request->file('file'));
+            return back()->with('success', 'Data produk berhasil diimport!');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errorMessages = [];
+
+            foreach ($failures as $failure) {
+                $rowNumber = $failure->row();
+
+                $message = $failure->errors()[0];
+                $cleanMessage = str_replace(':row', $rowNumber, $message);
+
+                if (isset($failure->values()[$failure->attribute()])) {
+                    $cleanMessage = str_replace(':input', $failure->values()[$failure->attribute()], $cleanMessage);
+                }
+
+                $errorMessages[] = $cleanMessage;
+            }
+
+            $fullMessage = implode("<br>", $errorMessages);
+
+            return back()->with('error', $fullMessage);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 
     // generate sku
     private function generateSku()
