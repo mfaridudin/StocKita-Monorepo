@@ -93,6 +93,13 @@ class CustomerController extends Controller
             'store_id' => Auth::user()->store->id,
         ]);
 
+        logActivity('CREATE', $customer, [
+            'name' => $user->name,
+            'email' => $user->email,
+            'type' => $customer->type,
+            'status' => $customer->status,
+        ]);
+
         return redirect()->back()->with('success', 'Pelanggan berhasil disimpan!');
     }
 
@@ -142,6 +149,14 @@ class CustomerController extends Controller
             }
         }
 
+        $before = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'type' => $customer->type,
+            'status' => $customer->status,
+            'phone' => $customer->phone,
+        ];
+
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -151,6 +166,17 @@ class CustomerController extends Controller
             'type' => $request->type,
             'status' => $request->status,
             'phone' => $phone,
+        ]);
+
+        logActivity('UPDATE', $customer, [
+            'before' => $before,
+            'after' => [
+                'name' => $request->name,
+                'email' => $request->email,
+                'type' => $request->type,
+                'status' => $request->status,
+                'phone' => $phone,
+            ]
         ]);
 
         return redirect()->back()->with('success', 'Pelanggan berhasil diperbarui!');
@@ -163,7 +189,16 @@ class CustomerController extends Controller
     {
         $customer = Customer::findOrFail($id);
         $user = User::findOrFail($customer->user->id);
+
+        $data = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'type' => $customer->type,
+        ];
+
         $user->delete();
+
+        logActivity('DELETE', $customer, $data);
 
         return redirect()->back()->with('success', 'Pelanggan berhasil dihapus!');
     }
@@ -175,6 +210,11 @@ class CustomerController extends Controller
 
         Mail::to($customer->user->email)
             ->send(new SendCustomerEmail($customer));
+
+        logActivity('SEND_EMAIL_CUSTOMER', $customer, [
+            'email' => $customer->user->email,
+            'customer_name' => $customer->user->name,
+        ]);
 
         return back()->with('success', 'Email berhasil dikirim!');
     }
