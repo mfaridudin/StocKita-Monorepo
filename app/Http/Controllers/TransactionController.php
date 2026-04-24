@@ -175,6 +175,22 @@ class TransactionController extends Controller
 
             DB::commit();
 
+            logActivity('CREATE', $transaction, [
+                'invoice' => $transaction->invoice_code,
+                'total' => $transaction->total,
+                'paid' => $transaction->paid,
+                'change' => $transaction->change,
+                'payment_method' => $transaction->payment_method,
+                'store_id' => $transaction->store_id,
+                'items' => collect($request->items)->map(function ($item) {
+                    return [
+                        'product_id' => $item['product_id'],
+                        'qty' => $item['qty'],
+                        'price' => $item['price'],
+                    ];
+                }),
+            ]);
+
             // buat struk
             $transaction->load('items.product');
             $receiptPath = $this->generateReceipt($transaction);
@@ -231,7 +247,15 @@ class TransactionController extends Controller
             Storage::disk('public')->delete($transaksi->receipt);
         }
 
+        $data = [
+            'invoice' => $transaksi->invoice_code,
+            'total' => $transaksi->total,
+            'store_id' => $transaksi->store_id,
+        ];
+
         $transaksi->delete();
+
+        logActivity('DELETE', $transaksi, $data);
 
         return redirect()->back()->with('success', 'Data transaksi berhasil dihapus');
     }
