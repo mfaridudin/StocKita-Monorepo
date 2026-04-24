@@ -141,10 +141,12 @@
 
                             <a href="{{ route('customers.export', request()->query()) }}"
                                 class="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium flex items-center gap-2 whitespace-nowrap transition">
-                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                                 </svg>
+
                                 Export
                             </a>
 
@@ -466,7 +468,6 @@
     <x-modal name="send-email" max-width="lg">
         <div class="p-6">
             <h3 class="text-lg font-semibold mb-6">Kirim Email</h3>
-            <!-- Email form content -->
         </div>
     </x-modal>
 
@@ -475,7 +476,6 @@
             <form action="{{ route('customers.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <!-- Header -->
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold">Import Pelanggan</h3>
                     <button type="button" @click="$dispatch('close-modal', 'import-customer')">
@@ -486,10 +486,8 @@
                     </button>
                 </div>
 
-                <!-- Content -->
                 <div class="space-y-4">
 
-                    <!-- Info format -->
                     <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-700">
                         Format Excel:
                         <ul class="list-disc ml-5 mt-1">
@@ -500,7 +498,6 @@
                         </ul>
                     </div>
 
-                    <!-- Upload -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             File Excel <span class="text-red-500">*</span>
@@ -514,13 +511,10 @@
                         <x-input-error :messages="$errors->get('file')" class="mt-2 text-red-500 text-sm" />
                     </div>
 
-                    <!-- Download Template -->
-                    <a href="{{ route('customers.template')}}"
-                        class="text-sm text-blue-600 hover:underline">
+                    <a href="{{ route('customers.template')}}" class="text-sm text-blue-600 hover:underline">
                         Download template Excel
                     </a>
 
-                    <!-- Action -->
                     <div class="flex gap-3 pt-4">
                         <button type="button" @click="$dispatch('close-modal', 'import-customer')"
                             class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
