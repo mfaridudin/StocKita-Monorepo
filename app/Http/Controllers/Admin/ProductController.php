@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ProductsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
 use App\Models\Category;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 // use Imagick;
 use Intervention\Image\Laravel\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -216,6 +218,12 @@ class ProductController extends Controller
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus!');
     }
+
+    public function export()
+    {
+        return Excel::download(new ProductsExport, 'daftar-produk.xlsx');
+    }
+
 
     // generate sku
     private function generateSku()

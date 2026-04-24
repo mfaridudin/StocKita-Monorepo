@@ -27,12 +27,22 @@
                 </p>
             </div>
 
-            <div x-data class="flex w-full sm:w-auto">
+            <div class="flex w-full sm:w-auto gap-2">
+                <a href="{{ route('products.export', request()->query()) }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3
+                    text-white font-medium text-sm rounded-xl bg-green-600 shadow-lg hover:shadow-xl transition-all
+                    duration-200 transform hover:-translate-y-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Export Excel
+                </a>
+
                 @can('create products')
-                <button @click.prevent="$dispatch('open-modal', { name: 'add-produk'})" class="w-full
-                        sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white
-                        font-medium text-sm rounded-xl bg-green-500 shadow-lg hover:shadow-xl transition-all duration-200
-                        transform hover:-translate-y-0.5">
+                <button @click.prevent="$dispatch('open-modal', { name: 'add-produk'})" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3
+                    text-white font-medium text-sm rounded-xl bg-green-500 shadow-lg hover:shadow-xl transition-all
+                    duration-200 transform hover:-translate-y-0.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
