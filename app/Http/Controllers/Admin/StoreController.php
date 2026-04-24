@@ -55,13 +55,20 @@ class StoreController extends Controller
 
         $owner->assignRole('owner');
 
-        Store::create([
+        $store = Store::create([
             'name' => $request->name,
             'email' => $request->email,
             'owner_id' => $owner->id,
             'address' => $request->address,
             'phone' => $request->phone,
             'slug' => $this->generateUniqueSlug($request->name),
+        ]);
+
+        logActivity('CREATE', $store, [
+            'store_name' => $store->name,
+            'store_email' => $store->email,
+            'owner_name' => $owner->name,
+            'owner_email' => $owner->email,
         ]);
 
         return redirect()->back()->with('success', 'Toko berhasil dibuat');
@@ -112,6 +119,13 @@ class StoreController extends Controller
             'name.required'       => 'Nama toko wajib diisi!',
         ]);
 
+        $before = [
+            'store_name' => $store->name,
+            'store_email' => $store->email,
+            'owner_name' => $owner->name,
+            'owner_email' => $owner->email,
+        ];
+
         $owner->update([
             'name' => $request->owner_name,
             'email' => $request->owner_email,
@@ -127,13 +141,32 @@ class StoreController extends Controller
             'slug' => $this->generateUniqueSlug($request->name),
         ]);
 
+        logActivity('UPDATE', $store, [
+            'before' => $before,
+            'after' => [
+                'store_name' => $request->name,
+                'store_email' => $request->email,
+                'owner_name' => $request->owner_name,
+                'owner_email' => $request->owner_email,
+            ]
+        ]);
+
         return redirect()->back()->with('success', 'Informasi toko berhasil diperbarui!');
     }
 
     public function destroy(string $id)
     {
         $store = Store::findOrFail($id);
+
+        $data = [
+            'store_name' => $store->name,
+            'store_email' => $store->email,
+            'owner_id' => $store->owner_id,
+        ];
+
         $store->delete();
+
+        logActivity('DELETE', $store, $data);
 
         return redirect()->back()->with('success', 'Toko berhasil dihapus!');
     }
