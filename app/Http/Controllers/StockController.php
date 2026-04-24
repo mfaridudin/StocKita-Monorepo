@@ -52,6 +52,12 @@ class StockController extends Controller
 
         $stock->increment('qty', $request->qty);
 
+        logActivity('CREATE', $stock, [
+            'product_id' => $stock->product_id,
+            'warehouse_id' => $stock->warehouse_id,
+            'qty' => $stock->qty,
+        ]);
+
         return redirect()->back()->with('success', 'Barang berhasil ditambah!');
     }
 
@@ -86,6 +92,13 @@ class StockController extends Controller
             'qty' => $updateQty,
         ]);
 
+        logActivity('ADD_STOCK', $stock, [
+            'product_id' => $stock->product_id,
+            'before' => $qty,
+            'added' => $addQty,
+            'after' => $updateQty,
+        ]);
+
         return redirect()->back()->with('success', 'Stok barang berhasil ditambah!');
     }
 
@@ -109,8 +122,19 @@ class StockController extends Controller
 
         $stock = Stock::findOrFail($id);
 
+        $beforeQty = $stock->qty;
+        $reduceQty = $request->qty;
+        $afterQty = $beforeQty - $reduceQty;
+
         $stock->update([
             'qty' => $request->qty,
+        ]);
+
+        logActivity('REDUCE_STOCK', $stock, [
+            'product_id' => $stock->product_id,
+            'before' => $beforeQty,
+            'reduced' => $afterQty,
+            'after' => $reduceQty
         ]);
 
         return redirect()->back()->with('success', 'Stok barang berhasil dikurangi!');
@@ -121,9 +145,13 @@ class StockController extends Controller
      */
     public function destroy(string $id)
     {
-        $warehouse = Stock::findOrFail($id);
+        $stock = Stock::findOrFail($id);
 
-        $warehouse->delete();
+        $data = $stock->only(['product_id', 'warehouse_id', 'qty']);
+
+        $stock->delete();
+
+        logActivity('DELETE', $stock, $data);
 
         return redirect()->back()->with('success', 'Stok barang berhasil dihapus!');
     }

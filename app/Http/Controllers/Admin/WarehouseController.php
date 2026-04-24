@@ -14,7 +14,7 @@ class WarehouseController extends Controller
 {
     public function __construct()
     {
-          $this->middleware('permission:view warehouse')->only(['index', 'show']);
+        $this->middleware('permission:view warehouse')->only(['index', 'show']);
         $this->middleware('permission:create warehouse')->only(['store']);
         $this->middleware('permission:edit warehouse')->only(['update']);
         $this->middleware('permission:delete warehouse')->only(['destroy']);
@@ -61,12 +61,20 @@ class WarehouseController extends Controller
     public function store(WarehouseStoreRequest $request)
     {
 
-        Warehouse::create([
+        $warehouse = Warehouse::create([
             'name' => $request->name,
             'code' => $this->generateWarehouseCode(),
             'location' => $request->location,
             'store_id' => $request->store_id,
             'description' => $request->description,
+        ]);
+
+        logActivity('CREATE', $warehouse, [
+            'name' => $warehouse->name,
+            'code' => $warehouse->code,
+            'location' => $warehouse->location,
+            'description' => $warehouse->description,
+            'store_id' => $warehouse->store_id,
         ]);
 
         return redirect()->back()->with('success', 'Gudang berhasil disi!');
@@ -104,10 +112,17 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::findOrFail($id);
 
+        $before = $warehouse->only(['name', 'location', 'description']);
+
         $warehouse->update([
             'name' => $request->name,
             'location' => $request->location,
             'description' => $request->description,
+        ]);
+
+        logActivity('UPDATE', $warehouse, [
+            'before' => $before,
+            'after' => $warehouse->only(['name', 'location', 'description'])
         ]);
 
         return redirect()->back()->with('success', 'Gudang Berhasil diupdate!');
@@ -120,7 +135,11 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::findOrFail($id);
 
+        $data = $warehouse->only(['name', 'location', 'description', 'store_id']);
+
         $warehouse->delete();
+
+        logActivity('DELETE', $warehouse, $data);
 
         return redirect()->back()->with('success', 'Gudang Berhasil dihapus!');
     }

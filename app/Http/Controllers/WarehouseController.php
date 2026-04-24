@@ -63,13 +63,22 @@ class WarehouseController extends Controller
             return back()->with('error', 'Limit Gudang habis');
         }
 
-        Warehouse::create([
+        $warehouse = Warehouse::create([
             'name' => $request->name,
             'code' => $this->generateWarehouseCode(),
             'location' => $request->location,
             'store_id' => Auth::user()->store->id,
             'description' => $request->description,
         ]);
+
+        logActivity('CREATE', $warehouse, [
+            'name' => $warehouse->name,
+            'code' => $warehouse->code,
+            'location' => $warehouse->location,
+            'description' => $warehouse->description,
+            'store_id' => $warehouse->store_id,
+        ]);
+
 
         return redirect()->back()->with('success', 'Gudang berhasil disi!');
     }
@@ -105,10 +114,17 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::findOrFail($id);
 
+        $before = $warehouse->only(['name', 'location', 'description']);
+
         $warehouse->update([
             'name' => $request->name,
             'location' => $request->location,
             'description' => $request->description,
+        ]);
+
+        logActivity('UPDATE', $warehouse, [
+            'before' => $before,
+            'after' => $warehouse->only(['name', 'location', 'description'])
         ]);
 
         return redirect()->back()->with('success', 'Gudang Berhasil diupdate!');
@@ -121,7 +137,11 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::findOrFail($id);
 
+        $data = $warehouse->only(['name', 'location', 'description', 'store_id']);
+
         $warehouse->delete();
+
+        logActivity('DELETE', $warehouse, $data);
 
         return redirect()->back()->with('success', 'Gudang Berhasil dihapus!');
     }

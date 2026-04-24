@@ -114,7 +114,6 @@ class CategoryController extends Controller
                 ->with('category_id', $id)
                 ->withInput();
         }
-        
         $before = $category->only(['name', 'slug']);
 
         $category->update([
