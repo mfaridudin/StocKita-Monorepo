@@ -17,6 +17,54 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
+<script>
+    const VAPID_PUBLIC_KEY = "{{ config('webpush.vapid.public_key') }}";
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+    navigator.serviceWorker.register('/js/sw.js').then(registration => {
+
+        registration.pushManager.getSubscription().then(existing => {
+            if (existing) return;
+
+            // Auto subscribe saat halaman dibuka
+            Notification.requestPermission().then(permission => {
+                if (permission !== 'granted') return;
+
+                registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+                }).then(subscription => {
+                    const key = subscription.getKey('p256dh');
+                    const token = subscription.getKey('auth');
+
+                    fetch('/push/subscribe', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            endpoint: subscription.endpoint,
+                            publicKey: key ? btoa(String.fromCharCode(...new Uint8Array(key))) : null,
+                            authToken: token ? btoa(String.fromCharCode(...new Uint8Array(token))) : null,
+                            contentEncoding: (PushManager.supportedContentEncodings || ['aesgcm'])[0]
+                        })
+                    });
+                });
+            });
+        });
+
+    });
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+}
+</script>
+
 <body class="font-figtree bg-gray-50 antialiased">
 
     <div class="flex w-full min-h-screen overflow-hidden">

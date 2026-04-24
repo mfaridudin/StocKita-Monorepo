@@ -20,6 +20,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Midtrans\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PushController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransactionController;
@@ -176,6 +177,10 @@ Route::middleware(['auth'])->group(function () {
         return response()->json(['success' => true]);
     });
 
+    Route::post('/push/subscribe', [PushController::class, 'subscribe']);
+    Route::delete('/push/unsubscribe', [PushController::class, 'unsubscribe']);
+
+    // export
     Route::get('/transactions/export', [AdminTransactionController::class, 'export'])->name('transactions.export');
 });
 

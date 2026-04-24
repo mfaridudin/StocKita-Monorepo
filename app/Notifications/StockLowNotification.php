@@ -7,6 +7,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\WebPush\WebPushChannel;
+use NotificationChannels\WebPush\WebPushMessage;
 
 class StockLowNotification extends Notification
 {
@@ -28,7 +30,20 @@ class StockLowNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', WebPushChannel::class];
+    }
+
+    public function toWebPush($notifiable, $notification)
+    {
+        $url = $notifiable->hasRole('admin')
+            ? '/admin/warehouse/' . $this->stock->warehouse_id
+            : '/warehouse/' . $this->stock->warehouse_id;
+
+        return (new WebPushMessage)
+            ->title('Stok Menipis')
+            ->body($this->stock->product->name . ' sisa ' . $this->stock->qty)
+            ->icon('/favicon.ico')
+            ->data(['url' => $url]);
     }
 
     /**
