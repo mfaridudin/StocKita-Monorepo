@@ -190,6 +190,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logs', [ActivityLogController::class, 'index'])
         ->name('logs.index');
     // ->middleware('permission:view logs');
+
+    // import
+    Route::get('/subscriptions/template', [SubscriptionController::class, 'template'])->name('subscriptions.template');
+    Route::post('/subscriptions/import', [SubscriptionController::class, 'import'])->name('subscriptions.import');
 });
 
 /*

@@ -34,6 +34,15 @@ $prefix = $isAdmin ? '/admin' : '';
             </div>
 
             <div x-data class="flex gap-3">
+                <button type="button" @click="$dispatch('open-modal', { name: 'import-subscription' })"
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-blue-500 hover:bg-blue-600 shadow-lg hover:shadow-xl transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M12 3v13.5m0 0 3-3m-3 3-3-3M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
+                    </svg>
+                    Import
+                </button>
+
                 <a href="{{ $prefix }}/subscriptions/create"
                     class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium text-sm rounded-xl bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -455,4 +464,66 @@ $prefix = $isAdmin ? '/admin' : '';
         </div>
     </x-modal>
 
+    {{-- import modal --}}
+    <x-modal name="import-subscription" maxWidth="md">
+        <div class="p-6">
+            <form action="/subscriptions/import" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Import Langganan</h3>
+                    <button type="button" @click="$dispatch('close-modal', 'import-subscription')"
+                        class="text-gray-400 hover:text-gray-600 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div
+                        class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-blue-300 hover:bg-blue-50 transition-colors">
+                        <input type="file" name="file" accept=".xlsx,.xls,.csv" class="hidden" id="importFile"
+                            onchange="document.getElementById('importFileName').textContent = this.files[0]?.name || 'Belum ada file dipilih'">
+                        <label for="importFile" class="cursor-pointer block">
+                            <svg class="w-10 h-10 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m6.75 12-3-3m0 0-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                            </svg>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Klik untuk pilih file</p>
+                            <p class="text-xs text-gray-400">XLSX, XLS, CSV (maks 2MB)</p>
+                        </label>
+                        <p id="importFileName" class="text-xs text-blue-600 mt-2 font-medium">Belum ada file dipilih</p>
+                    </div>
+
+                    @error('file')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                    @enderror
+
+                    <a href="/subscriptions/template"
+                        class="flex items-center justify-center gap-2 w-full px-4 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Download Template Excel
+                    </a>
+
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" @click="$dispatch('close-modal', 'import-subscription')"
+                            class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="flex-1 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition">
+                            Import
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </x-modal>
 </x-app-layout>

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\SubscriptionsImport;
 use App\Models\Plan;
 use App\Models\Store;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SubscriptionController extends Controller
 {
@@ -202,5 +204,53 @@ class SubscriptionController extends Controller
         logActivity('DELETE', $subscription, $data);
 
         return redirect()->back()->with('success', 'Data langganan berhasil dihapus!');
+    }
+
+    // import
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        Excel::import(new SubscriptionsImport, $request->file('file'));
+
+        return back()->with('success', 'Import berhasil!');
+    }
+
+    public function template()
+    {
+        return Excel::download(new class implements
+            \Maatwebsite\Excel\Concerns\FromArray,
+            \Maatwebsite\Excel\Concerns\WithHeadings
+        {
+            public function headings(): array
+            {
+                return [
+                    'nama',
+                    'email',
+                    'password',
+                    'nama_toko',
+                    'alamat',
+                    'plan',
+                    'interval'
+                ];
+            }
+
+            public function array(): array
+            {
+                return [
+                    [
+                        'Budi Santoso',
+                        'budi@email.com',
+                        'password123',
+                        'Toko Budi',
+                        'Jl. Contoh No.1',
+                        'Business',
+                        'monthly'
+                    ]
+                ];
+            }
+        }, 'template-import.xlsx');
     }
 }
