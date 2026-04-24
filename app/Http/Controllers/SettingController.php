@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmailTemplate;
 use App\Models\Plan;
 use App\Models\Setting;
 use App\Models\Store;
@@ -11,13 +12,13 @@ use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
-     public function __construct()
+    public function __construct()
     {
         $this->middleware('permission:view settings')->only(['index']);
         $this->middleware('permission:edit store')->only(['updateStore']);
     }
-    
-    
+
+
     private function generateUniqueSlug($name)
     {
         $slug = Str::slug($name);
@@ -58,7 +59,7 @@ class SettingController extends Controller
         if ($request->has('app')) {
             foreach ($request->app as $key => $value) {
                 Setting::updateOrCreate(
-                    ['key' => 'app.'.$key],
+                    ['key' => 'app.' . $key],
                     ['value' => $value]
                 );
             }
@@ -68,7 +69,7 @@ class SettingController extends Controller
         if ($request->has('email')) {
             foreach ($request->email as $key => $value) {
                 Setting::updateOrCreate(
-                    ['key' => 'email.'.$key],
+                    ['key' => 'email.' . $key],
                     ['value' => $value]
                 );
             }
@@ -96,5 +97,18 @@ class SettingController extends Controller
         );
 
         return redirect()->back()->with('success', 'Informasi toko berhasil diperbarui!');
+    }
+
+    public function updateEmail(Request $request, $key)
+    {
+        EmailTemplate::updateOrCreate(
+            ['key' => $key],
+            [
+                'subject' => $request->subject,
+                'body' => $request->body,
+            ]
+        );
+
+        return back()->with('success', 'Template berhasil disimpan');
     }
 }

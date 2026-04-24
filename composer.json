@@ -39,7 +39,8 @@
         "files": [
             "app/Helpers/SettingHelpers.php",
             "app/Helpers/ReceiptHelper.php",
-            "app/Helpers/ActivityLogHelper.php"
+            "app/Helpers/ActivityLogHelper.php",
+            "app/Helpers/EmailTemplateHelper.php"
         ]
     },
     "autoload-dev": {

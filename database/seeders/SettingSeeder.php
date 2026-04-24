@@ -12,17 +12,6 @@ class SettingSeeder extends Seeder
         $settings = [
             'app.name' => 'StocKita',
             'app.description' => 'Sistem kasir modern',
-
-            'email.welcome' => 'Halo {{name}},
-
-            Selamat datang di {{store.name}} 👋
-
-            Terima kasih sudah bergabung dengan kami. Kami senang bisa melayani Anda.
-
-            Jika ada pertanyaan, silakan hubungi kami kapan saja.
-
-            Salam,
-            {{store.name}}',
         ];
 
         foreach ($settings as $key => $value) {

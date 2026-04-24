@@ -144,13 +144,12 @@
                 </div>
 
                 @php
-                $template = setting('email.welcome');
+                $email = email_template('welcome_email');
 
-                $template = str_replace(
-                ['{{ name }}', '{{ store . name }}'],
-                ['Customer', setting('store.name')],
-                $template,
-                );
+                $template = parse_template($email?->body ?? '', [
+                'name' => 'Customer',
+                'store_name' => 'Nama Toko Kamu',
+                ]);
                 @endphp
 
                 <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6">
@@ -406,6 +405,11 @@
     {{-- email templte --}}
     <x-modal name="email-template" maxWidth="lg">
         <div class="p-6">
+
+            @php
+            $email = email_template('welcome_email');
+            @endphp
+
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
                 <h3 class="text-lg font-semibold text-gray-900">
                     Edit Template Email
@@ -420,45 +424,44 @@
                 </button>
             </div>
 
-            <form method="POST" action="/settings" class="space-y-6">
+            <form method="POST" action="{{ route('email-template.update', 'welcome_email') }}" class="space-y-6">
                 @csrf
-                <div>
-                    <label class="text-sm font-medium text-gray-700">
-                        Template Email
-                    </label>
 
-                    <textarea name="email[welcome]" rows="8"
-                        class="mt-2 w-full border border-gray-200 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                        placeholder="Tulis template email di sini...">{{ setting('email.welcome') }}</textarea>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Subject</label>
+                    <input type="text" name="subject" value="{{ $email?->subject }}"
+                        class="mt-2 w-full border border-gray-200 rounded-xl px-4 py-3 text-sm">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Template Email</label>
+                    <textarea name="body" rows="8"
+                        class="mt-2 w-full border border-gray-200 rounded-xl px-4 py-3 font-mono text-sm">{{ $email?->body }}</textarea>
 
                     <p class="text-xs text-gray-500 mt-2">
-                        Gunakan variable:
+                        Gunakan:
                         <span class="font-mono">@{{ name }}</span>,
                         <span class="font-mono">@{{ store_name }}</span>
                     </p>
                 </div>
 
-                <!-- PREVIEW -->
+                @php
+                $preview = parse_template($email?->body ?? '', [
+                'name' => 'JAYA',
+                'store_name' => 'Ridzz Store',
+                ]);
+                @endphp
+
                 <div>
                     <p class="text-sm font-medium text-gray-700 mb-2">Preview</p>
-
-                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-700 leading-relaxed">
-                        {!! nl2br(
-                        e(
-                        str_replace(
-                        ['{{ name }}', '{{ store_name }}'],
-                        ['JAYA', setting('store.name')],
-                        setting('email.welcome'),
-                        ),
-                        ),
-                        ) !!}
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-700">
+                        {!! nl2br(e($preview)) !!}
                     </div>
                 </div>
 
-                <!-- ACTION -->
                 <div class="flex justify-end">
                     <button type="submit"
-                        class="px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition">
+                        class="px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700">
                         Simpan Template
                     </button>
                 </div>

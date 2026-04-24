@@ -13,31 +13,31 @@ class SendCustomerEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $customer;
-
     public $contentData;
+    public $subjectText;
 
     public function __construct($customer)
     {
         $this->customer = $customer;
 
-        $variables = [
-            '{{name}}' => $customer->user->name,
-            '{{store.name}}' => setting('store.name'),
+        $email = email_template('welcome_email');
+
+        $template = $email?->body ?? 'Halo {{ name }}';
+        $subject = $email?->subject ?? 'Pesan';
+
+        $data = [
+            'name' => $customer->user->name,
+            'store_name' => optional($customer->store)->name ?? 'Toko',
         ];
 
-        $template = setting('email.welcome');
-
-        foreach ($variables as $key => $value) {
-            $template = str_replace($key, $value, $template);
-        }
-
-        $this->contentData = $template;
+        $this->contentData = parse_template($template, $data);
+        $this->subjectText = parse_template($subject, $data);
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pesan dari '.setting('store.name'),
+            subject: $this->subjectText,
         );
     }
 
