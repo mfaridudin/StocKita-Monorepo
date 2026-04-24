@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\CustomerExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerStoreRequest;
 use App\Mail\SendCustomerEmail;
@@ -12,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -185,5 +187,11 @@ class CustomerController extends Controller
         ]);
 
         return back()->with('success', 'Email berhasil dikirim!');
+    }
+
+    // export
+    public function export()
+    {
+        return Excel::download(new CustomerExport, 'daftar-pelanggan.xlsx');
     }
 }

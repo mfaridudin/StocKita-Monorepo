@@ -184,6 +184,7 @@ Route::middleware(['auth'])->group(function () {
     // export
     Route::get('/transactions/export', [AdminTransactionController::class, 'export'])->name('transactions.export');
     Route::get('/product/export', [AdminProductController::class, 'export'])->name('products.export');
+    Route::get('/customers/export', [AdminCustomerController::class, 'export'])->name('customers.export');
 
     // logs
     Route::get('/logs', [ActivityLogController::class, 'index'])
