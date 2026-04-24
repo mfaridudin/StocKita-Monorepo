@@ -254,7 +254,7 @@ class TransactionController extends Controller
     // export 
     public function export()
     {
-        return Excel::download(new TransactionsExport, 'daftar-transaksi.xlsx');
+        return Excel::download(new TransactionsExport(auth()->user()), 'daftar-transaksi.xlsx');
     }
 
     // buat struk

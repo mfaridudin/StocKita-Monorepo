@@ -13,9 +13,25 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 class ProductsExport implements FromCollection, WithHeadings, WithMapping, WithDrawings, WithEvents
 {
+    protected $user;
+
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+
     public function collection()
     {
-        return Product::with(['category', 'warehouse', 'store'])->get();
+        $query = Product::with(['category', 'warehouse', 'store']);
+
+        if ($this->user->hasRole('admin')) {
+            return $query->get();
+        }
+        if ($this->user->hasRole('owner')) {
+            return $query->where('store_id', $this->user->store->id)->get();
+        }
+
+        return collect();
     }
 
     public function headings(): array

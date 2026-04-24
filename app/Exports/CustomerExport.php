@@ -12,9 +12,26 @@ class CustomerExport implements FromCollection, WithHeadings, WithMapping
     /**
      * @return \Illuminate\Support\Collection
      */
+
+    protected $user;
+
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+
     public function collection()
     {
-        return Customer::with(['user'])->get();
+        $query = Customer::with(['user', 'store']);
+
+        if ($this->user->hasRole('admin')) {
+            return $query->get();
+        }
+        if ($this->user->hasRole('owner')) {
+            return $query->where('store_id', $this->user->store->id)->get();
+        }
+
+        return collect();
     }
 
     public function headings(): array

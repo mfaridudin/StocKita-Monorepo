@@ -193,7 +193,7 @@ class CustomerController extends Controller
     // export
     public function export()
     {
-        return Excel::download(new CustomerExport, 'daftar-pelanggan.xlsx');
+        return Excel::download(new CustomerExport(auth()->user()), 'daftar-pelanggan.xlsx');
     }
 
     // import exel
