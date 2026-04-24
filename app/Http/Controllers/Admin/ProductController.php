@@ -103,7 +103,7 @@ class ProductController extends Controller
             }
         }
 
-        Product::create([
+        $product = Product::create([
             'name' => $request->name,
             'sku' => $this->generateSku(),
             'price' => $request->price,
@@ -112,6 +112,12 @@ class ProductController extends Controller
             'created_by' => auth()->id(),
             'store_id' => $request->store_id,
             'warehouse_id' => $request->warehouse_id,
+        ]);
+
+        logActivity('CREATE', $product, [
+            'name' => $product->name,
+            'price' => $product->price,
+            'category_id' => $product->category_id,
         ]);
 
         return redirect()->back()->with('success', 'Produk baru berhasil ditambahkan!');
@@ -167,6 +173,12 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
         ]);
 
+        $before = $product->only(['name', 'price', 'category_id']);
+        logActivity('UPDATE', $product, [
+            'before' => $before,
+            'after' => $product->only(['name', 'price', 'category_id'])
+        ]);
+
         return redirect()->back()->with('success', 'Produk berhasil diperbarui!');
     }
 
@@ -201,6 +213,10 @@ class ProductController extends Controller
                 $product->update([
                     'image' => $imagePath,
                 ]);
+
+                logActivity('UPDATE_IMAGE', $product, [
+                    'image' => $imagePath
+                ]);
             } catch (\Exception $e) {
                 return back()->with('error', 'Gagal memproses gambar: ' . $e->getMessage());
             }
@@ -215,7 +231,12 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
+
+        $data = $product->only(['name', 'price', 'category_id']);
+
         $product->delete();
+
+        logActivity('DELETE', $product, $data);
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus!');
     }

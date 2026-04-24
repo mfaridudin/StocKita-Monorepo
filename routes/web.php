@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
@@ -183,6 +184,11 @@ Route::middleware(['auth'])->group(function () {
     // export
     Route::get('/transactions/export', [AdminTransactionController::class, 'export'])->name('transactions.export');
     Route::get('/product/export', [AdminProductController::class, 'export'])->name('products.export');
+
+    // logs
+    Route::get('/logs', [ActivityLogController::class, 'index'])
+        ->name('logs.index');
+    // ->middleware('permission:view logs');
 });
 
 /*
