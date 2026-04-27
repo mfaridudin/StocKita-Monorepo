@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmailTemplate;
 use App\Models\Plan;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -12,8 +13,9 @@ class SettingController extends Controller
     public function index()
     {
         $plans = Plan::latest()->get();
+        $emailTemplates = EmailTemplate::all()->keyBy('key');
 
-        return view('settings.index', compact('plans'));
+        return view('settings.index', compact('plans', 'emailTemplates'));
     }
 
     public function update(Request $request)

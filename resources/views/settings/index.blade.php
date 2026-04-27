@@ -1,4 +1,7 @@
 <x-app-layout title="Settings">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
     @if ($message = session('success') ?? (session('error') ?? (session('warning') ?? session('info'))))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -138,34 +141,50 @@
 
             {{-- email --}}
             <div x-data class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
-                <div class="mb-8">
-                    <h2 class="text-2xl font-semibold text-gray-900 mb-1">Email Template</h2>
-                    <p class="text-sm text-gray-500">Digunakan untuk komunikasi customer</p>
-                </div>
 
-                @php
-                $email = email_template('welcome_email');
-
-                $template = parse_template($email?->body ?? '', [
-                'name' => 'Customer',
-                'store_name' => 'Nama Toko Kamu',
-                ]);
-                @endphp
-
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6">
-
-                    <p class="text-xs text-gray-400 mb-3">Preview Email</p>
-
-                    <div class="text-sm text-gray-700 leading-relaxed space-y-2">
-                        {!! nl2br(e($template)) !!}
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-semibold text-gray-900">Email Template</h2>
+                        <p class="text-sm text-gray-500">Kelola template email sistem</p>
                     </div>
-
                 </div>
 
-                <button @click="$dispatch('open-modal', { name: 'email-template'})"
-                    class="w-full sm:w-auto text-sm font-medium text-green-600 hover:text-green-700 px-4 py-2 border border-green-100 rounded-lg hover:bg-green-50 transition-colors">
-                    Edit Template
-                </button>
+                <div class="flex flex-col gap-4">
+                    @foreach ($emailTemplates as $template)
+                    <div class="bg-white border border-gray-200 rounded-xl p-6">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="font-semibold text-gray-900">
+                                    {{ ucfirst(str_replace('_', ' ', $template->key)) }}
+                                </h3>
+                                <p class="text-xs text-gray-500">
+                                    Key: {{ $template->key }}
+                                </p>
+                            </div>
+
+                            <button @click="$dispatch('open-modal', { 
+                            name: 'email-template', 
+                            template: @js($template) 
+                        })" class="text-sm text-green-600 hover:text-green-700">
+                                Edit
+                            </button>
+                        </div>
+
+                        @php
+                        $preview = parse_template($template->body, [
+                        'name' => 'Preview User',
+                        'store_name' => 'Preview Store',
+                        ]);
+                        @endphp
+
+                        <div class="bg-gray-50 border rounded-lg p-4 text-sm text-gray-700">
+                            {!! $preview !!}
+                        </div>
+
+                    </div>
+                    @endforeach
+                </div>
             </div>
             @endrole
 
@@ -403,66 +422,71 @@
     </x-modal>
 
     {{-- email templte --}}
-    <x-modal name="email-template" maxWidth="lg">
-        <div class="p-6">
+    <x-modal name="email-template" maxWidth="2xl">
+        <div x-data="{
+        template: {},
+        quillEditor: null,
+        initQuill() {
+            this.quillEditor = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
+        }
+        }" x-on:open-modal.window="
+            if($event.detail.name === 'email-template'){
+                template = $event.detail.template;
+                $nextTick(() => {
+                    if(!quillEditor) initQuill();
 
-            @php
-            $email = email_template('welcome_email');
-            @endphp
+                    let cleaned = (template.body ?? '')
+                        .replace(/(<p><br><\/p>\s*){2,}/g, '<p><br></p>')
+                        .replace(/(<br>\s*){3,}/g, '<br>');
 
-            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    Edit Template Email
-                </h3>
+                    quillEditor.root.innerHTML = cleaned;
+                });
+            }
+            " class="p-6">
 
-                <button type="button" @click="$dispatch('close-modal', 'email-template')"
-                    class="text-gray-400 hover:text-gray-600 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+            <div class="flex justify-between items-center mb-5 pb-3 border-b">
+                <h3 class="text-lg font-semibold">Edit Template Email</h3>
             </div>
 
-            <form method="POST" action="{{ route('email-template.update', 'welcome_email') }}" class="space-y-6">
+            <form method="POST" :action="`/email-template/${template.key}`" class="space-y-6" x-on:submit="
+                template.body = quillEditor.root.innerHTML;
+                $el.querySelector('#hidden-body').value = template.body;
+            ">
                 @csrf
+                @method('PUT')
 
                 <div>
-                    <label class="text-sm font-medium text-gray-700">Subject</label>
-                    <input type="text" name="subject" value="{{ $email?->subject }}"
-                        class="mt-2 w-full border border-gray-200 rounded-xl px-4 py-3 text-sm">
+                    <label class="text-sm font-medium">Subject</label>
+                    <input type="text" name="subject" x-model="template.subject"
+                        class="mt-2 w-full border rounded-xl px-4 py-3 text-sm">
                 </div>
 
                 <div>
-                    <label class="text-sm font-medium text-gray-700">Template Email</label>
-                    <textarea name="body" rows="8"
-                        class="mt-2 w-full border border-gray-200 rounded-xl px-4 py-3 font-mono text-sm">{{ $email?->body }}</textarea>
+                    <label class="text-sm font-medium">Template Email</label>
 
-                    <p class="text-xs text-gray-500 mt-2">
-                        Gunakan:
-                        <span class="font-mono">@{{ name }}</span>,
-                        <span class="font-mono">@{{ store_name }}</span>
-                    </p>
-                </div>
+                    {{-- Quill editor container --}}
+                    <div id="quill-editor" class="mt-2 bg-white rounded-xl text-sm min-h-[200px]"></div>
 
-                @php
-                $preview = parse_template($email?->body ?? '', [
-                'name' => 'JAYA',
-                'store_name' => 'Ridzz Store',
-                ]);
-                @endphp
-
-                <div>
-                    <p class="text-sm font-medium text-gray-700 mb-2">Preview</p>
-                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-700">
-                        {!! nl2br(e($preview)) !!}
-                    </div>
+                    {{-- Hidden input untuk submit nilai HTML --}}
+                    <input type="hidden" name="body" id="hidden-body">
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit"
-                        class="px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700">
-                        Simpan Template
+                    <button type="submit" class="px-5 py-2.5 bg-green-600 text-white rounded-lg">
+                        Simpan
                     </button>
                 </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TransactionMail;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Store;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -195,6 +197,16 @@ class TransactionController extends Controller
             $transaction->load('items.product');
             $receiptPath = $this->generateReceipt($transaction);
             $transaction->update(['receipt' => $receiptPath]);
+
+            if ($transaction->customer_id) {
+                $email = $transaction->customer?->user?->email;
+
+                if ($email) {
+                    Mail::to($email)
+                        ->send(new TransactionMail($transaction, 'transaction.success'));
+                }
+            }
+
 
             return response()->json([
                 'message' => 'Transaksi berhasil',

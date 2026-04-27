@@ -2,10 +2,12 @@
 
 namespace App\Observers;
 
+use App\Mail\OutOfStockMail;
 use App\Models\Stock;
 use App\Models\User;
 use App\Notifications\StockLowNotification;
 use App\Notifications\StockOutNotification;
+use Illuminate\Support\Facades\Mail;
 
 class StockObserver
 {
@@ -36,6 +38,16 @@ class StockObserver
             // sesuai toko
             if ($owner) {
                 $owner->notify(new StockOutNotification($stock));
+
+                Mail::to($owner->email)->send(
+                    new OutOfStockMail([
+                        'name' => $owner->name,
+                        'product_name' => $stock->product->name,
+                        'product_code' => $stock->product->sku,
+                        'store_name' => $owner->store->name,
+                        'warehouse_id' => $stock->warehouse_id
+                    ])
+                );
             }
 
             // notify admin

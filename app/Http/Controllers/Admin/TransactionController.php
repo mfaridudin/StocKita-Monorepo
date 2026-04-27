@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use App\Exports\TransactionsExport;
+use App\Mail\TransactionMail;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionController extends Controller
@@ -186,6 +188,15 @@ class TransactionController extends Controller
             // Log::info('ini log',$transaction->load('items.product')->toArray());
             $receiptPath = $this->generateReceipt($transaction);
             $transaction->update(['receipt' => $receiptPath]);
+
+            if ($transaction->customer_id) {
+                $email = $transaction->customer?->user?->email;
+
+                if ($email) {
+                    Mail::to($email)
+                        ->send(new TransactionMail($transaction, 'transaction.success'));
+                }
+            }
 
             return response()->json([
                 'message' => 'Transaksi berhasil',

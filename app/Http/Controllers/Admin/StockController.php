@@ -122,6 +122,10 @@ class StockController extends Controller
 
         $stock = Stock::findOrFail($id);
 
+        $beforeQty = $stock->qty;
+        $reduceQty = $request->qty;
+        $afterQty = $beforeQty - $reduceQty;
+
         $stock->update([
             'qty' => $request->qty,
         ]);

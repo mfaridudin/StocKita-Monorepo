@@ -15,6 +15,7 @@ class SendCustomerEmail extends Mailable
     public $customer;
     public $contentData;
     public $subjectText;
+    public $store_name;
 
     public function __construct($customer)
     {
@@ -30,6 +31,7 @@ class SendCustomerEmail extends Mailable
             'store_name' => optional($customer->store)->name ?? 'Toko',
         ];
 
+        $this->store_name = $data['store_name'];
         $this->contentData = parse_template($template, $data);
         $this->subjectText = parse_template($subject, $data);
     }
@@ -47,6 +49,7 @@ class SendCustomerEmail extends Mailable
             view: 'emails.dynamic',
             with: [
                 'content' => $this->contentData,
+                'store_name' =>   $this->store_name
             ],
         );
     }

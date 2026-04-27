@@ -199,7 +199,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/products/template', [AdminProductController::class, 'template'])->name('products.template');
 
     // email
-    Route::post('/email-template/{key}', [SettingController::class, 'updateEmail'])
+    Route::put('/email-template/{key}', [SettingController::class, 'updateEmail'])
         ->name('email-template.update');
 });
 
