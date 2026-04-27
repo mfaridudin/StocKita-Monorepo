@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 // use Imagick;
 use Intervention\Image\Laravel\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
@@ -198,10 +199,18 @@ class ProductController extends Controller
     // import exel
     public function import(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'file.required' => 'File wajib diupload!',
+            'file.mimes' => 'Format file harus Excel (.xlsx, .xls, .csv)',
         ]);
 
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'import')
+                ->withInput();
+        }
         try {
             Excel::import(new ProductsImport, $request->file('file'));
 

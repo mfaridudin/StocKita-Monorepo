@@ -24,11 +24,16 @@ class CustomerImport implements ToModel, WithHeadingRow, WithValidation
     {
         $finalStoreId = $this->storeId ?? Auth::user()->store->id;
 
-        // sanitize phone
-        $phone = preg_replace('/[^0-9+]/', '', $row['no_telepon'] ?? '');
+        $rawPhone = (string) ($row['no_telepon'] ?? '');
 
-        if (!str_starts_with($phone, '+') && str_starts_with($phone, '0')) {
+        // sanitize
+        $phone = preg_replace('/[^0-9+]/', '', $rawPhone);
+        if (str_starts_with($phone, '0')) {
             $phone = '+62' . substr($phone, 1);
+        } elseif (str_starts_with($phone, '62')) {
+            $phone = '+' . $phone;
+        } elseif (!str_starts_with($phone, '+62')) {
+            $phone = '+62' . $phone;
         }
 
         // create user
@@ -55,7 +60,6 @@ class CustomerImport implements ToModel, WithHeadingRow, WithValidation
         return [
             'nama'        => 'required|string|max:255',
             'email'       => 'required|email|unique:users,email',
-            'no_telepon'  => 'nullable|string|max:20',
             'alamat'      => 'nullable|string|max:255',
         ];
     }

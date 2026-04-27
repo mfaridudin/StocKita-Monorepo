@@ -465,7 +465,7 @@ $prefix = $isAdmin ? '/admin' : '';
     </x-modal>
 
     {{-- import modal --}}
-    <x-modal name="import-subscription" maxWidth="md">
+    <x-modal name="import-subscription" maxWidth="md" :show="$errors->import->any()">
         <div class="p-6">
             <form action="/subscriptions/import" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -498,9 +498,7 @@ $prefix = $isAdmin ? '/admin' : '';
                         <p id="importFileName" class="text-xs text-blue-600 mt-2 font-medium">Belum ada file dipilih</p>
                     </div>
 
-                    @error('file')
-                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                    @enderror
+                    <x-input-error class="text-red-500 text-sm" :messages="$errors->import->get('file')" />
 
                     <a href="/subscriptions/template" class="text-sm text-blue-600 hover:underline">
                         Download template Excel

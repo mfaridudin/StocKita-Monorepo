@@ -355,7 +355,7 @@
     </x-modal>
 
     {{-- modal import --}}
-    <x-modal name="import-produk" maxWidth="md">
+    <x-modal name="import-produk" maxWidth="md" :show="$errors->import->any()">
         <div class="p-6">
             <form action="{{ route('admin.products.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -411,6 +411,8 @@
 
                     <p id="fileName" class="mt-3 text-sm text-green-600 hidden"></p>
                 </div>
+                <x-input-error :messages="$errors->import->get('file')" class="mt-2 text-red-500 text-sm" />
+
                 <a href="{{ route('products.template')}}" class="text-sm text-blue-600 hover:underline">
                     Download template Excel
                 </a>

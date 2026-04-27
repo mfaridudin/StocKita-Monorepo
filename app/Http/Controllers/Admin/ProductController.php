@@ -12,6 +12,7 @@ use App\Models\Store;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 // use Imagick;
 use Intervention\Image\Laravel\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
@@ -286,10 +287,20 @@ class ProductController extends Controller
 
     public function import(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'file' => 'required|mimes:xlsx,xls,csv',
             'store_id' => 'required'
+        ], [
+            'file.required' => 'File wajib diupload!',
+            'file.mimes' => 'Format file harus Excel (.xlsx, .xls, .csv)',
+            'store_id.required' => 'Toko harus dipilih!'
         ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'import')
+                ->withInput();
+        }
 
         try {
             Excel::import(new ProductsImport($request->store_id), $request->file('file'));

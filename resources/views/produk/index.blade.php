@@ -283,7 +283,7 @@
     </x-modal>
 
     {{-- modal import --}}
-    <x-modal name="import-produk" maxWidth="md">
+    <x-modal name="import-produk" maxWidth="md" :show="$errors->import->any()">
         <div class="p-6">
             <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -326,6 +326,7 @@
                             Format: .xlsx / .xls (max 5MB)
                         </p>
                     </label>
+                    <x-input-error :messages="$errors->import->get('file')" class="mt-2 text-red-500 text-sm" />
 
                     <p id="fileName" class="mt-3 text-sm text-green-600 hidden"></p>
                 </div>

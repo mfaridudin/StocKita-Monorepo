@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
@@ -235,10 +236,21 @@ class CustomerController extends Controller
     // import exel
     public function import(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'file' => 'required|mimes:xlsx,xls,csv',
             'store_id' => 'required'
+        ], [
+            'file.required' => 'File wajib diupload!',
+            'file.mimes' => 'Format file harus Excel (.xlsx, .xls, .csv)',
+            'store_id.required' => 'Toko harus dipilih!'
         ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'import')
+                ->withInput();
+        }
+
 
         try {
             Excel::import(new CustomerImport($request->store_id), $request->file('file'));

@@ -9,6 +9,7 @@ use App\Models\Store;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SubscriptionController extends Controller
@@ -209,9 +210,20 @@ class SubscriptionController extends Controller
     // import
     public function import(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv'
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx,xls,csv',
+            'store_id' => 'required'
+        ], [
+            'file.required' => 'File wajib diupload!',
+            'file.mimes' => 'Format file harus Excel (.xlsx, .xls, .csv)',
+            'store_id.required' => 'Toko harus dipilih!'
         ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'import')
+                ->withInput();
+        }
 
         Excel::import(new SubscriptionsImport, $request->file('file'));
 

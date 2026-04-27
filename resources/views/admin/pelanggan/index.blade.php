@@ -516,7 +516,7 @@
         </div>
     </x-modal>
 
-    <x-modal name="import-customer" maxWidth="md">
+    <x-modal name="import-customer" maxWidth="md" :show="$errors->import->any()">
         <div class="p-6">
             <form action="{{ route('admin.customers.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -562,7 +562,7 @@
                                file:text-sm file:font-medium file:bg-blue-50 file:text-blue-600
                                hover:file:bg-blue-100">
 
-                        <x-input-error :messages="$errors->get('file')" class="mt-2 text-red-500 text-sm" />
+                        <x-input-error :messages="$errors->import->get('file')" class="mt-2 text-red-500 text-sm" />
                     </div>
 
                     <a href="{{ route('customers.template')}}" class="text-sm text-blue-600 hover:underline">
